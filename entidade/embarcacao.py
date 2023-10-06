@@ -21,4 +21,5 @@ class Embarcacao(ABC):
         return not self.__vida
 
     def tomar_dano(self):
-        self.__vida -= 1
+        if self.__vida:
+            self.__vida -= 1
