@@ -12,6 +12,10 @@ class PrincipalCtrl:
         self.__relatorio_ctrl = None
 
     @property
+    def jogador_logado(self):
+        return self.__jogador_logado
+
+    @property
     def jogo_ctrl(self):
         return self.__jogo_ctrl
 
