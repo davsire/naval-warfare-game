@@ -3,14 +3,14 @@ from abc import ABC, abstractmethod
 
 class Embarcacao(ABC):
     @abstractmethod
-    def __init__(self, identificador: str, tamanho: int):
-        self.__identificador = identificador
+    def __init__(self, sigla: str, tamanho: int):
+        self.__sigla = sigla
         self.__tamanho = tamanho
         self.__vida = tamanho
 
     @property
-    def identificador(self) -> str:
-        return 'X' if self.__vida else self.__identificador
+    def sigla(self) -> str:
+        return self.__sigla
 
     @property
     def tamanho(self) -> int:
