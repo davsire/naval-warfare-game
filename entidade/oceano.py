@@ -13,11 +13,11 @@ class Oceano:
         self.__mapa = [[None for _ in range(tamanho)] for _ in range(tamanho)]
 
     @property
-    def tamanho(self):
+    def tamanho(self) -> int:
         return self.__tamanho
 
     @property
-    def mapa(self):
+    def mapa(self) -> list:
         return self.__mapa
 
     def adicionar_embarcacao(self,
