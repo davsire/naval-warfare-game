@@ -1,5 +1,7 @@
 from tela.principal_tela import PrincipalTela
 from entidade.jogador import Jogador
+from controlador.jogador_ctrl import JogadorCtrl
+from controlador.ranking_ctrl import RankingCtrl
 
 
 class PrincipalCtrl:
@@ -7,8 +9,8 @@ class PrincipalCtrl:
         self.__jogador_logado = None
         self.__principal_tela = PrincipalTela()
         self.__jogo_ctrl = None
-        self.__jogador_ctrl = None
-        self.__ranking_ctrl = None
+        self.__jogador_ctrl = JogadorCtrl(self)
+        self.__ranking_ctrl = RankingCtrl(self)
         self.__oceano_ctrl = None
         self.__relatorio_ctrl = None
 
