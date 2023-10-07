@@ -6,7 +6,10 @@ class JogadorTela(AbstractTela):
         pass
 
     def mostra_login_jogador(self):
-        pass
+        self.mostra_titulo('LOGANDO JOGAR')
+        usuario = input('Digite seu usuario: ')
+        senha = input('Digite sua senha: ')
+        return usuario, senha
 
     def obtem_dados_jogador(self):
         pass

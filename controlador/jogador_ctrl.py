@@ -13,10 +13,22 @@ class JogadorCtrl:
         return self.__jogadores
 
     def obter_jogador_por_id(self, id: int) -> Jogador:
-        pass
+        for jogador in self.jogadores:
+            if jogador.id == id:
+                return jogador
+        self.__jogador_tela.mostra_mensagem(
+                'Não existe um jogador com esse ID.')
 
     def logar_jogador(self):
-        pass
+        usuario, senha = self.__jogador_tela.mostra_login_jogador()
+        print(senha)
+        for jogador in self.jogadores:
+            if usuario == jogador.usuario and \
+                senha == jogador.senha:
+                return jogador
+            else:
+                self.__jogador_tela.mostra_mensagem(
+                        'Usuário ou senha incorretos.')
 
     def mostrar_jogador(self):
         pass
@@ -25,7 +37,11 @@ class JogadorCtrl:
         pass
 
     def excluir_jogador(self, jogador_logado: Jogador):
-        pass
+        for jogador in self.jogadores:
+            if jogador == jogador_logado:
+                del self.jogadores[jogador]
+                self.__jogador_tela.mostra_mensagem(
+                        'Jogador excluido com sucesso.')
 
     def editar_jogador(self, jogador_logado: Jogador):
         pass

@@ -39,9 +39,8 @@ class PrincipalCtrl:
         return self.__relatorio_ctrl
 
     def abrir_login_jogador(self):
-        print('LOGIN JOGADOR')
-        # Login e redirecionamento temporário, implementar no respectivo controlador
-        self.__jogador_logado = 'temp'
+        self.__jogador_logado = self.__jogador_ctrl.logar_jogador()
+        print(self.jogador_logado)
         self.iniciar_app()
 
     def abrir_cadastro_jogador(self):
