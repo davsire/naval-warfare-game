@@ -12,7 +12,8 @@ class PrincipalTela(AbstractTela):
             'Cadastrar',
             'Sair do jogo'
         ])
-        return self.obtem_opcao('Selecione uma opção: ', [1, 2, 3])
+        return self.obtem_opcao('Selecione uma opção: ',
+                                [1, 2, 3])
 
     def mostra_menu_principal(self) -> int:
         self.mostra_titulo('BATALHA NAVAL')
@@ -22,4 +23,7 @@ class PrincipalTela(AbstractTela):
             'Ranking',
             'Logout'
         ])
-        return self.obtem_opcao('O que deseja acessar?\nSelecione uma opção: ', [1, 2, 3, 4])
+        return self.obtem_opcao(
+            'O que deseja acessar?\nSelecione uma opção: ',
+            [1, 2, 3, 4]
+        )

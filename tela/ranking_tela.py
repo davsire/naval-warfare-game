@@ -5,5 +5,5 @@ class RankingTela(AbstractTela):
     def __init__(self):
         pass
 
-    def mostra_jogadores():
+    def mostra_jogadores(self):
         pass

@@ -1,7 +1,12 @@
 
 
 class Jogador:
-    def __init__(self, id: int, nome: str, data_nascimento: str, usuario: str, senha: str):
+    def __init__(self,
+                 id: int,
+                 nome: str,
+                 data_nascimento: str,
+                 usuario: str,
+                 senha: str):
         self.__id = id
         self.__nome = nome
         self.__data_nascimento = data_nascimento

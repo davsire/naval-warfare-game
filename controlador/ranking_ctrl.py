@@ -7,5 +7,5 @@ class RankingCtrl:
         self.__controlador_principal = controlador_principal
         self.__tela_ranking = RankingTela()
 
-    def listar_jogadores():
+    def listar_jogadores(self):
         pass
