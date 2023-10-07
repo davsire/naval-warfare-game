@@ -1,10 +1,9 @@
-from controlador.principal_ctrl import PrincipalCtrl
 from tela.jogador_tela import JogadorTela
 from entidade.jogador import Jogador
 
 
 class JogadorCtrl:
-    def __init__(self, controlador_principal: PrincipalCtrl):
+    def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__jogador_tela = JogadorTela()
         self.__jogadores = []
