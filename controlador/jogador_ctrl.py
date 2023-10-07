@@ -13,7 +13,7 @@ class JogadorCtrl:
     def jogadores(self) -> list:
         return self.__jogadores
 
-    def obter_jogador_por_id(self, id: id) -> Jogador:
+    def obter_jogador_por_id(self, id: int) -> Jogador:
         pass
 
     def logar_jogador(self):

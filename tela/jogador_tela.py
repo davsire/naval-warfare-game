@@ -11,7 +11,7 @@ class JogadorTela(AbstractTela):
     def obtem_dados_jogador():
         pass
 
-    def obtem_jogador_por_id() -> int:
+    def obtem_id_jogador() -> int:
         pass
 
     def mostra_cadastro_jogador():
