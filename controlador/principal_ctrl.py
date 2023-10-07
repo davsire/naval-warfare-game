@@ -1,4 +1,5 @@
 from tela.principal_tela import PrincipalTela
+from entidade.jogador import Jogador
 
 
 class PrincipalCtrl:
@@ -12,7 +13,7 @@ class PrincipalCtrl:
         self.__relatorio_ctrl = None
 
     @property
-    def jogador_logado(self):
+    def jogador_logado(self) -> Jogador:
         return self.__jogador_logado
 
     @property
