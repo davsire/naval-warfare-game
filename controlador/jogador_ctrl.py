@@ -20,15 +20,14 @@ class JogadorCtrl:
         self.__jogador_tela.mostra_mensagem(
                 'Não existe um jogador com esse ID.')
 
-    def logar_jogador(self):
+    def logar_jogador(self) -> Jogador:
         usuario, senha = self.__jogador_tela.mostra_login_jogador()
         for jogador in self.jogadores:
             if usuario == jogador.usuario and \
                 senha == jogador.senha:
                 return jogador
-            else:
-                self.__jogador_tela.mostra_mensagem(
-                        'Usuário ou senha incorretos.')
+        self.__jogador_tela.mostra_mensagem(
+                    'Usuário ou senha incorretos.')
 
     def mostrar_jogador(self):
         id = self.__jogador_tela.obtem_id_jogador()
@@ -41,13 +40,12 @@ class JogadorCtrl:
         nome, dia, mes, ano, usuario, senha = self.__jogador_tela.mostra_cadastro_jogador()
         novo_jogador = Jogador(self.__proximo_id, nome, f'{dia}/{mes}/{ano}', usuario, senha)
         self.__jogadores.append(novo_jogador)
+        self.__proximo_id += 1
         return novo_jogador
 
     def excluir_jogador(self, jogador_logado: Jogador):
-        for jogador in self.jogadores:
-            if jogador == jogador_logado:
-                del self.jogadores[jogador]
-                self.__jogador_tela.mostra_mensagem(
+        self.__jogadores.remove(jogador_logado)
+        self.__jogador_tela.mostra_mensagem(
                         'Jogador excluido com sucesso.')
 
     def editar_jogador(self, jogador_logado: Jogador):
