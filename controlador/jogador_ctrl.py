@@ -49,4 +49,5 @@ class JogadorCtrl:
                         'Jogador excluido com sucesso.')
 
     def editar_jogador(self, jogador_logado: Jogador):
+        # Implementar
         pass

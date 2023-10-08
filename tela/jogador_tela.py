@@ -5,13 +5,13 @@ class JogadorTela(AbstractTela):
     def __init__(self):
         pass
 
-    def mostra_login_jogador(self):
+    def mostra_login_jogador(self) -> tuple:
         self.mostra_titulo('LOGANDO JOGAR')
         usuario = input('Digite seu usuario: ')
         senha = input('Digite sua senha: ')
         return usuario, senha
 
-    def obtem_dados_jogador(self):
+    def obtem_dados_jogador(self) -> tuple:
         nome = input('Digite seu nome: ')
         dia, mes, ano = input(
                 'Digite sua data de nascimento separada por espaços: ').split()
@@ -23,12 +23,13 @@ class JogadorTela(AbstractTela):
         id = int(input('Digite o id do jogador: '))
         return id
 
-    def mostra_cadastro_jogador(self):
+    def mostra_cadastro_jogador(self) -> tuple:
         self.mostra_titulo('CADASTRANDO JOGADOR')
         nome, dia, mes, ano, usuario, senha = self.obtem_dados_jogador()
         return nome, dia, mes, ano, usuario, senha
 
     def mostra_edicao_jogador(self):
+        # Implementar
         self.mostra_titulo('EDITANDO JOGADOR')
         self.obtem_dados_jogador()
 
