@@ -1,4 +1,5 @@
 from tela.abstract_tela import AbstractTela
+from entidade.jogador import Jogador
 
 
 class JogadorTela(AbstractTela):
@@ -6,17 +7,17 @@ class JogadorTela(AbstractTela):
         pass
 
     def mostra_login_jogador(self) -> tuple:
-        self.mostra_titulo('LOGANDO JOGAR')
-        usuario = input('Digite seu usuario: ')
-        senha = input('Digite sua senha: ')
+        self.mostra_titulo('LOGIN JOGADOR')
+        usuario = input('Digite seu usuario: ').strip()
+        senha = input('Digite sua senha: ').strip()
         return usuario, senha
 
     def obtem_dados_jogador(self) -> tuple:
         nome = input('Digite seu nome: ')
         dia, mes, ano = input(
                 'Digite sua data de nascimento separada por espaços: ').split()
-        usuario = input('Digite seu usuário: ')
-        senha = input('Digite sua senha: ')
+        usuario = input('Digite seu usuário: ').strip()
+        senha = input('Digite sua senha: ').strip()
         return nome, dia, mes, ano, usuario, senha
 
     def obtem_id_jogador(self) -> int:
@@ -25,14 +26,13 @@ class JogadorTela(AbstractTela):
 
     def mostra_cadastro_jogador(self) -> tuple:
         self.mostra_titulo('CADASTRANDO JOGADOR')
-        nome, dia, mes, ano, usuario, senha = self.obtem_dados_jogador()
-        return nome, dia, mes, ano, usuario, senha
+        return self.obtem_dados_jogador()
 
     def mostra_edicao_jogador(self):
         # Implementar
         self.mostra_titulo('EDITANDO JOGADOR')
         self.obtem_dados_jogador()
 
-    def mostra_perfil_jogador(self, id: int, nome: str, data_nascimento: str):
+    def mostra_perfil_jogador(self, jogador: Jogador):
         # Temporario
-        self.mostra_mensagem(f'Jogador{id} - Nome: {nome}, Data de Nascimento: {data_nascimento}')
+        self.mostra_mensagem(f'Jogador ID:{jogador.id} - Nome: {jogador.nome}, Data de Nascimento: {jogador.data_nascimento}')

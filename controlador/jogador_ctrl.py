@@ -7,7 +7,7 @@ class JogadorCtrl:
         self.__controlador_principal = controlador_principal
         self.__jogador_tela = JogadorTela()
         self.__jogadores = []
-        self.__proximo_id = 1 #implementar
+        self.__proximo_id = 1
 
     @property
     def jogadores(self) -> list:
@@ -32,9 +32,13 @@ class JogadorCtrl:
     def mostrar_jogador(self):
         id = self.__jogador_tela.obtem_id_jogador()
         jogador = self.obter_jogador_por_id(id)
-        self.__jogador_tela.mostra_perfil_jogador(
-                jogador.id, jogador.nome, jogador.data_nascimento)
-
+        if jogador:
+            self.__jogador_tela.mostra_perfil_jogador(jogador)
+    
+    def mostrar_jogador_logado(self):
+        jogador = self.__controlador_principal.jogador_logado
+        if jogador:
+            self.__jogador_tela.mostra_perfil_jogador(jogador)
 
     def cadastrar_jogador(self):
         # Implementar verificacao
