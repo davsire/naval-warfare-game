@@ -37,6 +37,7 @@ class JogadorCtrl:
 
 
     def cadastrar_jogador(self):
+        # Implementar verificacao
         nome, dia, mes, ano, usuario, senha = self.__jogador_tela.mostra_cadastro_jogador()
         novo_jogador = Jogador(self.__proximo_id, nome, f'{dia}/{mes}/{ano}', usuario, senha)
         self.__jogadores.append(novo_jogador)
