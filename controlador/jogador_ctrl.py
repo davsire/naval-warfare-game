@@ -7,6 +7,7 @@ class JogadorCtrl:
         self.__controlador_principal = controlador_principal
         self.__jogador_tela = JogadorTela()
         self.__jogadores = []
+        self.__proximo_id = 1 #implementar
 
     @property
     def jogadores(self) -> list:
@@ -21,7 +22,6 @@ class JogadorCtrl:
 
     def logar_jogador(self):
         usuario, senha = self.__jogador_tela.mostra_login_jogador()
-        print(senha)
         for jogador in self.jogadores:
             if usuario == jogador.usuario and \
                 senha == jogador.senha:
@@ -31,10 +31,17 @@ class JogadorCtrl:
                         'Usuário ou senha incorretos.')
 
     def mostrar_jogador(self):
-        pass
+        id = self.__jogador_tela.obtem_id_jogador()
+        jogador = self.obter_jogador_por_id(id)
+        self.__jogador_tela.mostra_perfil_jogador(
+                jogador.id, jogador.nome, jogador.data_nascimento)
+
 
     def cadastrar_jogador(self):
-        pass
+        nome, dia, mes, ano, usuario, senha = self.__jogador_tela.mostra_cadastro_jogador()
+        novo_jogador = Jogador(self.__proximo_id, nome, f'{dia}/{mes}/{ano}', usuario, senha)
+        self.__jogadores.append(novo_jogador)
+        return novo_jogador
 
     def excluir_jogador(self, jogador_logado: Jogador):
         for jogador in self.jogadores:
