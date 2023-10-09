@@ -18,13 +18,13 @@ class JogadorCtrl:
             if jogador.id == id:
                 return jogador
         self.__jogador_tela.mostra_mensagem(
-                'Não existe um jogador com esse ID.')
+            'Não existe um jogador com esse ID.')
 
     def logar_jogador(self) -> Jogador:
         usuario, senha = self.__jogador_tela.mostra_login_jogador()
         for jogador in self.jogadores:
             if usuario == jogador.usuario and \
-                senha == jogador.senha:
+                    senha == jogador.senha:
                 return jogador
         self.__jogador_tela.mostra_mensagem('Usuário ou senha incorretos.')
 
@@ -33,7 +33,7 @@ class JogadorCtrl:
         jogador = self.obter_jogador_por_id(id)
         if jogador:
             self.__jogador_tela.mostra_perfil_jogador(jogador)
-    
+
     def mostrar_jogador_logado(self):
         jogador = self.__controlador_principal.jogador_logado
         if jogador:
@@ -41,8 +41,10 @@ class JogadorCtrl:
 
     def cadastrar_jogador(self) -> Jogador:
         # Implementar verificacao
-        nome, dia, mes, ano, usuario, senha = self.__jogador_tela.mostra_cadastro_jogador()
-        novo_jogador = Jogador(self.__proximo_id, nome, f'{dia}/{mes}/{ano}', usuario, senha)
+        nome, dia, mes, ano, usuario, senha = self.__jogador_tela\
+            .mostra_cadastro_jogador()
+        novo_jogador = Jogador(self.__proximo_id, nome, f'{dia}/{mes}/{ano}',
+                               usuario, senha)
         self.__jogadores.append(novo_jogador)
         self.__proximo_id += 1
         return novo_jogador
