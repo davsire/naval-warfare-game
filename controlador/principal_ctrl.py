@@ -39,22 +39,18 @@ class PrincipalCtrl:
         return self.__relatorio_ctrl
 
     def abrir_login_jogador(self):
-        print('LOGIN JOGADOR')
-        # Login e redirecionamento temporário, implementar no respectivo controlador
-        self.__jogador_logado = 'temp'
+        self.__jogador_logado = self.__jogador_ctrl.logar_jogador()
         self.iniciar_app()
 
     def abrir_cadastro_jogador(self):
-        print('CADASTRO JOGADOR')
-        # Cadastro e redirecionamento temporário, implementar no respectivo controlador
-        self.__jogador_logado = 'temp'
+        self.__jogador_logado = self.__jogador_ctrl.cadastrar_jogador()
         self.iniciar_app()
 
     def abrir_jogo(self):
         print('JOGO')
 
     def abrir_perfil_jogador(self):
-        print('PEFIL')
+        self.__jogador_ctrl.mostrar_jogador_logado()
 
     def abrir_ranking(self):
         print('RANKING')
