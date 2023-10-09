@@ -35,4 +35,6 @@ class JogadorTela(AbstractTela):
 
     def mostra_perfil_jogador(self, jogador: Jogador):
         # Temporario
-        self.mostra_mensagem(f'Jogador ID:{jogador.id} - Nome: {jogador.nome}, Data de Nascimento: {jogador.data_nascimento}')
+        self.mostra_mensagem(f'Jogador ID: {jogador.id} - '
+                             f'Nome: {jogador.nome}, '
+                             f'Data de Nascimento: {jogador.data_nascimento}')

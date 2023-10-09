@@ -26,8 +26,7 @@ class JogadorCtrl:
             if usuario == jogador.usuario and \
                 senha == jogador.senha:
                 return jogador
-        self.__jogador_tela.mostra_mensagem(
-                    'Usuário ou senha incorretos.')
+        self.__jogador_tela.mostra_mensagem('Usuário ou senha incorretos.')
 
     def mostrar_jogador(self):
         id = self.__jogador_tela.obtem_id_jogador()
@@ -40,7 +39,7 @@ class JogadorCtrl:
         if jogador:
             self.__jogador_tela.mostra_perfil_jogador(jogador)
 
-    def cadastrar_jogador(self):
+    def cadastrar_jogador(self) -> Jogador:
         # Implementar verificacao
         nome, dia, mes, ano, usuario, senha = self.__jogador_tela.mostra_cadastro_jogador()
         novo_jogador = Jogador(self.__proximo_id, nome, f'{dia}/{mes}/{ano}', usuario, senha)
@@ -50,8 +49,7 @@ class JogadorCtrl:
 
     def excluir_jogador(self, jogador_logado: Jogador):
         self.__jogadores.remove(jogador_logado)
-        self.__jogador_tela.mostra_mensagem(
-                        'Jogador excluido com sucesso.')
+        self.__jogador_tela.mostra_mensagem('Jogador excluido com sucesso.')
 
     def editar_jogador(self, jogador_logado: Jogador):
         # Implementar
