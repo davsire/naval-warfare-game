@@ -7,23 +7,11 @@ class OceanoTela(AbstractTela):
     def __init__(self):
         self.__tamanho_minimo = 5
         self.__tamanho_maximo = 15
-        self.__indice_letras = {
-            'A': 1,
-            'B': 2,
-            'C': 3,
-            'D': 4,
-            'E': 5,
-            'F': 6,
-            'G': 7,
-            'H': 8,
-            'I': 9,
-            'J': 10,
-            'K': 11,
-            'L': 12,
-            'M': 13,
-            'N': 14,
-            'O': 15,
-        }
+        self.__letras_colunas = [
+            'A', 'B', 'C', 'D', 'E',
+            'F', 'G', 'H', 'I', 'J',
+            'K', 'L', 'M', 'N', 'O'
+        ]
         self.__nomes_embarcacoes = {
             'B': 'Bote',
             'S': 'Submarino',
@@ -58,17 +46,21 @@ class OceanoTela(AbstractTela):
         for sigla, nome in self.__nomes_embarcacoes.items():
             print(f'{nome} ({sigla}) - {disponiveis.count(sigla)} disponíveis')
 
-    def obter_posicao(self, tamanho_oceano: int) -> tuple:
+    def obter_posicao(self) -> tuple:
         while True:
-            linha, coluna = input(
-                'Digite a linha e coluna separas por hífen (ex: 1-A): '
-            ).split('-')
-
-            return linha, coluna
+            try:
+                linha, coluna = input(
+                    'Digite a linha e coluna separadas por hífen (ex: 1-A): '
+                ).split('-')
+                if not linha or not coluna:
+                    raise ValueError
+                return linha, coluna
+            except ValueError:
+                print('É necessário digitar uma linha e uma coluna!')
 
     def mostra_oceano(self, oceano: Oceano):
-        letras_colunas = list(self.__indice_letras.keys())[:oceano.tamanho]
-        print(f'{" " * 4}{" ".join(letras_colunas)}')
+        letras_colunas = self.__letras_colunas[:oceano.tamanho]
+        print(f'{" " * 3}{" ".join(letras_colunas)}')
         for index, linha in enumerate(oceano.mapa, start=1):
             print(f'{index:<2}', end=' ')
             for embarcacao in linha:
