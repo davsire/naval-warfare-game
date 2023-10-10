@@ -28,13 +28,23 @@ class JogadorTela(AbstractTela):
         self.mostra_titulo('CADASTRANDO JOGADOR')
         return self.obtem_dados_jogador()
 
-    def mostra_edicao_jogador(self):
-        # Implementar
+    def mostra_edicao_jogador(self) -> tuple:
         self.mostra_titulo('EDITANDO JOGADOR')
-        self.obtem_dados_jogador()
+        return self.obtem_dados_jogador()
 
     def mostra_perfil_jogador(self, jogador: Jogador):
         # Temporario
         self.mostra_mensagem(f'Jogador ID: {jogador.id} - '
                              f'Nome: {jogador.nome}, '
                              f'Data de Nascimento: {jogador.data_nascimento}')
+
+    def mostra_menu_perfil(self) -> int:
+        self.mostra_opcoes([
+            'Editar Perfil',
+            'Excluir Perfil',
+            'Voltar ao menu'
+        ])
+        return self.obtem_opcao(
+            'O que deseja acessar?\nSelecione uma opção: ',
+            [1, 2, 3]
+        )

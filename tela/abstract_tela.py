@@ -23,9 +23,9 @@ class AbstractTela(ABC):
             print(f'{index} - {opcao}')
 
     def mostra_titulo(self, titulo: str):
-        print('#' * 30)
+        print('#' * 35)
         print(titulo)
-        print('#' * 30)
+        print('#' * 35)
 
     def mostra_mensagem(self, mensagem: str):
         print(mensagem)

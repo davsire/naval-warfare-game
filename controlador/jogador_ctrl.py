@@ -38,6 +38,14 @@ class JogadorCtrl:
         jogador = self.__controlador_principal.jogador_logado
         if jogador:
             self.__jogador_tela.mostra_perfil_jogador(jogador)
+            opcoes_acoes = {
+                1: self.editar_jogador,
+                2: self.excluir_jogador,
+                3: self.__controlador_principal.iniciar_app,
+            }
+
+            opcao_escolhida = self.__jogador_tela.mostra_menu_perfil()
+            opcoes_acoes[opcao_escolhida]()
 
     def cadastrar_jogador(self) -> Jogador:
         # Implementar verificacao
@@ -49,10 +57,17 @@ class JogadorCtrl:
         self.__proximo_id += 1
         return novo_jogador
 
-    def excluir_jogador(self, jogador_logado: Jogador):
+    def excluir_jogador(self):
+        jogador_logado = self.__controlador_principal.jogador_logado
         self.__jogadores.remove(jogador_logado)
         self.__jogador_tela.mostra_mensagem('Jogador excluido com sucesso.')
+        self.__controlador_principal.logout()
 
-    def editar_jogador(self, jogador_logado: Jogador):
-        # Implementar
-        pass
+    def editar_jogador(self):
+        nome, dia, mes, ano, usuario, senha = self.__jogador_tela\
+            .mostra_editar_jogador()
+        jogador_logado = self.__controlador_principal.jogador_logado
+        jogador_logado.nome = nome
+        jogador_logado.data_nascimento = f'{dia}/{mes}/{ano}'
+        jogador_logado.usuario = usuario
+        jogador_logado.senha = senha
