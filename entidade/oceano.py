@@ -24,12 +24,12 @@ class Oceano:
                              sigla_embarcacao: str,
                              coord_inicio: tuple,
                              coord_final: tuple):
-        embarcacao = self.__criar_embarcacao(sigla_embarcacao)
+        embarcacao = self.criar_embarcacao(sigla_embarcacao)
 
-        self.__verificar_tamanho_embarcacao(embarcacao,
-                                            coord_inicio,
-                                            coord_final)
-        self.__verificar_conflito_embarcacao(coord_inicio, coord_final)
+        self.verificar_tamanho_embarcacao(embarcacao,
+                                          coord_inicio,
+                                          coord_final)
+        self.verificar_conflito_embarcacao(coord_inicio, coord_final)
 
         x_inicio, y_inicio = coord_inicio
         x_final, y_final = coord_final
@@ -37,7 +37,7 @@ class Oceano:
             for coluna in range(y_inicio, y_final + 1):
                 self.__mapa[linha][coluna] = embarcacao
 
-    def __criar_embarcacao(self, sigla_embarcacao: str) -> Embarcacao:
+    def criar_embarcacao(self, sigla_embarcacao: str) -> Embarcacao:
         lista_embarcacoes = {
             'B': Bote,
             'S': Submarino,
@@ -46,10 +46,10 @@ class Oceano:
         }
         return lista_embarcacoes[sigla_embarcacao]()
 
-    def __verificar_tamanho_embarcacao(self,
-                                       embarcacao: Embarcacao,
-                                       coord_inicio: tuple,
-                                       coord_final: tuple):
+    def verificar_tamanho_embarcacao(self,
+                                     embarcacao: Embarcacao,
+                                     coord_inicio: tuple,
+                                     coord_final: tuple):
         x_inicio, y_inicio = coord_inicio
         x_final, y_final = coord_final
         comprimento = max(abs(x_final - x_inicio), abs(y_final - y_inicio))
@@ -57,9 +57,9 @@ class Oceano:
         if comprimento != (embarcacao.tamanho - 1) or largura != 0:
             raise PosicaoEmbarcacaoErro
 
-    def __verificar_conflito_embarcacao(self,
-                                        coord_inicio: tuple,
-                                        coord_final: tuple):
+    def verificar_conflito_embarcacao(self,
+                                      coord_inicio: tuple,
+                                      coord_final: tuple):
         x_inicio, y_inicio = coord_inicio
         x_final, y_final = coord_final
         for linha in range(x_inicio, x_final + 1):
