@@ -28,7 +28,7 @@ class JogadorTela(AbstractTela):
         self.mostra_titulo('CADASTRANDO JOGADOR')
         return self.obtem_dados_jogador()
 
-    def mostra_edicao_jogador(self):
+    def mostra_edicao_jogador(self) -> tuple:
         self.mostra_titulo('EDITANDO JOGADOR')
         return self.obtem_dados_jogador()
 
@@ -38,7 +38,7 @@ class JogadorTela(AbstractTela):
                              f'Nome: {jogador.nome}, '
                              f'Data de Nascimento: {jogador.data_nascimento}')
 
-    def mostra_menu_perfil(self):
+    def mostra_menu_perfil(self) -> int:
         self.mostra_opcoes([
             'Editar Perfil',
             'Excluir Perfil',

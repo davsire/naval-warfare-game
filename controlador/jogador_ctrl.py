@@ -50,7 +50,7 @@ class JogadorCtrl:
     def cadastrar_jogador(self) -> Jogador:
         # Implementar verificacao
         nome, dia, mes, ano, usuario, senha = self.__jogador_tela\
-            .mostra_edicao_jogador()
+            .mostra_cadastro_jogador()
         novo_jogador = Jogador(self.__proximo_id, nome, f'{dia}/{mes}/{ano}',
                                usuario, senha)
         self.__jogadores.append(novo_jogador)
@@ -65,7 +65,7 @@ class JogadorCtrl:
 
     def editar_jogador(self):
         nome, dia, mes, ano, usuario, senha = self.__jogador_tela\
-            .mostra_cadastro_jogador()
+            .mostra_editar_jogador()
         jogador_logado = self.__controlador_principal.jogador_logado
         jogador_logado.nome = nome
         jogador_logado.data_nascimento = f'{dia}/{mes}/{ano}'

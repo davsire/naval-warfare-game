@@ -38,10 +38,6 @@ class PrincipalCtrl:
     def relatorio_ctrl(self):
         return self.__relatorio_ctrl
 
-    @jogador_logado.setter
-    def jogador_logado(self, jogador_logado: Jogador):
-        self.__jogador_logado = jogador_logado
-
     def abrir_login_jogador(self):
         self.__jogador_logado = self.__jogador_ctrl.logar_jogador()
         self.iniciar_app()
