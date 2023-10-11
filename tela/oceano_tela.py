@@ -5,8 +5,6 @@ from entidade.embarcacao import Embarcacao
 
 class OceanoTela(AbstractTela):
     def __init__(self):
-        self.__tamanho_minimo = 5
-        self.__tamanho_maximo = 15
         self.__letras_colunas = [
             'A', 'B', 'C', 'D', 'E',
             'F', 'G', 'H', 'I', 'J',
@@ -19,16 +17,15 @@ class OceanoTela(AbstractTela):
             'P': 'Porta Aviões',
         }
 
-    def obtem_tamanho_oceano(self) -> int:
-        self.mostra_titulo('CADASTRANDO OCEANO')
+    def obtem_tamanho_oceano(self, minimo: int, maximo: int) -> int:
         while True:
-            self.mostra_mensagem('O tamanho do oceano deve ser maior que '
-                                 f'{self.__tamanho_minimo} espaços e '
-                                 f'menor que {self.__tamanho_maximo} espaços!')
+            self.mostra_mensagem('O tamanho do oceano deve ser maior ou igual '
+                                 f'a {minimo} espaços e menor '
+                                 f'ou igual a {maximo} espaços!')
             try:
                 tamanho = int(input('Digite o tamanho dos oceanos do jogo: '))
-                if tamanho < self.__tamanho_minimo or \
-                        tamanho > self.__tamanho_maximo:
+                if tamanho < minimo or \
+                        tamanho > maximo:
                     raise ValueError
                 return tamanho
             except ValueError:

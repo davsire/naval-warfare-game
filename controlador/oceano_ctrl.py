@@ -8,6 +8,8 @@ class OceanoCtrl:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__oceano_tela = OceanoTela()
+        self.__tamanho_minimo_oceano = 5
+        self.__tamanho_maximo_oceano = 15
         self.__oceanos = []
         self.__embarcacoes_iniciais = ['B', 'B', 'B', 'S', 'S', 'F', 'F', 'P']
         self.__indice_letras = {
@@ -17,7 +19,11 @@ class OceanoCtrl:
         }
 
     def cadastrar_oceano(self) -> tuple:
-        tamanho_oceano = self.__oceano_tela.obtem_tamanho_oceano()
+        self.__oceano_tela.mostra_titulo('CADASTRANDO OCEANO')
+        tamanho_oceano = self.__oceano_tela.obtem_tamanho_oceano(
+            self.__tamanho_minimo_oceano,
+            self.__tamanho_maximo_oceano,
+        )
         oceano_jogador = Oceano(tamanho_oceano)
         oceano_pc = Oceano(tamanho_oceano)
 
