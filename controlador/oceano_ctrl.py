@@ -29,12 +29,11 @@ class OceanoCtrl:
         oceano_jogador = Oceano(tamanho_oceano)
         oceano_pc = Oceano(tamanho_oceano)
 
-        #self.__oceano_tela.mostra_mensagem('Seu oceano:')
-        #self.__oceano_tela.mostra_oceano(oceano_jogador)
+        self.__oceano_tela.mostra_mensagem('Seu oceano:')
+        self.__oceano_tela.mostra_oceano(oceano_jogador)
 
-        #self.preencher_oceano_jogador(oceano_jogador)
+        self.preencher_oceano_jogador(oceano_jogador)
         self.preencher_oceano_pc(oceano_pc)
-        self.__oceano_tela.mostra_oceano(oceano_pc)
 
         return oceano_jogador, oceano_pc
 
