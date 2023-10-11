@@ -1,17 +1,19 @@
 from tela.principal_tela import PrincipalTela
 from entidade.jogador import Jogador
+from controlador.jogo_ctrl import JogoCtrl
 from controlador.jogador_ctrl import JogadorCtrl
 from controlador.ranking_ctrl import RankingCtrl
+from controlador.oceano_ctrl import OceanoCtrl
 
 
 class PrincipalCtrl:
     def __init__(self):
         self.__jogador_logado = None
         self.__principal_tela = PrincipalTela()
-        self.__jogo_ctrl = None
+        self.__jogo_ctrl = JogoCtrl(self)
         self.__jogador_ctrl = JogadorCtrl(self)
         self.__ranking_ctrl = RankingCtrl(self)
-        self.__oceano_ctrl = None
+        self.__oceano_ctrl = OceanoCtrl(self)
         self.__relatorio_ctrl = None
 
     @property
@@ -47,7 +49,7 @@ class PrincipalCtrl:
         self.iniciar_app()
 
     def abrir_jogo(self):
-        print('JOGO')
+        self.__jogo_ctrl.iniciar_jogo()
 
     def abrir_perfil_jogador(self):
         self.__jogador_ctrl.mostrar_jogador_logado()
