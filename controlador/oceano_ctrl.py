@@ -67,8 +67,6 @@ class OceanoCtrl:
                 pos_inicial, pos_final = self.obter_posicoes_aleatorias(
                     oceano.tamanho, tamanho_embarcacao
                 )
-                if sigla == 'B':
-                    pos_final = pos_inicial
                 oceano.adicionar_embarcacao(sigla, pos_inicial, pos_final)
                 disponiveis.remove(sigla)
             except ConflitoEmbarcacaoErro:
