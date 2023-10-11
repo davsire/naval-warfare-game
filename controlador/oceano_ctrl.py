@@ -92,9 +92,8 @@ class OceanoCtrl:
                                   tamanho_oceano: int,
                                   tamanho_embarcacao: int) -> tuple:
         is_horizontal = bool(round(random.random()))
-        coord_maxima = tamanho_oceano - tamanho_embarcacao
-        coord_fixa = random.randint(0, coord_maxima)
-        coord_inicial = random.randint(0, coord_maxima)
+        coord_fixa = random.randrange(tamanho_oceano)
+        coord_inicial = random.randint(0, tamanho_oceano - tamanho_embarcacao)
         coord_final = coord_inicial + (tamanho_embarcacao - 1)
 
         pos_inicial = (coord_fixa, coord_inicial) if is_horizontal \
