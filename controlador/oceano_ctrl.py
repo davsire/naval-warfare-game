@@ -31,7 +31,7 @@ class OceanoCtrl:
         self.__oceano_tela.mostra_oceano(oceano_jogador)
 
         self.preencher_oceano_jogador(oceano_jogador)
-        self.preencher_oceano_jogador(oceano_pc)
+        self.preencher_oceano_pc(oceano_pc)
 
         return oceano_jogador, oceano_pc
 
@@ -40,6 +40,7 @@ class OceanoCtrl:
         self.__oceano_tela.mostra_titulo('ADICIONANDO EMBARCAÇÕES')
         while len(disponiveis):
             try:
+                # TODO: avisar o tamanho do barco
                 sigla = self.__oceano_tela.obtem_sigla_embarcacao(disponiveis)
                 pos_inicial = self.obter_posicao(oceano.tamanho)
                 pos_final = pos_inicial if sigla == 'B' else \

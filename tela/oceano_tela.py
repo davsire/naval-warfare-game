@@ -46,6 +46,7 @@ class OceanoTela(AbstractTela):
     def obter_posicao(self) -> tuple:
         while True:
             try:
+                # TODO: avisar qual eh o inicio e final
                 linha, coluna = input(
                     'Digite a linha e coluna separadas por hífen (ex: 1-A): '
                 ).split('-')
