@@ -49,7 +49,7 @@ class OceanoCtrl:
                 sigla = self.__oceano_tela.obtem_sigla_embarcacao(disponiveis)
                 tamanho = self.__tamanho_embarcacoes[sigla]
                 self.__oceano_tela.mostra_mensagem('** Tamanho da embarcação: '
-                                                   f'{tamanho} espaços **')
+                                                   f'{tamanho} espaço(s) **')
                 pos_inicial = self.obter_posicao(oceano.tamanho)
                 pos_final = pos_inicial if sigla == 'B' else \
                     self.obter_posicao(oceano.tamanho)
