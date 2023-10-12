@@ -1,4 +1,5 @@
 import random
+import string
 from entidade.oceano import Oceano
 from tela.oceano_tela import OceanoTela
 from exception.posicao_embarcacao_error import PosicaoEmbarcacaoErro
@@ -13,11 +14,9 @@ class OceanoCtrl:
         self.__tamanho_maximo_oceano = 15
         self.__oceanos = []
         self.__embarcacoes_iniciais = ['B', 'B', 'B', 'S', 'S', 'F', 'F', 'P']
-        self.__indice_letras = {
-            'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4,
-            'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9,
-            'K': 10, 'L': 11, 'M': 12, 'N': 13, 'O': 14,
-        }
+        self.__indice_letras = {letra: index
+                                for index, letra
+                                in enumerate(list(string.ascii_uppercase))}
         self.__tamanho_embarcacoes = {'B': 1, 'S': 2, 'F': 3, 'P': 4}
 
     def cadastrar_oceano(self) -> tuple:
@@ -32,8 +31,13 @@ class OceanoCtrl:
         self.__oceano_tela.mostra_mensagem('Seu oceano:')
         self.__oceano_tela.mostra_oceano(oceano_jogador)
 
-        self.preencher_oceano_jogador(oceano_jogador)
-        self.preencher_oceano_pc(oceano_pc)
+        self.preencher_oceano_aleatorio(oceano_pc)
+        if self.__oceano_tela.obtem_opcao_cadastro_oceano() == 1:
+            self.preencher_oceano_jogador(oceano_jogador)
+        else:
+            self.preencher_oceano_aleatorio(oceano_jogador)
+            self.__oceano_tela.mostra_mensagem('Seu oceano:')
+            self.__oceano_tela.mostra_oceano(oceano_jogador)
 
         return oceano_jogador, oceano_pc
 
@@ -42,7 +46,6 @@ class OceanoCtrl:
         self.__oceano_tela.mostra_titulo('ADICIONANDO EMBARCAÇÕES')
         while len(disponiveis):
             try:
-                # TODO: avisar o tamanho do barco
                 sigla = self.__oceano_tela.obtem_sigla_embarcacao(disponiveis)
                 tamanho = self.__tamanho_embarcacoes[sigla]
                 self.__oceano_tela.mostra_mensagem('** Tamanho da embarcação: '
@@ -58,7 +61,7 @@ class OceanoCtrl:
             except (PosicaoEmbarcacaoErro, ConflitoEmbarcacaoErro) as e:
                 self.__oceano_tela.mostra_mensagem(e)
 
-    def preencher_oceano_pc(self, oceano: Oceano):
+    def preencher_oceano_aleatorio(self, oceano: Oceano):
         disponiveis = self.__embarcacoes_iniciais.copy()
         while len(disponiveis):
             try:

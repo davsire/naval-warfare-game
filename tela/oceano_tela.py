@@ -1,3 +1,4 @@
+import string
 from tela.abstract_tela import AbstractTela
 from entidade.oceano import Oceano
 from entidade.embarcacao import Embarcacao
@@ -5,11 +6,7 @@ from entidade.embarcacao import Embarcacao
 
 class OceanoTela(AbstractTela):
     def __init__(self):
-        self.__letras_colunas = [
-            'A', 'B', 'C', 'D', 'E',
-            'F', 'G', 'H', 'I', 'J',
-            'K', 'L', 'M', 'N', 'O'
-        ]
+        self.__letras_colunas = list(string.ascii_uppercase)
         self.__nomes_embarcacoes = {
             'B': 'Bote',
             'S': 'Submarino',
@@ -31,6 +28,18 @@ class OceanoTela(AbstractTela):
             except ValueError:
                 print('Digite um número válido!')
 
+    def obtem_opcao_cadastro_oceano(self) -> int:
+        self.mostra_mensagem('O que você deseja fazer?')
+        self.mostra_opcoes([
+            'Posicionar embarcações',
+            'Gerar oceano aleatório',
+        ])
+        return self.obtem_opcao('Escolha uma opção: ', [1, 2])
+
+    def mostra_embarcacoes_disponiveis(self, disponiveis: list):
+        for sigla, nome in self.__nomes_embarcacoes.items():
+            print(f'{nome} ({sigla}) - {disponiveis.count(sigla)} disponíveis')
+
     def obtem_sigla_embarcacao(self, disponiveis: list) -> str:
         while True:
             self.mostra_embarcacoes_disponiveis(disponiveis)
@@ -38,10 +47,6 @@ class OceanoTela(AbstractTela):
             if sigla_embarcacao.upper() in disponiveis:
                 return sigla_embarcacao.upper()
             print('Digite a sigla de uma embarcação disponível!')
-
-    def mostra_embarcacoes_disponiveis(self, disponiveis: list):
-        for sigla, nome in self.__nomes_embarcacoes.items():
-            print(f'{nome} ({sigla}) - {disponiveis.count(sigla)} disponíveis')
 
     def obter_posicao(self) -> tuple:
         while True:
