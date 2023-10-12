@@ -1,3 +1,5 @@
+import random
+import string
 from entidade.oceano import Oceano
 from tela.oceano_tela import OceanoTela
 from exception.posicao_embarcacao_error import PosicaoEmbarcacaoErro
@@ -12,11 +14,10 @@ class OceanoCtrl:
         self.__tamanho_maximo_oceano = 15
         self.__oceanos = []
         self.__embarcacoes_iniciais = ['B', 'B', 'B', 'S', 'S', 'F', 'F', 'P']
-        self.__indice_letras = {
-            'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4,
-            'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9,
-            'K': 10, 'L': 11, 'M': 12, 'N': 13, 'O': 14,
-        }
+        self.__indice_letras = {letra: index
+                                for index, letra
+                                in enumerate(list(string.ascii_uppercase))}
+        self.__tamanho_embarcacoes = {'B': 1, 'S': 2, 'F': 3, 'P': 4}
 
     def cadastrar_oceano(self) -> tuple:
         self.__oceano_tela.mostra_titulo('CADASTRANDO OCEANO')
@@ -30,8 +31,13 @@ class OceanoCtrl:
         self.__oceano_tela.mostra_mensagem('Seu oceano:')
         self.__oceano_tela.mostra_oceano(oceano_jogador)
 
-        self.preencher_oceano_jogador(oceano_jogador)
-        self.preencher_oceano_pc(oceano_pc)
+        self.preencher_oceano_aleatorio(oceano_pc)
+        if self.__oceano_tela.obtem_opcao_cadastro_oceano() == 1:
+            self.preencher_oceano_jogador(oceano_jogador)
+        else:
+            self.preencher_oceano_aleatorio(oceano_jogador)
+            self.__oceano_tela.mostra_mensagem('Seu oceano:')
+            self.__oceano_tela.mostra_oceano(oceano_jogador)
 
         return oceano_jogador, oceano_pc
 
@@ -40,8 +46,10 @@ class OceanoCtrl:
         self.__oceano_tela.mostra_titulo('ADICIONANDO EMBARCAÇÕES')
         while len(disponiveis):
             try:
-                # TODO: avisar o tamanho do barco
                 sigla = self.__oceano_tela.obtem_sigla_embarcacao(disponiveis)
+                tamanho = self.__tamanho_embarcacoes[sigla]
+                self.__oceano_tela.mostra_mensagem('** Tamanho da embarcação: '
+                                                   f'{tamanho} espaço(s) **')
                 pos_inicial = self.obter_posicao(oceano.tamanho)
                 pos_final = pos_inicial if sigla == 'B' else \
                     self.obter_posicao(oceano.tamanho)
@@ -50,15 +58,22 @@ class OceanoCtrl:
                 oceano.adicionar_embarcacao(sigla, pos_inicial, pos_final)
                 disponiveis.remove(sigla)
                 self.__oceano_tela.mostra_oceano(oceano)
-            except PosicaoEmbarcacaoErro as e:
-                self.__oceano_tela.mostra_mensagem(e)
-            except ConflitoEmbarcacaoErro as e:
+            except (PosicaoEmbarcacaoErro, ConflitoEmbarcacaoErro) as e:
                 self.__oceano_tela.mostra_mensagem(e)
 
-    def preencher_oceano_pc(self, oceano: Oceano):
+    def preencher_oceano_aleatorio(self, oceano: Oceano):
         disponiveis = self.__embarcacoes_iniciais.copy()
         while len(disponiveis):
-            break
+            try:
+                sigla = disponiveis[-1]
+                tamanho_embarcacao = self.__tamanho_embarcacoes[sigla]
+                pos_inicial, pos_final = self.obter_posicoes_aleatorias(
+                    oceano.tamanho, tamanho_embarcacao
+                )
+                oceano.adicionar_embarcacao(sigla, pos_inicial, pos_final)
+                disponiveis.remove(sigla)
+            except ConflitoEmbarcacaoErro:
+                pass
 
     def obter_posicao(self, tamanho_oceano: int) -> tuple:
         linhas_mapa = range(tamanho_oceano)
@@ -75,6 +90,20 @@ class OceanoCtrl:
                 self.__oceano_tela.mostra_mensagem(
                     'Digite uma linha e coluna existentes no mapa!'
                 )
+
+    def obter_posicoes_aleatorias(self,
+                                  tamanho_oceano: int,
+                                  tamanho_embarcacao: int) -> tuple:
+        is_horizontal = bool(round(random.random()))
+        coord_fixa = random.randrange(tamanho_oceano)
+        coord_inicial = random.randint(0, tamanho_oceano - tamanho_embarcacao)
+        coord_final = coord_inicial + (tamanho_embarcacao - 1)
+
+        pos_inicial = (coord_fixa, coord_inicial) if is_horizontal \
+            else (coord_inicial, coord_fixa)
+        pos_final = (coord_fixa, coord_final) if is_horizontal \
+            else (coord_final, coord_fixa)
+        return pos_inicial, pos_final
 
     def ordernar_posicoes(self, pos_inicial: tuple, pos_final: tuple) -> tuple:
         x_inicial, y_inicial = pos_inicial
