@@ -1,6 +1,5 @@
 import random
 from entidade.jogo import Jogo
-from entidade.oceano import Oceano
 from entidade.embarcacao import Embarcacao
 from tela.jogo_tela import JogoTela
 
