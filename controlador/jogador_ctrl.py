@@ -33,7 +33,16 @@ class JogadorCtrl:
         jogador = self.obter_jogador_por_id(id)
         if jogador:
             self.__jogador_tela.mostra_perfil_jogador(jogador)
-            return jogador
+            opcoes_acoes = {
+                1: self.mostrar_historico_jogos,
+                2: self.__controlador_principal.abrir_menu_principal,
+            }
+
+            opcao_escolhida = self.__jogador_tela.mostra_menu_perfil()
+            if opcao_escolhida == 1:
+                opcoes_acoes[opcao_escolhida](jogador)
+            else:
+                opcoes_acoes[opcao_escolhida]()
 
     def mostrar_jogador_logado(self):
         jogador = self.__controlador_principal.jogador_logado

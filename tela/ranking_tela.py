@@ -9,7 +9,7 @@ class RankingTela(AbstractTela):
         print('')
         for index, jogador in enumerate(ranking, start=1):
                 print(f'{index} - ID: {jogador.id} - Nome: {jogador.nome}'
-                      f' - Pontuacao: {jogador.pontuacao_total}')
+                      f' - Pontuacao total: {jogador.pontuacao_total}')
         print('')
 
     def mostra_menu_perfil(self) -> int:
@@ -24,7 +24,7 @@ class RankingTela(AbstractTela):
 
     def mostra_menu_ranking(self) -> int:
         self.mostra_opcoes([
-            'Acessar perfil por id',
+            'Acessar perfil por ID',
             'Voltar ao menu'
         ])
         return self.obtem_opcao(

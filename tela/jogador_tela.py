@@ -27,7 +27,17 @@ class JogadorTela(AbstractTela):
     def mostra_historico_jogos(self, jogador: Jogador):
         # Implementar
         self.mostra_titulo('HISTÓRICO DE JOGOS')
-        
+
+    def mostra_menu_perfil(self) -> int:
+        self.mostra_opcoes([
+            'Histórico de jogos',
+            'Voltar ao menu'
+        ])
+        return self.obtem_opcao(
+            'O que deseja acessar?\nSelecione uma opção: ',
+            [1, 2]
+        )
+
     def mostra_menu_perfil_logado(self) -> int:
         self.mostra_opcoes([
             'Histórico de Jogos',

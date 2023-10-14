@@ -12,7 +12,7 @@ class PrincipalCtrl:
         self.__principal_tela = PrincipalTela()
         self.__jogo_ctrl = JogoCtrl(self)
         self.__jogador_ctrl = JogadorCtrl(self)
-        self.__ranking_ctrl = RankingCtrl(self, self.__jogador_ctrl)
+        self.__ranking_ctrl = RankingCtrl(self)
         self.__oceano_ctrl = OceanoCtrl(self)
         self.__relatorio_ctrl = None
 
