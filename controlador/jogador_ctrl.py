@@ -28,51 +28,50 @@ class JogadorCtrl:
                 return jogador
         self.__jogador_tela.mostra_mensagem('Usuário ou senha incorretos.')
 
-    def mostrar_jogador(self):
+    def mostrar_jogador(self) -> Jogador:
         id = self.__jogador_tela.obtem_id_jogador()
         jogador = self.obter_jogador_por_id(id)
         if jogador:
             self.__jogador_tela.mostra_perfil_jogador(jogador)
+            return jogador
 
     def mostrar_jogador_logado(self):
         jogador = self.__controlador_principal.jogador_logado
         if jogador:
             self.__jogador_tela.mostra_perfil_jogador(jogador)
             opcoes_acoes = {
-                1: self.historico_jogos,
+                1: self.mostrar_historico_jogos_logado,
                 2: self.editar_jogador,
                 3: self.excluir_jogador,
                 4: self.__controlador_principal.iniciar_app,
             }
 
-            opcao_escolhida = self.__jogador_tela.mostra_menu_perfil()
+            opcao_escolhida = self.__jogador_tela.mostra_menu_perfil_logado()
             opcoes_acoes[opcao_escolhida]()
 
     def tratar_usario(self) -> str:
         usuarios = [jogador.usuario for jogador in self.jogadores]
         while True:
             usuario = self.__jogador_tela.obtem_informacao(
-            'Digite seu usuário: ').strip().lower()
-            if usuario not in usuarios:
+            'Digite seu usuário: ').strip()
+            if usuario not in usuarios or\
+                    usuario == self.__controlador_principal.jogador_logado:
                 return usuario
             else:
                 self.__jogador_tela.mostra_mensagem(
-                    'Nome de usuário ja está em uso...')
+                    'Nome de usuário já está em uso...')
 
     def tratar_data_nascimento(self) -> str:
         while True:
             try:
                 dia, mes, ano = self.__jogador_tela.obtem_informacao(
                     f'Digite sua data de nascimento '
-                    f'separada por espaços: ').split()
+                    f'separada por espaços (ex: 01 01 2000): ').split()
                 dia = int(dia)
                 mes = int(mes)
                 ano = int(ano)
-                if not (0 < dia < 32):
-                    raise ValueError
-                elif not (0 < mes < 13):
-                    raise ValueError
-                elif not (ano > 0):
+                if not (0 < dia < 32) or not (0 < mes < 13) or\
+                        not (ano > 0):
                     raise ValueError
                 return f'{dia}/{mes}/{ano}'
             except ValueError:
@@ -111,6 +110,9 @@ class JogadorCtrl:
         jogador_logado.usuario = usuario
         jogador_logado.senha = senha
 
-    def historico_jogos(self):
+    def mostrar_historico_jogos_logado(self):
         jogador = self.__controlador_principal.jogador_logado
+        self.__jogador_tela.mostra_historico_jogos(jogador)
+
+    def mostrar_historico_jogos(self, jogador: Jogador):
         self.__jogador_tela.mostra_historico_jogos(jogador)
