@@ -8,7 +8,7 @@ class JogadorTela(AbstractTela):
 
     def mostra_login_jogador(self) -> tuple:
         self.mostra_titulo('LOGIN JOGADOR')
-        usuario = self.obtem_informacao('Digite seu usuario: ').strip().lower()
+        usuario = self.obtem_informacao('Digite seu usuario: ').strip()
         senha = self.obtem_informacao('Digite sua senha: ').strip()
         return usuario, senha
 
@@ -28,7 +28,7 @@ class JogadorTela(AbstractTela):
         # Implementar
         self.mostra_titulo('HISTÓRICO DE JOGOS')
         
-    def mostra_menu_perfil(self) -> int:
+    def mostra_menu_perfil_logado(self) -> int:
         self.mostra_opcoes([
             'Histórico de Jogos',
             'Editar Perfil',
