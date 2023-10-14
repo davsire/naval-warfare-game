@@ -1,11 +1,23 @@
+from enum import Enum
 from datetime import date
 from entidade.oceano import Oceano
+from entidade.jogador import Jogador
+
+
+class Vencedor(Enum):
+    JOGADOR = 1
+    PC = 2
 
 
 class Jogo:
-    def __init__(self, id: int, oceano_jogador: Oceano, oceano_pc: Oceano):
+    def __init__(self,
+                 id: int,
+                 jogador: Jogador,
+                 oceano_jogador: Oceano,
+                 oceano_pc: Oceano):
         self.__id = id
         self.__data_hora = date.today()
+        self.__jogador = jogador
         self.__oceano_jogador = oceano_jogador
         self.__oceano_pc = oceano_pc
         self.__vencedor = None
@@ -23,6 +35,10 @@ class Jogo:
         return self.__data_hora
 
     @property
+    def jogador(self) -> Jogador:
+        return self.__jogador
+
+    @property
     def oceano_jogador(self) -> Oceano:
         return self.__oceano_jogador
 
@@ -31,7 +47,7 @@ class Jogo:
         return self.__oceano_pc
 
     @property
-    def vencedor(self) -> str:
+    def vencedor(self) -> Vencedor:
         return self.__vencedor
 
     @property
@@ -51,8 +67,8 @@ class Jogo:
         return self.__jogadas_pc
 
     @vencedor.setter
-    def vencedor(self, vencedor: str):
-        if isinstance(vencedor, str):
+    def vencedor(self, vencedor: Vencedor):
+        if isinstance(vencedor, Vencedor):
             self.__vencedor = vencedor
 
     def aumentar_pontuacao_jogador(self, pontuacao: int):
@@ -61,10 +77,32 @@ class Jogo:
     def aumentar_pontuacao_pc(self, pontuacao: int):
         self.__pontuacao_pc += pontuacao
 
-    def adicionar_jogada_jogador(self):
-        # TODO: implementar lógica de adicionar jogada depois
-        pass
+    def adicionar_jogada_jogador(self,
+                                 acertou: bool,
+                                 afundou: bool = False,
+                                 pontuacao: int = 0):
+        jogada = 'JOGADOR: '
+        jogada += self.montar_mensagem_jogada(acertou, afundou, pontuacao)
+        self.__jogadas_jogador.append(jogada)
 
-    def adicionar_jogada_pc(self):
-        # TODO: implementar lógica de adicionar jogada depois
-        pass
+    def adicionar_jogada_pc(self,
+                            acertou: bool,
+                            afundou: bool = False,
+                            pontuacao: int = 0):
+        jogada = 'PC: '
+        jogada += self.montar_mensagem_jogada(acertou, afundou, pontuacao)
+        self.__jogadas_pc.append(jogada)
+
+    def montar_mensagem_jogada(self,
+                               acertou: bool,
+                               afundou: bool = False,
+                               pontuacao: int = 0) -> str:
+        mensagem = ''
+        if acertou:
+            mensagem += 'Acertou uma embarcação '
+            if afundou:
+                mensagem += 'e afundou ela '
+            mensagem += f'(+{pontuacao} ponto(s))'
+        else:
+            mensagem += 'Errou o tiro'
+        return mensagem
