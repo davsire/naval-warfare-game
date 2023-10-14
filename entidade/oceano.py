@@ -65,4 +65,4 @@ class Oceano:
         for linha in range(x_inicio, x_final + 1):
             for coluna in range(y_inicio, y_final + 1):
                 if isinstance(self.__mapa[linha][coluna], Embarcacao):
-                    raise ConflitoEmbarcacaoErro(linha + 1, coluna + 1)
+                    raise ConflitoEmbarcacaoErro(linha, coluna)
