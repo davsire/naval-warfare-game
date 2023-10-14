@@ -52,7 +52,7 @@ class JogadorCtrl:
         usuarios = [jogador.usuario for jogador in self.jogadores]
         while True:
             usuario = self.__jogador_tela.obtem_informacao(
-            'Digite seu usuário: ').strip()
+            'Digite seu usuário: ').strip().lower()
             if usuario not in usuarios:
                 return usuario
             else:
@@ -74,7 +74,7 @@ class JogadorCtrl:
                     raise ValueError
                 elif not (ano > 0):
                     raise ValueError
-                return f'{dia}, {mes}, {ano}'
+                return f'{dia}/{mes}/{ano}'
             except ValueError:
                 self.__jogador_tela.mostra_mensagem(
                     'Data de nascimento inválida!')
@@ -89,7 +89,7 @@ class JogadorCtrl:
 
     def cadastrar_jogador(self) -> Jogador:
         self.__jogador_tela.mostra_titulo('CADASTRANDO JOGADOR')
-        nome, data_nascimento, usuario, senha = self.obter_informacoes()
+        nome, data_nascimento, usuario, senha = self.obter_informacoes_jogador()
         novo_jogador = Jogador(self.__proximo_id, nome, data_nascimento,
                                usuario, senha)
         self.__jogadores.append(novo_jogador)
@@ -104,7 +104,7 @@ class JogadorCtrl:
 
     def editar_jogador(self):
         self.__jogador_tela.mostra_titulo('EDITANDO JOGADOR')
-        nome, data_nascimento, usuario, senha = self.obter_informacoes()
+        nome, data_nascimento, usuario, senha = self.obter_informacoes_jogador()
         jogador_logado = self.__controlador_principal.jogador_logado
         jogador_logado.nome = nome
         jogador_logado.data_nascimento = data_nascimento

@@ -8,12 +8,12 @@ class JogadorTela(AbstractTela):
 
     def mostra_login_jogador(self) -> tuple:
         self.mostra_titulo('LOGIN JOGADOR')
-        usuario = input('Digite seu usuario: ').strip()
-        senha = input('Digite sua senha: ').strip()
+        usuario = self.obtem_informacao('Digite seu usuario: ').strip().lower()
+        senha = self.obtem_informacao('Digite sua senha: ').strip()
         return usuario, senha
 
     def obtem_id_jogador(self) -> int:
-        id = int(input('Digite o id do jogador: '))
+        id = int(self.obtem_informacao('Digite o id do jogador: '))
         return id
 
     def mostra_perfil_jogador(self, jogador: Jogador):
