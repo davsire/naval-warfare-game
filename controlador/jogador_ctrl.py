@@ -28,30 +28,69 @@ class JogadorCtrl:
                 return jogador
         self.__jogador_tela.mostra_mensagem('Usuário ou senha incorretos.')
 
-    def mostrar_jogador(self):
+    def mostrar_jogador(self) -> Jogador:
         id = self.__jogador_tela.obtem_id_jogador()
         jogador = self.obter_jogador_por_id(id)
         if jogador:
             self.__jogador_tela.mostra_perfil_jogador(jogador)
+            return jogador
 
     def mostrar_jogador_logado(self):
         jogador = self.__controlador_principal.jogador_logado
         if jogador:
             self.__jogador_tela.mostra_perfil_jogador(jogador)
             opcoes_acoes = {
-                1: self.editar_jogador,
-                2: self.excluir_jogador,
-                3: self.__controlador_principal.iniciar_app,
+                1: self.mostrar_historico_jogos_logado,
+                2: self.editar_jogador,
+                3: self.excluir_jogador,
+                4: self.__controlador_principal.iniciar_app,
             }
 
-            opcao_escolhida = self.__jogador_tela.mostra_menu_perfil()
+            opcao_escolhida = self.__jogador_tela.mostra_menu_perfil_logado()
             opcoes_acoes[opcao_escolhida]()
 
+    def tratar_usario(self) -> str:
+        jogador_logado = self.__controlador_principal.jogador_logado
+        usuarios = [jogador.usuario for jogador in self.jogadores]
+        while True:
+            usuario = self.__jogador_tela.obtem_informacao(
+                'Digite seu usuário: ').strip()
+            if usuario not in usuarios or \
+                    (jogador_logado and jogador_logado.usuario == usuario):
+                return usuario
+            else:
+                self.__jogador_tela.mostra_mensagem(
+                    'Nome de usuário já está em uso...')
+
+    def tratar_data_nascimento(self) -> str:
+        while True:
+            try:
+                dia, mes, ano = self.__jogador_tela.obtem_informacao(
+                    f'Digite sua data de nascimento '
+                    f'separada por espaços (ex: 01 01 2000): ').split()
+                dia = int(dia)
+                mes = int(mes)
+                ano = int(ano)
+                if not (0 < dia < 32) or not (0 < mes < 13) or\
+                        not (ano > 0):
+                    raise ValueError
+                return f'{dia}/{mes}/{ano}'
+            except ValueError:
+                self.__jogador_tela.mostra_mensagem(
+                    'Data de nascimento inválida!')
+
+    def obter_informacoes_jogador(self) -> tuple:
+        nome = self.__jogador_tela.obtem_informacao(
+            'Digite seu nome: ')
+        data_nascimento = self.tratar_data_nascimento()
+        usuario = self.tratar_usario()
+        senha = input('Digite sua senha: ').strip()
+        return nome, data_nascimento, usuario, senha
+
     def cadastrar_jogador(self) -> Jogador:
-        # Implementar verificacao
-        nome, dia, mes, ano, usuario, senha = self.__jogador_tela\
-            .mostra_cadastro_jogador()
-        novo_jogador = Jogador(self.__proximo_id, nome, f'{dia}/{mes}/{ano}',
+        self.__jogador_tela.mostra_titulo('CADASTRANDO JOGADOR')
+        nome, data_nascimento, usuario, senha = self.obter_informacoes_jogador()
+        novo_jogador = Jogador(self.__proximo_id, nome, data_nascimento,
                                usuario, senha)
         self.__jogadores.append(novo_jogador)
         self.__proximo_id += 1
@@ -64,10 +103,17 @@ class JogadorCtrl:
         self.__controlador_principal.logout()
 
     def editar_jogador(self):
-        nome, dia, mes, ano, usuario, senha = self.__jogador_tela\
-            .mostra_editar_jogador()
+        self.__jogador_tela.mostra_titulo('EDITANDO JOGADOR')
+        nome, data_nascimento, usuario, senha = self.obter_informacoes_jogador()
         jogador_logado = self.__controlador_principal.jogador_logado
         jogador_logado.nome = nome
-        jogador_logado.data_nascimento = f'{dia}/{mes}/{ano}'
+        jogador_logado.data_nascimento = data_nascimento
         jogador_logado.usuario = usuario
         jogador_logado.senha = senha
+
+    def mostrar_historico_jogos_logado(self):
+        jogador = self.__controlador_principal.jogador_logado
+        self.__jogador_tela.mostra_historico_jogos(jogador)
+
+    def mostrar_historico_jogos(self, jogador: Jogador):
+        self.__jogador_tela.mostra_historico_jogos(jogador)

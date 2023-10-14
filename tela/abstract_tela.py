@@ -22,6 +22,10 @@ class AbstractTela(ABC):
         for index, opcao in enumerate(opcoes, start=1):
             print(f'{index} - {opcao}')
 
+    def obtem_informacao(self, mensagem: str) -> str:
+        informacao = input(mensagem)
+        return informacao
+
     def mostra_titulo(self, titulo: str):
         print('#' * 35)
         print(titulo)

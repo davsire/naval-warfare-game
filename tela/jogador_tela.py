@@ -8,43 +8,34 @@ class JogadorTela(AbstractTela):
 
     def mostra_login_jogador(self) -> tuple:
         self.mostra_titulo('LOGIN JOGADOR')
-        usuario = input('Digite seu usuario: ').strip()
-        senha = input('Digite sua senha: ').strip()
+        usuario = self.obtem_informacao('Digite seu usuario: ').strip().lower()
+        senha = self.obtem_informacao('Digite sua senha: ').strip()
         return usuario, senha
 
-    def obtem_dados_jogador(self) -> tuple:
-        nome = input('Digite seu nome: ')
-        dia, mes, ano = input(
-                'Digite sua data de nascimento separada por espaços: ').split()
-        usuario = input('Digite seu usuário: ').strip()
-        senha = input('Digite sua senha: ').strip()
-        return nome, dia, mes, ano, usuario, senha
-
     def obtem_id_jogador(self) -> int:
-        id = int(input('Digite o id do jogador: '))
+        id = int(self.obtem_informacao('Digite o id do jogador: '))
         return id
 
-    def mostra_cadastro_jogador(self) -> tuple:
-        self.mostra_titulo('CADASTRANDO JOGADOR')
-        return self.obtem_dados_jogador()
-
-    def mostra_edicao_jogador(self) -> tuple:
-        self.mostra_titulo('EDITANDO JOGADOR')
-        return self.obtem_dados_jogador()
-
     def mostra_perfil_jogador(self, jogador: Jogador):
-        # Temporario
-        self.mostra_mensagem(f'Jogador ID: {jogador.id} - '
-                             f'Nome: {jogador.nome}, '
-                             f'Data de Nascimento: {jogador.data_nascimento}')
+        self.mostra_mensagem('-'*35)
+        self.mostra_mensagem(f'ID: {jogador.id}\n'
+                             f'Nome: {jogador.nome}\n'
+                             f'Data de Nascimento: {jogador.data_nascimento}\n'
+                             f'Nome de usuário: {jogador.usuario}')
+        self.mostra_mensagem('-'*35)
 
+    def mostra_historico_jogos(self, jogador: Jogador):
+        # Implementar
+        self.mostra_titulo('HISTÓRICO DE JOGOS')
+        
     def mostra_menu_perfil(self) -> int:
         self.mostra_opcoes([
+            'Histórico de Jogos',
             'Editar Perfil',
             'Excluir Perfil',
             'Voltar ao menu'
         ])
         return self.obtem_opcao(
             'O que deseja acessar?\nSelecione uma opção: ',
-            [1, 2, 3]
+            [1, 2, 3, 4]
         )
