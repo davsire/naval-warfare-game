@@ -1,5 +1,5 @@
 import random
-from entidade.jogo import Jogo
+from entidade.jogo import Jogo, Vencedor
 from entidade.embarcacao import Embarcacao
 from tela.jogo_tela import JogoTela
 
@@ -38,21 +38,37 @@ class JogoCtrl:
     def executar_jogadas(self, jogo: Jogo):
         self.__jogo_tela.mostra_situacao_jogo(jogo)
         self.executar_jogada_jogador(jogo)
-        self.executar_jogada_pc(jogo)
-        existe_vencedor = self.verificar_vitoria(jogo)
-        if existe_vencedor:
+        if not jogo.vencedor:
+            self.executar_jogada_pc(jogo)
+        if jogo.vencedor:
+            self.__jogo_tela.mostra_situacao_jogo(jogo)
+            self.__jogo_tela.mostra_fim_jogo(jogo.vencedor)
             return
         self.executar_jogadas(jogo)
 
     def verificar_vitoria(self, jogo: Jogo) -> bool:
-        pass
+        vencedor = None
+        if not self.existe_embarcacao_mapa(jogo.oceano_jogador.mapa):
+            vencedor = Vencedor.PC
+        if not self.existe_embarcacao_mapa(jogo.oceano_pc.mapa):
+            vencedor = Vencedor.JOGADOR
+        if vencedor:
+            jogo.vencedor = vencedor
+        return bool(vencedor)
+
+    def existe_embarcacao_mapa(self, mapa: list) -> bool:
+        posicoes_mapa = [coluna for linha in mapa for coluna in linha]
+        return any([isinstance(posicao, Embarcacao)
+                    for posicao
+                    in posicoes_mapa])
 
     def executar_jogada_jogador(self, jogo: Jogo):
         while True:
             try:
                 linha, coluna = self.obter_posicao_tiro(jogo)
                 acertou = self.computar_tiro(linha, coluna, jogo)
-                if not acertou:
+                existe_vencedor = self.verificar_vitoria(jogo)
+                if not acertou or existe_vencedor:
                     return
                 self.__jogo_tela.mostra_situacao_jogo(jogo)
             except ValueError:
@@ -64,7 +80,8 @@ class JogoCtrl:
             try:
                 linha, coluna = self.obter_posicao_aleatoria(jogo)
                 acertou = self.computar_tiro(linha, coluna, jogo, True)
-                if not acertou:
+                existe_vencedor = self.verificar_vitoria(jogo)
+                if not acertou or existe_vencedor:
                     return
             except ValueError:
                 pass

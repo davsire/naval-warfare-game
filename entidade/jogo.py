@@ -1,6 +1,12 @@
+from enum import Enum
 from datetime import date
 from entidade.oceano import Oceano
 from entidade.jogador import Jogador
+
+
+class Vencedor(Enum):
+    JOGADOR = 1
+    PC = 2
 
 
 class Jogo:
@@ -41,7 +47,7 @@ class Jogo:
         return self.__oceano_pc
 
     @property
-    def vencedor(self) -> str:
+    def vencedor(self) -> Vencedor:
         return self.__vencedor
 
     @property
@@ -61,8 +67,8 @@ class Jogo:
         return self.__jogadas_pc
 
     @vencedor.setter
-    def vencedor(self, vencedor: str):
-        if isinstance(vencedor, str):
+    def vencedor(self, vencedor: Vencedor):
+        if isinstance(vencedor, Vencedor):
             self.__vencedor = vencedor
 
     def aumentar_pontuacao_jogador(self, pontuacao: int):

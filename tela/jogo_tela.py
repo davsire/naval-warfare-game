@@ -1,4 +1,5 @@
 import string
+from entidade.jogo import Vencedor
 from tela.abstract_tela import AbstractTela
 from entidade.jogo import Jogo
 from entidade.embarcacao import Embarcacao
@@ -14,6 +15,16 @@ class JogoTela(AbstractTela):
         print(f'Jogador: {jogo.pontuacao_jogador} - PC: {jogo.pontuacao_pc}')
         print('-' * 35)
         self.mostra_oceanos(jogo)
+
+    def mostra_fim_jogo(self, vencedor: Vencedor):
+        if vencedor == Vencedor.JOGADOR:
+            print('~' * 35)
+            print('Parabéns!!! Você venceu a partida!')
+            print('~' * 35)
+        else:
+            print('~' * 35)
+            print('Que pena, a vitória não veio dessa vez...')
+            print('~' * 35)
 
     def mostra_oceanos(self, jogo: Jogo):
         oceano_jogador = jogo.oceano_jogador
