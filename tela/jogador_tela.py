@@ -8,13 +8,17 @@ class JogadorTela(AbstractTela):
 
     def mostra_login_jogador(self) -> tuple:
         self.mostra_titulo('LOGIN JOGADOR')
-        usuario = self.obtem_informacao('Digite seu usuario: ').strip().lower()
+        usuario = self.obtem_informacao('Digite seu usuario: ').strip()
         senha = self.obtem_informacao('Digite sua senha: ').strip()
         return usuario, senha
 
     def obtem_id_jogador(self) -> int:
-        id = int(self.obtem_informacao('Digite o id do jogador: '))
-        return id
+        while True:
+            try:
+                id_jogador = int(input('Digite o ID do jogador: '))
+                return id_jogador
+            except ValueError:
+                print('Digite um ID válido!')
 
     def mostra_perfil_jogador(self, jogador: Jogador):
         self.mostra_mensagem('-'*35)
@@ -27,8 +31,18 @@ class JogadorTela(AbstractTela):
     def mostra_historico_jogos(self, jogador: Jogador):
         # Implementar
         self.mostra_titulo('HISTÓRICO DE JOGOS')
-        
+
     def mostra_menu_perfil(self) -> int:
+        self.mostra_opcoes([
+            'Histórico de Jogos',
+            'Voltar ao menu'
+        ])
+        return self.obtem_opcao(
+            'O que deseja acessar?\nSelecione uma opção: ',
+            [1, 2]
+        )
+
+    def mostra_menu_perfil_logado(self) -> int:
         self.mostra_opcoes([
             'Histórico de Jogos',
             'Editar Perfil',

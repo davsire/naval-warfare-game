@@ -13,9 +13,9 @@ class JogadorCtrl:
     def jogadores(self) -> list:
         return self.__jogadores
 
-    def obter_jogador_por_id(self, id: int) -> Jogador:
+    def obter_jogador_por_id(self, id_jogador: int) -> Jogador:
         for jogador in self.jogadores:
-            if jogador.id == id:
+            if jogador.id == id_jogador:
                 return jogador
         self.__jogador_tela.mostra_mensagem(
             'Não existe um jogador com esse ID.')
@@ -28,12 +28,21 @@ class JogadorCtrl:
                 return jogador
         self.__jogador_tela.mostra_mensagem('Usuário ou senha incorretos.')
 
-    def mostrar_jogador(self) -> Jogador:
-        id = self.__jogador_tela.obtem_id_jogador()
-        jogador = self.obter_jogador_por_id(id)
+    def mostrar_jogador(self):
+        id_jogador = self.__jogador_tela.obtem_id_jogador()
+        jogador = self.obter_jogador_por_id(id_jogador)
         if jogador:
             self.__jogador_tela.mostra_perfil_jogador(jogador)
-            return jogador
+            opcoes_acoes = {
+                1: self.mostrar_historico_jogos,
+                2: self.__controlador_principal.iniciar_app,
+            }
+
+            opcao_escolhida = self.__jogador_tela.mostra_menu_perfil()
+            if opcao_escolhida == 1:
+                opcoes_acoes[opcao_escolhida](jogador)
+            else:
+                opcoes_acoes[opcao_escolhida]()
 
     def mostrar_jogador_logado(self):
         jogador = self.__controlador_principal.jogador_logado
