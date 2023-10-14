@@ -79,7 +79,7 @@ class JogadorCtrl:
                 self.__jogador_tela.mostra_mensagem(
                     'Data de nascimento inválida!')
 
-    def obter_informacoes(self) -> tuple:
+    def obter_informacoes_jogador(self) -> tuple:
         nome = self.__jogador_tela.obtem_informacao(
             'Digite seu nome: ')
         data_nascimento = self.tratar_data_nascimento()
