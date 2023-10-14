@@ -13,8 +13,12 @@ class JogadorTela(AbstractTela):
         return usuario, senha
 
     def obtem_id_jogador(self) -> int:
-        id = int(self.obtem_informacao('Digite o id do jogador: '))
-        return id
+        while True:
+            try:
+                id_jogador = int(input('Digite o ID do jogador: '))
+                return id_jogador
+            except ValueError:
+                print('Digite um ID válido!')
 
     def mostra_perfil_jogador(self, jogador: Jogador):
         self.mostra_mensagem('-'*35)
@@ -30,7 +34,7 @@ class JogadorTela(AbstractTela):
 
     def mostra_menu_perfil(self) -> int:
         self.mostra_opcoes([
-            'Histórico de jogos',
+            'Histórico de Jogos',
             'Voltar ao menu'
         ])
         return self.obtem_opcao(
