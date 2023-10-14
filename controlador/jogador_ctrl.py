@@ -50,18 +50,13 @@ class JogadorCtrl:
             opcoes_acoes[opcao_escolhida]()
 
     def tratar_usario(self) -> str:
+        jogador_logado = self.__controlador_principal.jogador_logado
         usuarios = [jogador.usuario for jogador in self.jogadores]
-        controlador_principal = self.__controlador_principal
         while True:
             usuario = self.__jogador_tela.obtem_informacao(
-            'Digite seu usuário: ').strip()
-            if controlador_principal.jogador_logado == None and\
-                    usuario not in usuarios:
-                return usuario
-            elif usuario == controlador_principal.jogador_logado.usuario:
-                return usuario
-            elif usuario != controlador_principal.jogador_logado.usuario and\
-                    usuario not in usuarios:
+                'Digite seu usuário: ').strip()
+            if usuario not in usuarios or \
+                    (jogador_logado and jogador_logado.usuario == usuario):
                 return usuario
             else:
                 self.__jogador_tela.mostra_mensagem(
