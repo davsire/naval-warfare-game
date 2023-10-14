@@ -20,6 +20,9 @@ class Embarcacao(ABC):
     def afundou(self) -> bool:
         return not self.__vida
 
+    def sigla_escondida(self) -> str:
+        return self.sigla if self.afundou else 'X'
+
     def tomar_dano(self):
         if self.__vida:
             self.__vida -= 1
