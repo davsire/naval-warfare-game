@@ -21,6 +21,7 @@ class JogadorTela(AbstractTela):
                 print('Digite um ID válido!')
 
     def mostra_perfil_jogador(self, jogador: Jogador):
+        self.mostra_titulo('PERFIL DE JOGADOR')
         self.mostra_mensagem('-'*35)
         self.mostra_mensagem(f'ID: {jogador.id}\n'
                              f'Nome: {jogador.nome}\n'
@@ -29,8 +30,16 @@ class JogadorTela(AbstractTela):
         self.mostra_mensagem('-'*35)
 
     def mostra_historico_jogos(self, jogador: Jogador):
-        # Implementar
         self.mostra_titulo('HISTÓRICO DE JOGOS')
+        self.mostra_mensagem('-' * 35)
+        if len(jogador.jogos):
+            for index, jogo in enumerate(jogador.jogos, start=1):
+                print(f'{index} - ID: {jogo.id} - '
+                      f'Vencedor: {jogo.vencedor.name} - '
+                      f'Data: {jogo.data_hora}')
+        else:
+            self.mostra_mensagem('O jogador ainda não tem jogos registrados!')
+        self.mostra_mensagem('-' * 35)
 
     def mostra_menu_perfil(self) -> int:
         self.mostra_opcoes([
@@ -52,4 +61,14 @@ class JogadorTela(AbstractTela):
         return self.obtem_opcao(
             'O que deseja acessar?\nSelecione uma opção: ',
             [1, 2, 3, 4]
+        )
+
+    def mostra_menu_historico_jogo(self) -> int:
+        self.mostra_opcoes([
+            'Acessar relatório de jogo',
+            'Voltar ao menu'
+        ])
+        return self.obtem_opcao(
+            'O que deseja acessar?\nSelecione uma opção: ',
+            [1, 2]
         )

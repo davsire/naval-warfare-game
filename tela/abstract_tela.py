@@ -26,6 +26,10 @@ class AbstractTela(ABC):
         informacao = input(mensagem)
         return informacao
 
+    def confirma_acao(self, mensagem: str) -> bool:
+        confirmacao = input(f'{mensagem} [S/n] ')
+        return confirmacao.lower() != 'n'
+
     def mostra_titulo(self, titulo: str):
         print('#' * 35)
         print(titulo)
