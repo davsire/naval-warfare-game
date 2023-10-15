@@ -120,7 +120,6 @@ class JogoCtrl:
             oceano.mapa[linha][coluna] = '*'
             return False
         else:
-            # TODO: mudar tipo do erro
             raise ValueError
 
     def computar_acerto(self, jogo: Jogo, embarcacao: Embarcacao, is_pc: bool):
