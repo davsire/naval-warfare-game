@@ -11,7 +11,7 @@ class OceanoCtrl:
         self.__controlador_principal = controlador_principal
         self.__oceano_tela = OceanoTela()
         self.__tamanho_minimo_oceano = 5
-        self.__tamanho_maximo_oceano = 15
+        self.__tamanho_maximo_oceano = 25
         self.__oceanos = []
         self.__embarcacoes_iniciais = ['B', 'B', 'B', 'S', 'S', 'F', 'F', 'P']
         self.__indice_letras = {letra: index
