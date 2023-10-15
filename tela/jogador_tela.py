@@ -26,7 +26,8 @@ class JogadorTela(AbstractTela):
         self.mostra_mensagem(f'ID: {jogador.id}\n'
                              f'Nome: {jogador.nome}\n'
                              f'Data de Nascimento: {jogador.data_nascimento}\n'
-                             f'Nome de usuário: {jogador.usuario}')
+                             f'Nome de usuário: {jogador.usuario}\n'
+                             f'Pontuação total: {jogador.pontuacao_total}')
         self.mostra_mensagem('-'*35)
 
     def mostra_historico_jogos(self, jogador: Jogador):
