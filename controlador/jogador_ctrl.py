@@ -100,8 +100,8 @@ class JogadorCtrl:
 
     def cadastrar_jogador(self) -> Jogador:
         self.__jogador_tela.mostra_titulo('CADASTRANDO JOGADOR')
-        nome, data_nascimento, usuario, senha = self.obter_informacoes_jogador()
-        novo_jogador = Jogador(self.__proximo_id, nome, data_nascimento,
+        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador()
+        novo_jogador = Jogador(self.__proximo_id, nome, data_nasc,
                                usuario, senha)
         self.__jogadores.append(novo_jogador)
         self.__proximo_id += 1
@@ -114,15 +114,17 @@ class JogadorCtrl:
         if confirmacao:
             jogador_logado = self.__controlador_principal.jogador_logado
             self.__jogadores.remove(jogador_logado)
-            self.__jogador_tela.mostra_mensagem('Jogador excluido com sucesso.')
+            self.__jogador_tela.mostra_mensagem(
+                'Jogador excluído com sucesso!'
+            )
             self.__controlador_principal.logout()
 
     def editar_jogador(self):
         self.__jogador_tela.mostra_titulo('EDITANDO JOGADOR')
-        nome, data_nascimento, usuario, senha = self.obter_informacoes_jogador()
+        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador()
         jogador_logado = self.__controlador_principal.jogador_logado
         jogador_logado.nome = nome
-        jogador_logado.data_nascimento = data_nascimento
+        jogador_logado.data_nascimento = data_nasc
         jogador_logado.usuario = usuario
         jogador_logado.senha = senha
 

@@ -1,5 +1,4 @@
 from tela.ranking_tela import RankingTela
-from controlador.jogador_ctrl import JogadorCtrl
 
 
 class RankingCtrl:
