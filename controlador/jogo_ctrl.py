@@ -21,6 +21,11 @@ class JogoCtrl:
     def jogos(self):
         return self.__jogos
 
+    def obter_jogo_por_id(self, id_jogo: int):
+        for jogo in self.__jogos:
+            if jogo.id == id_jogo:
+                return jogo
+
     def iniciar_jogo(self):
         jogador_logado = self.__controlador_principal.jogador_logado
         oceano_jogador, oceano_pc = self.__controlador_principal\
@@ -119,6 +124,7 @@ class JogoCtrl:
             raise ValueError
 
     def computar_acerto(self, jogo: Jogo, embarcacao: Embarcacao, is_pc: bool):
+        jogador_logado = self.__controlador_principal.jogador_logado
         indice_mensagem = random.randrange(len(self.__mensagens_acerto))
         mensagem = self.__mensagens_acerto[indice_mensagem]
         self.__jogo_tela.mostra_mensagem(
@@ -136,6 +142,7 @@ class JogoCtrl:
             jogo.aumentar_pontuacao_pc(pontuacao)
             jogo.adicionar_jogada_pc(True, embarcacao.afundou, pontuacao)
         else:
+            jogador_logado.aumenta_pontuacao_total(pontuacao)
             jogo.aumentar_pontuacao_jogador(pontuacao)
             jogo.adicionar_jogada_jogador(True, embarcacao.afundou, pontuacao)
 
@@ -150,3 +157,11 @@ class JogoCtrl:
             jogo.adicionar_jogada_pc(False)
         else:
             jogo.adicionar_jogada_jogador(False)
+
+    def mostrar_relatorio_jogo(self):
+        id_jogo = self.__jogo_tela.obtem_id_jogo()
+        jogo = self.obter_jogo_por_id(id_jogo)
+        if jogo:
+            self.__jogo_tela.mostra_relatorio_jogo(jogo)
+        else:
+            self.__jogo_tela.mostra_mensagem('Não existe um jogo com esse ID!')

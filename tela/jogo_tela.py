@@ -9,6 +9,17 @@ class JogoTela(AbstractTela):
     def __init__(self):
         self.__letras_colunas = list(string.ascii_uppercase)
 
+    def obtem_id_jogo(self) -> int:
+        while True:
+            try:
+                id_jogo = int(input('Digite o ID do jogo: '))
+                return id_jogo
+            except ValueError:
+                print('Digite um id válido!')
+
+    def mostra_relatorio_jogo(self, jogo: Jogo):
+        print('JOGO')
+
     def mostra_situacao_jogo(self, jogo: Jogo):
         print('-' * 35)
         print('Pontuações:')

@@ -14,7 +14,6 @@ class PrincipalCtrl:
         self.__jogador_ctrl = JogadorCtrl(self)
         self.__ranking_ctrl = RankingCtrl(self)
         self.__oceano_ctrl = OceanoCtrl(self)
-        self.__relatorio_ctrl = None
 
     @property
     def jogador_logado(self) -> Jogador:
@@ -35,10 +34,6 @@ class PrincipalCtrl:
     @property
     def oceano_ctrl(self):
         return self.__oceano_ctrl
-
-    @property
-    def relatorio_ctrl(self):
-        return self.__relatorio_ctrl
 
     def abrir_login_jogador(self):
         self.__jogador_logado = self.__jogador_ctrl.logar_jogador()

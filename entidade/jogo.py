@@ -1,5 +1,5 @@
 from enum import Enum
-from datetime import date
+from datetime import datetime
 from entidade.oceano import Oceano
 from entidade.jogador import Jogador
 
@@ -16,7 +16,7 @@ class Jogo:
                  oceano_jogador: Oceano,
                  oceano_pc: Oceano):
         self.__id = id
-        self.__data_hora = date.today()
+        self.__data_hora = datetime.now()
         self.__jogador = jogador
         self.__oceano_jogador = oceano_jogador
         self.__oceano_pc = oceano_pc
@@ -31,8 +31,8 @@ class Jogo:
         return self.__id
 
     @property
-    def data_hora(self) -> date:
-        return self.__data_hora
+    def data_hora(self) -> str:
+        return self.__data_hora.strftime('%d/%m/%Y %H:%M')
 
     @property
     def jogador(self) -> Jogador:

@@ -17,12 +17,11 @@ class RankingCtrl:
         self.abrir_menu_ranking()
 
     def abrir_menu_ranking(self):
+        controlador_jogador = self.__controlador_principal.jogador_ctrl
+        opcoes_acoes = {
+                1: controlador_jogador.mostrar_jogador,
+                2: self.__controlador_principal.abrir_menu_principal,
+            }
         while True:
-            controlador_jogador = self.__controlador_principal.jogador_ctrl
-            opcoes_acoes = {
-                    1: controlador_jogador.mostrar_jogador,
-                    2: self.__controlador_principal.abrir_menu_principal,
-                }
-
             opcao_escolhida = self.__tela_ranking.mostra_menu_ranking()
             opcoes_acoes[opcao_escolhida]()
