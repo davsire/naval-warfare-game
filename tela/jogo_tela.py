@@ -17,9 +17,6 @@ class JogoTela(AbstractTela):
             except ValueError:
                 print('Digite um id válido!')
 
-    def mostra_relatorio_jogo(self, jogo: Jogo):
-        print('JOGO')
-
     def mostra_situacao_jogo(self, jogo: Jogo):
         print('-' * 35)
         print('Pontuações:')
@@ -72,3 +69,27 @@ class JogoTela(AbstractTela):
                 else:
                     print(posicao, end=' ')
             print('')
+
+    def mostra_relatorio_jogo(self, jogo: Jogo):
+        self.mostra_titulo('RELATÓRIO DE JOGO')
+        print('-' * 35)
+        print(f'ID: {jogo.id}\n'
+              f'Vencedor: {jogo.vencedor.name}\n'
+              f'Data: {jogo.data_hora}\n'
+              f'Pontuação do jogador: {jogo.pontuacao_jogador} pts\n'
+              f'Pontuação do PC: {jogo.pontuacao_pc} pts')
+        print('-' * 35)
+
+    def mostra_jogadas(self, jogo: Jogo):
+        print('-' * 35)
+        print('\n'.join(jogo.jogadas))
+        print('-' * 35)
+
+    def mostra_menu_relatorio_jogo(self) -> int:
+        self.mostra_opcoes([
+            'Visualizar mapas finais da partida',
+            'Visualizar jogadas da partida',
+            'Voltar ao menu'
+        ])
+        return self.obtem_opcao('O que deseja acessar?\nSelecione uma opção: ',
+                                [1, 2, 3])

@@ -161,7 +161,18 @@ class JogoCtrl:
     def mostrar_relatorio_jogo(self):
         id_jogo = self.__jogo_tela.obtem_id_jogo()
         jogo = self.obter_jogo_por_id(id_jogo)
+        opcoes_acoes = {
+            1: self.__jogo_tela.mostra_oceanos,
+            2: self.__jogo_tela.mostra_jogadas,
+            3: self.__controlador_principal.iniciar_app
+        }
         if jogo:
             self.__jogo_tela.mostra_relatorio_jogo(jogo)
+            while True:
+                opcao_escolhida = self.__jogo_tela.mostra_menu_relatorio_jogo()
+                if opcao_escolhida == 3:
+                    opcoes_acoes[opcao_escolhida]()
+                else:
+                    opcoes_acoes[opcao_escolhida](jogo)
         else:
             self.__jogo_tela.mostra_mensagem('Não existe um jogo com esse ID!')

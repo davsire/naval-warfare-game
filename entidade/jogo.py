@@ -23,8 +23,7 @@ class Jogo:
         self.__vencedor = None
         self.__pontuacao_jogador = 0
         self.__pontuacao_pc = 0
-        self.__jogadas_jogador = []
-        self.__jogadas_pc = []
+        self.__jogadas = []
 
     @property
     def id(self) -> int:
@@ -59,12 +58,8 @@ class Jogo:
         return self.__pontuacao_pc
 
     @property
-    def jogadas_jogador(self) -> list:
-        return self.__jogadas_jogador
-
-    @property
-    def jogadas_pc(self) -> list:
-        return self.__jogadas_pc
+    def jogadas(self) -> list:
+        return self.__jogadas
 
     @vencedor.setter
     def vencedor(self, vencedor: Vencedor):
@@ -83,7 +78,7 @@ class Jogo:
                                  pontuacao: int = 0):
         jogada = 'JOGADOR: '
         jogada += self.montar_mensagem_jogada(acertou, afundou, pontuacao)
-        self.__jogadas_jogador.append(jogada)
+        self.__jogadas.append(jogada)
 
     def adicionar_jogada_pc(self,
                             acertou: bool,
@@ -91,7 +86,7 @@ class Jogo:
                             pontuacao: int = 0):
         jogada = 'PC: '
         jogada += self.montar_mensagem_jogada(acertou, afundou, pontuacao)
-        self.__jogadas_pc.append(jogada)
+        self.__jogadas.append(jogada)
 
     def montar_mensagem_jogada(self,
                                acertou: bool,
