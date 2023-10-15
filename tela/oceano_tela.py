@@ -48,10 +48,11 @@ class OceanoTela(AbstractTela):
                 return sigla_embarcacao.upper()
             print('Digite a sigla de uma embarcação disponível!')
 
-    def obter_posicao(self) -> tuple:
+    def obter_posicao(self, aviso: str = '') -> tuple:
         while True:
             try:
-                # TODO: avisar qual eh o inicio e final
+                if aviso:
+                    print(aviso)
                 linha, coluna = input(
                     'Digite a linha e coluna separadas por hífen (ex: 1-A): '
                 ).split('-')

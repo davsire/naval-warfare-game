@@ -48,13 +48,17 @@ class OceanoCtrl:
             try:
                 sigla = self.__oceano_tela.obtem_sigla_embarcacao(disponiveis)
                 tamanho = self.__tamanho_embarcacoes[sigla]
+                self.__oceano_tela.mostra_oceano(oceano)
                 self.__oceano_tela.mostra_mensagem('** Tamanho da embarcação: '
                                                    f'{tamanho} espaço(s) **')
-                pos_inicial = self.obter_posicao(oceano.tamanho)
+
+                pos_inicial = self.obter_posicao(oceano.tamanho,
+                                                 'Início da embarcação:')
                 pos_final = pos_inicial if sigla == 'B' else \
-                    self.obter_posicao(oceano.tamanho)
+                    self.obter_posicao(oceano.tamanho, 'Final da embarcação:')
                 pos_inicial, pos_final = self.ordernar_posicoes(pos_inicial,
                                                                 pos_final)
+
                 oceano.adicionar_embarcacao(sigla, pos_inicial, pos_final)
                 disponiveis.remove(sigla)
                 self.__oceano_tela.mostra_oceano(oceano)
@@ -75,12 +79,12 @@ class OceanoCtrl:
             except ConflitoEmbarcacaoErro:
                 pass
 
-    def obter_posicao(self, tamanho_oceano: int) -> tuple:
+    def obter_posicao(self, tamanho_oceano: int, aviso: str = '') -> tuple:
         linhas_mapa = range(tamanho_oceano)
         colunas_mapa = list(self.__indice_letras.keys())[:tamanho_oceano]
         while True:
             try:
-                linha, coluna = self.__oceano_tela.obter_posicao()
+                linha, coluna = self.__oceano_tela.obter_posicao(aviso)
                 linha = int(linha) - 1
                 coluna = coluna.upper()
                 if linha not in linhas_mapa or coluna not in colunas_mapa:
