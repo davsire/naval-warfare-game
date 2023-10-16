@@ -48,7 +48,7 @@ class OceanoTela(AbstractTela):
                 return sigla_embarcacao.upper()
             print('Digite a sigla de uma embarcação disponível!')
 
-    def obter_posicao(self, aviso: str = '') -> tuple:
+    def obtem_posicao(self, aviso: str = '') -> tuple:
         while True:
             try:
                 if aviso:

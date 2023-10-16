@@ -84,7 +84,7 @@ class OceanoCtrl:
         colunas_mapa = list(self.__indice_letras.keys())[:tamanho_oceano]
         while True:
             try:
-                linha, coluna = self.__oceano_tela.obter_posicao(aviso)
+                linha, coluna = self.__oceano_tela.obtem_posicao(aviso)
                 linha = int(linha) - 1
                 coluna = coluna.upper()
                 if linha not in linhas_mapa or coluna not in colunas_mapa:
