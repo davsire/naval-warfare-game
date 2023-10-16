@@ -74,6 +74,7 @@ class JogoTela(AbstractTela):
         self.mostra_titulo('RELATÓRIO DE JOGO')
         print('-' * 35)
         print(f'ID: {jogo.id}\n'
+              f'Jogador: {jogo.jogador.nome} ({jogo.jogador.usuario})\n'
               f'Vencedor: {jogo.vencedor.name}\n'
               f'Data: {jogo.data_hora}\n'
               f'Pontuação do jogador: {jogo.pontuacao_jogador} pts\n'

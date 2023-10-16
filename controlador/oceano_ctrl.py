@@ -27,6 +27,8 @@ class OceanoCtrl:
         )
         oceano_jogador = Oceano(tamanho_oceano)
         oceano_pc = Oceano(tamanho_oceano)
+        self.__oceanos.append(oceano_jogador)
+        self.__oceanos.append(oceano_pc)
 
         self.__oceano_tela.mostra_mensagem('Seu oceano:')
         self.__oceano_tela.mostra_oceano(oceano_jogador)
