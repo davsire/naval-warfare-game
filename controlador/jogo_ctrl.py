@@ -1,4 +1,5 @@
 import random
+from time import sleep
 from entidade.jogo import Jogo, Vencedor
 from entidade.embarcacao import Embarcacao
 from tela.jogo_tela import JogoTela
@@ -40,19 +41,19 @@ class JogoCtrl:
         self.__jogo_tela.mostra_titulo('PREPARAR CANHÕES! ATIRAR!')
         self.executar_jogadas(novo_jogo)
 
-    def executar_jogadas(self, jogo: Jogo):
+    def mostrar_situacao_jogo(self, jogo: Jogo):
         self.__jogo_tela.mostra_pontuacoes(jogo.pontuacao_jogador,
                                            jogo.pontuacao_pc)
         self.__jogo_tela.mostra_oceanos(jogo.oceano_jogador.mapa,
                                         jogo.oceano_pc.mapa)
+
+    def executar_jogadas(self, jogo: Jogo):
+        self.mostrar_situacao_jogo(jogo)
         self.executar_jogada_jogador(jogo)
         if not jogo.vencedor:
             self.executar_jogada_pc(jogo)
         if jogo.vencedor:
-            self.__jogo_tela.mostra_pontuacoes(jogo.pontuacao_jogador,
-                                               jogo.pontuacao_pc)
-            self.__jogo_tela.mostra_oceanos(jogo.oceano_jogador.mapa,
-                                            jogo.oceano_pc.mapa)
+            self.mostrar_situacao_jogo(jogo)
             self.__jogo_tela.mostra_fim_jogo(jogo.vencedor)
             return
         self.executar_jogadas(jogo)
@@ -81,10 +82,7 @@ class JogoCtrl:
                 existe_vencedor = self.verificar_vitoria(jogo)
                 if not acertou or existe_vencedor:
                     return
-                self.__jogo_tela.mostra_pontuacoes(jogo.pontuacao_jogador,
-                                                   jogo.pontuacao_pc)
-                self.__jogo_tela.mostra_oceanos(jogo.oceano_jogador.mapa,
-                                                jogo.oceano_pc.mapa)
+                self.mostrar_situacao_jogo(jogo)
             except ValueError:
                 self.__jogo_tela.mostra_mensagem('Você já atirou aqui! '
                                                  'Tente novamente')
@@ -92,11 +90,13 @@ class JogoCtrl:
     def executar_jogada_pc(self, jogo: Jogo):
         while True:
             try:
+                sleep(1)
                 linha, coluna = self.obter_posicao_aleatoria(jogo)
                 acertou = self.computar_tiro(linha, coluna, jogo, True)
                 existe_vencedor = self.verificar_vitoria(jogo)
                 if not acertou or existe_vencedor:
                     return
+                self.mostrar_situacao_jogo(jogo)
             except ValueError:
                 pass
 
