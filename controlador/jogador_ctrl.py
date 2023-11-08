@@ -52,11 +52,6 @@ class JogadorCtrl:
         jogador = self.__controlador_principal.jogador_logado
         jogador_tela = self.__jogador_tela
         if jogador:
-            jogador_tela.mostra_perfil_jogador(jogador.id,
-                                               jogador.nome,
-                                               jogador.data_nascimento,
-                                               jogador.usuario,
-                                               jogador.pontuacao_total)
             opcoes_acoes = {
                 1: self.mostrar_historico_jogos_logado,
                 2: self.editar_jogador,
@@ -64,6 +59,11 @@ class JogadorCtrl:
                 4: self.__controlador_principal.iniciar_app,
             }
             while True:
+                jogador_tela.mostra_perfil_jogador(jogador.id,
+                                                   jogador.nome,
+                                                   jogador.data_nascimento,
+                                                   jogador.usuario,
+                                                   jogador.pontuacao_total)
                 opcao_escolhida = jogador_tela.mostra_menu_perfil_logado()
                 opcoes_acoes[opcao_escolhida]()
 

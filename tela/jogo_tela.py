@@ -46,7 +46,7 @@ class JogoTela(AbstractTela):
             print(f'{numero_linha}', end=' ')
             for posicao in linha_jogador:
                 if isinstance(posicao, Embarcacao):
-                    print(posicao.sigla, end=' ')
+                    print(posicao.sigla.name, end=' ')
                 elif isinstance(posicao, str):
                     print(posicao, end=' ')
                 elif not posicao:

@@ -39,8 +39,9 @@ class JogadorTela(AbstractTela):
         self.mostra_mensagem('-' * 35)
         if len(jogos):
             for index, jogo in enumerate(jogos, start=1):
+                vencedor = jogo.vencedor.name if jogo.vencedor else '~'
                 print(f'{index} - ID: {jogo.id} - '
-                      f'Vencedor: {jogo.vencedor.name} - '
+                      f'Vencedor: {vencedor} - '
                       f'Data: {jogo.data_hora}')
         else:
             self.mostra_mensagem('O jogador ainda não tem jogos registrados!')

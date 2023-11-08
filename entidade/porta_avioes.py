@@ -1,6 +1,6 @@
-from entidade.embarcacao import Embarcacao
+from entidade.embarcacao import Embarcacao, SiglaEmbarcacao
 
 
 class PortaAvioes(Embarcacao):
     def __init__(self):
-        super().__init__('P', 4)
+        super().__init__(SiglaEmbarcacao.P, 4)

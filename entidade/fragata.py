@@ -1,6 +1,6 @@
-from entidade.embarcacao import Embarcacao
+from entidade.embarcacao import Embarcacao, SiglaEmbarcacao
 
 
 class Fragata(Embarcacao):
     def __init__(self):
-        super().__init__('F', 3)
+        super().__init__(SiglaEmbarcacao.F, 3)

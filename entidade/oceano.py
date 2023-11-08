@@ -1,4 +1,4 @@
-from entidade.embarcacao import Embarcacao
+from entidade.embarcacao import Embarcacao, SiglaEmbarcacao
 from entidade.bote import Bote
 from entidade.submarino import Submarino
 from entidade.fragata import Fragata
@@ -39,10 +39,10 @@ class Oceano:
 
     def criar_embarcacao(self, sigla_embarcacao: str) -> Embarcacao:
         lista_embarcacoes = {
-            'B': Bote,
-            'S': Submarino,
-            'F': Fragata,
-            'P': PortaAvioes,
+            SiglaEmbarcacao.B.name: Bote,
+            SiglaEmbarcacao.S.name: Submarino,
+            SiglaEmbarcacao.F.name: Fragata,
+            SiglaEmbarcacao.P.name: PortaAvioes,
         }
         return lista_embarcacoes[sigla_embarcacao]()
 

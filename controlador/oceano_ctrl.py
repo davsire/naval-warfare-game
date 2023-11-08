@@ -1,6 +1,7 @@
 import random
 import string
 from entidade.oceano import Oceano
+from entidade.embarcacao import SiglaEmbarcacao
 from tela.oceano_tela import OceanoTela
 from exception.posicao_embarcacao_error import PosicaoEmbarcacaoErro
 from exception.conflito_embarcacao_error import ConflitoEmbarcacaoErro
@@ -17,7 +18,10 @@ class OceanoCtrl:
         self.__indice_letras = {letra: index
                                 for index, letra
                                 in enumerate(list(string.ascii_uppercase))}
-        self.__tamanho_embarcacoes = {'B': 1, 'S': 2, 'F': 3, 'P': 4}
+        self.__tamanho_embarcacoes = {SiglaEmbarcacao.B.name: 1,
+                                      SiglaEmbarcacao.S.name: 2,
+                                      SiglaEmbarcacao.F.name: 3,
+                                      SiglaEmbarcacao.P.name: 4}
 
     def cadastrar_oceano(self) -> tuple:
         self.__oceano_tela.mostra_titulo('CADASTRANDO OCEANO')
@@ -56,7 +60,8 @@ class OceanoCtrl:
 
                 pos_inicial = self.obter_posicao(oceano.tamanho,
                                                  'Início da embarcação:')
-                pos_final = pos_inicial if sigla == 'B' else \
+                pos_final = pos_inicial if \
+                    sigla == SiglaEmbarcacao.B.name else \
                     self.obter_posicao(oceano.tamanho, 'Final da embarcação:')
                 pos_inicial, pos_final = self.ordernar_posicoes(pos_inicial,
                                                                 pos_final)

@@ -170,10 +170,11 @@ class JogoCtrl:
         id_jogo = self.__jogo_tela.obtem_id_jogo()
         jogo = self.obter_jogo_por_id(id_jogo)
         if jogo:
+            vencedor = jogo.vencedor.name if jogo.vencedor else '~'
             self.__jogo_tela.mostra_relatorio_jogo(jogo.id,
                                                    jogo.jogador.nome,
                                                    jogo.jogador.usuario,
-                                                   jogo.vencedor.name,
+                                                   vencedor,
                                                    jogo.data_hora,
                                                    jogo.pontuacao_jogador,
                                                    jogo.pontuacao_pc)

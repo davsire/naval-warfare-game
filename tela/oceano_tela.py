@@ -68,7 +68,7 @@ class OceanoTela(AbstractTela):
             print(f'{index:<2}', end=' ')
             for embarcacao in linha:
                 if isinstance(embarcacao, Embarcacao):
-                    print(embarcacao.sigla, end=' ')
+                    print(embarcacao.sigla.name, end=' ')
                 else:
                     print('~', end=' ')
             print('')
