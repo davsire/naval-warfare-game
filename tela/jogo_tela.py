@@ -1,7 +1,6 @@
 import string
 from entidade.jogo import Vencedor
 from tela.abstract_tela import AbstractTela
-from entidade.jogo import Jogo
 from entidade.embarcacao import Embarcacao
 
 
@@ -17,12 +16,11 @@ class JogoTela(AbstractTela):
             except ValueError:
                 print('Digite um id válido!')
 
-    def mostra_situacao_jogo(self, jogo: Jogo):
+    def mostra_pontuacoes(self, pontuacao_jogador: int, pontuacao_pc: int):
         print('-' * 35)
         print('Pontuações:')
-        print(f'Jogador: {jogo.pontuacao_jogador} - PC: {jogo.pontuacao_pc}')
+        print(f'Jogador: {pontuacao_jogador} - PC: {pontuacao_pc}')
         print('-' * 35)
-        self.mostra_oceanos(jogo)
 
     def mostra_fim_jogo(self, vencedor: Vencedor):
         if vencedor == Vencedor.JOGADOR:
@@ -34,17 +32,15 @@ class JogoTela(AbstractTela):
             print('Que pena, a vitória não veio dessa vez...')
             print('~' * 35)
 
-    def mostra_oceanos(self, jogo: Jogo):
-        oceano_jogador = jogo.oceano_jogador
-        oceano_pc = jogo.oceano_pc
-        letras_colunas = self.__letras_colunas[:oceano_jogador.tamanho]
+    def mostra_oceanos(self, mapa_jogador: list, mapa_pc: list):
+        letras_colunas = self.__letras_colunas[:len(mapa_jogador)]
         print('** Seu oceano / Oceano do PC **')
         print(f'{" " * 3}{" ".join(letras_colunas)}', end='')
         print(f'{" " * 7}{" ".join(letras_colunas)}')
 
-        for linha in range(len(oceano_jogador.mapa)):
-            linha_jogador = oceano_jogador.mapa[linha]
-            linha_pc = oceano_pc.mapa[linha]
+        for linha in range(len(mapa_jogador)):
+            linha_jogador = mapa_jogador[linha]
+            linha_pc = mapa_pc[linha]
             numero_linha = f'{linha + 1:<2}'
 
             print(f'{numero_linha}', end=' ')
@@ -70,20 +66,27 @@ class JogoTela(AbstractTela):
                     print(posicao, end=' ')
             print('')
 
-    def mostra_relatorio_jogo(self, jogo: Jogo):
+    def mostra_relatorio_jogo(self,
+                              id_jogo: int,
+                              jogador_nome: str,
+                              jogador_usuario: str,
+                              vencedor: str,
+                              data_hora: str,
+                              pontuacao_jogador: int,
+                              pontuacao_pc: int):
         self.mostra_titulo('RELATÓRIO DE JOGO')
         print('-' * 35)
-        print(f'ID: {jogo.id}\n'
-              f'Jogador: {jogo.jogador.nome} ({jogo.jogador.usuario})\n'
-              f'Vencedor: {jogo.vencedor.name}\n'
-              f'Data: {jogo.data_hora}\n'
-              f'Pontuação do jogador: {jogo.pontuacao_jogador} pts\n'
-              f'Pontuação do PC: {jogo.pontuacao_pc} pts')
+        print(f'ID: {id_jogo}\n'
+              f'Jogador: {jogador_nome} ({jogador_usuario})\n'
+              f'Vencedor: {vencedor}\n'
+              f'Data: {data_hora}\n'
+              f'Pontuação do jogador: {pontuacao_jogador} pts\n'
+              f'Pontuação do PC: {pontuacao_pc} pts')
         print('-' * 35)
 
-    def mostra_jogadas(self, jogo: Jogo):
+    def mostra_jogadas(self, jogadas: list):
         print('-' * 35)
-        print('\n'.join(jogo.jogadas))
+        print('\n'.join(jogadas))
         print('-' * 35)
 
     def mostra_menu_relatorio_jogo(self) -> int:

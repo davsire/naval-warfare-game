@@ -32,7 +32,11 @@ class JogadorCtrl:
         id_jogador = self.__jogador_tela.obtem_id_jogador()
         jogador = self.obter_jogador_por_id(id_jogador)
         if jogador:
-            self.__jogador_tela.mostra_perfil_jogador(jogador)
+            self.__jogador_tela.mostra_perfil_jogador(jogador.id,
+                                                      jogador.nome,
+                                                      jogador.data_nascimento,
+                                                      jogador.usuario,
+                                                      jogador.pontuacao_total)
             opcoes_acoes = {
                 1: self.mostrar_historico_jogos,
                 2: self.__controlador_principal.iniciar_app,
@@ -48,7 +52,11 @@ class JogadorCtrl:
         jogador = self.__controlador_principal.jogador_logado
         jogador_tela = self.__jogador_tela
         if jogador:
-            jogador_tela.mostra_perfil_jogador(jogador)
+            jogador_tela.mostra_perfil_jogador(jogador.id,
+                                               jogador.nome,
+                                               jogador.data_nascimento,
+                                               jogador.usuario,
+                                               jogador.pontuacao_total)
             opcoes_acoes = {
                 1: self.mostrar_historico_jogos_logado,
                 2: self.editar_jogador,
@@ -133,7 +141,7 @@ class JogadorCtrl:
         self.mostrar_historico_jogos(jogador)
 
     def mostrar_historico_jogos(self, jogador: Jogador):
-        self.__jogador_tela.mostra_historico_jogos(jogador)
+        self.__jogador_tela.mostra_historico_jogos(jogador.jogos)
         opcoes_acoes = {
             1: self.__controlador_principal.jogo_ctrl.mostrar_relatorio_jogo,
             2: self.__controlador_principal.iniciar_app

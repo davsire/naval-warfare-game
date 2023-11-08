@@ -1,6 +1,5 @@
 import string
 from tela.abstract_tela import AbstractTela
-from entidade.oceano import Oceano
 from entidade.embarcacao import Embarcacao
 
 
@@ -62,10 +61,10 @@ class OceanoTela(AbstractTela):
             except ValueError:
                 print('É necessário digitar uma linha e uma coluna!')
 
-    def mostra_oceano(self, oceano: Oceano):
-        letras_colunas = self.__letras_colunas[:oceano.tamanho]
+    def mostra_oceano(self, mapa: list):
+        letras_colunas = self.__letras_colunas[:len(mapa)]
         print(f'{" " * 3}{" ".join(letras_colunas)}')
-        for index, linha in enumerate(oceano.mapa, start=1):
+        for index, linha in enumerate(mapa, start=1):
             print(f'{index:<2}', end=' ')
             for embarcacao in linha:
                 if isinstance(embarcacao, Embarcacao):

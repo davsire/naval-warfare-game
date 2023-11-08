@@ -41,12 +41,18 @@ class JogoCtrl:
         self.executar_jogadas(novo_jogo)
 
     def executar_jogadas(self, jogo: Jogo):
-        self.__jogo_tela.mostra_situacao_jogo(jogo)
+        self.__jogo_tela.mostra_pontuacoes(jogo.pontuacao_jogador,
+                                           jogo.pontuacao_pc)
+        self.__jogo_tela.mostra_oceanos(jogo.oceano_jogador.mapa,
+                                        jogo.oceano_pc.mapa)
         self.executar_jogada_jogador(jogo)
         if not jogo.vencedor:
             self.executar_jogada_pc(jogo)
         if jogo.vencedor:
-            self.__jogo_tela.mostra_situacao_jogo(jogo)
+            self.__jogo_tela.mostra_pontuacoes(jogo.pontuacao_jogador,
+                                               jogo.pontuacao_pc)
+            self.__jogo_tela.mostra_oceanos(jogo.oceano_jogador.mapa,
+                                            jogo.oceano_pc.mapa)
             self.__jogo_tela.mostra_fim_jogo(jogo.vencedor)
             return
         self.executar_jogadas(jogo)
@@ -75,7 +81,10 @@ class JogoCtrl:
                 existe_vencedor = self.verificar_vitoria(jogo)
                 if not acertou or existe_vencedor:
                     return
-                self.__jogo_tela.mostra_situacao_jogo(jogo)
+                self.__jogo_tela.mostra_pontuacoes(jogo.pontuacao_jogador,
+                                                   jogo.pontuacao_pc)
+                self.__jogo_tela.mostra_oceanos(jogo.oceano_jogador.mapa,
+                                                jogo.oceano_pc.mapa)
             except ValueError:
                 self.__jogo_tela.mostra_mensagem('Você já atirou aqui! '
                                                  'Tente novamente')
@@ -160,18 +169,22 @@ class JogoCtrl:
     def mostrar_relatorio_jogo(self):
         id_jogo = self.__jogo_tela.obtem_id_jogo()
         jogo = self.obter_jogo_por_id(id_jogo)
-        opcoes_acoes = {
-            1: self.__jogo_tela.mostra_oceanos,
-            2: self.__jogo_tela.mostra_jogadas,
-            3: self.__controlador_principal.iniciar_app
-        }
         if jogo:
-            self.__jogo_tela.mostra_relatorio_jogo(jogo)
+            self.__jogo_tela.mostra_relatorio_jogo(jogo.id,
+                                                   jogo.jogador.nome,
+                                                   jogo.jogador.usuario,
+                                                   jogo.vencedor.name,
+                                                   jogo.data_hora,
+                                                   jogo.pontuacao_jogador,
+                                                   jogo.pontuacao_pc)
             while True:
                 opcao_escolhida = self.__jogo_tela.mostra_menu_relatorio_jogo()
-                if opcao_escolhida == 3:
-                    opcoes_acoes[opcao_escolhida]()
+                if opcao_escolhida == 1:
+                    self.__jogo_tela.mostra_oceanos(jogo.oceano_jogador.mapa,
+                                                    jogo.oceano_pc.mapa)
+                elif opcao_escolhida == 2:
+                    self.__jogo_tela.mostra_jogadas(jogo.jogadas)
                 else:
-                    opcoes_acoes[opcao_escolhida](jogo)
+                    self.__controlador_principal.iniciar_app()
         else:
             self.__jogo_tela.mostra_mensagem('Não existe um jogo com esse ID!')

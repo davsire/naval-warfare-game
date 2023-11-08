@@ -31,7 +31,7 @@ class OceanoCtrl:
         self.__oceanos.append(oceano_pc)
 
         self.__oceano_tela.mostra_mensagem('Seu oceano:')
-        self.__oceano_tela.mostra_oceano(oceano_jogador)
+        self.__oceano_tela.mostra_oceano(oceano_jogador.mapa)
 
         self.preencher_oceano_aleatorio(oceano_pc)
         if self.__oceano_tela.obtem_opcao_cadastro_oceano() == 1:
@@ -39,7 +39,7 @@ class OceanoCtrl:
         else:
             self.preencher_oceano_aleatorio(oceano_jogador)
             self.__oceano_tela.mostra_mensagem('Seu oceano:')
-            self.__oceano_tela.mostra_oceano(oceano_jogador)
+            self.__oceano_tela.mostra_oceano(oceano_jogador.mapa)
 
         return oceano_jogador, oceano_pc
 
@@ -50,7 +50,7 @@ class OceanoCtrl:
             try:
                 sigla = self.__oceano_tela.obtem_sigla_embarcacao(disponiveis)
                 tamanho = self.__tamanho_embarcacoes[sigla]
-                self.__oceano_tela.mostra_oceano(oceano)
+                self.__oceano_tela.mostra_oceano(oceano.mapa)
                 self.__oceano_tela.mostra_mensagem('** Tamanho da embarcação: '
                                                    f'{tamanho} espaço(s) **')
 
@@ -63,7 +63,7 @@ class OceanoCtrl:
 
                 oceano.adicionar_embarcacao(sigla, pos_inicial, pos_final)
                 disponiveis.remove(sigla)
-                self.__oceano_tela.mostra_oceano(oceano)
+                self.__oceano_tela.mostra_oceano(oceano.mapa)
             except (PosicaoEmbarcacaoErro, ConflitoEmbarcacaoErro) as e:
                 self.__oceano_tela.mostra_mensagem(e)
 

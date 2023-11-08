@@ -5,7 +5,7 @@ class RankingTela(AbstractTela):
     def __init__(self):
         pass
 
-    def mostra_jogadores(self, ranking):
+    def mostra_jogadores(self, ranking: list):
         print('-' * 35)
         for index, jogador in enumerate(ranking, start=1):
             print(f'{index} - ID: {jogador.id} - Nome: {jogador.nome}'

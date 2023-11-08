@@ -1,5 +1,4 @@
 from tela.abstract_tela import AbstractTela
-from entidade.jogador import Jogador
 
 
 class JogadorTela(AbstractTela):
@@ -20,21 +19,26 @@ class JogadorTela(AbstractTela):
             except ValueError:
                 print('Digite um ID válido!')
 
-    def mostra_perfil_jogador(self, jogador: Jogador):
+    def mostra_perfil_jogador(self,
+                              id_jogador: int,
+                              nome: str,
+                              data_nascimento: str,
+                              usuario: str,
+                              pontuacao_total: int):
         self.mostra_titulo('PERFIL DE JOGADOR')
         self.mostra_mensagem('-'*35)
-        self.mostra_mensagem(f'ID: {jogador.id}\n'
-                             f'Nome: {jogador.nome}\n'
-                             f'Data de Nascimento: {jogador.data_nascimento}\n'
-                             f'Nome de usuário: {jogador.usuario}\n'
-                             f'Pontuação total: {jogador.pontuacao_total}')
+        self.mostra_mensagem(f'ID: {id_jogador}\n'
+                             f'Nome: {nome}\n'
+                             f'Data de Nascimento: {data_nascimento}\n'
+                             f'Nome de usuário: {usuario}\n'
+                             f'Pontuação total: {pontuacao_total}')
         self.mostra_mensagem('-'*35)
 
-    def mostra_historico_jogos(self, jogador: Jogador):
+    def mostra_historico_jogos(self, jogos: list):
         self.mostra_titulo('HISTÓRICO DE JOGOS')
         self.mostra_mensagem('-' * 35)
-        if len(jogador.jogos):
-            for index, jogo in enumerate(jogador.jogos, start=1):
+        if len(jogos):
+            for index, jogo in enumerate(jogos, start=1):
                 print(f'{index} - ID: {jogo.id} - '
                       f'Vencedor: {jogo.vencedor.name} - '
                       f'Data: {jogo.data_hora}')
