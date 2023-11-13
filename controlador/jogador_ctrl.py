@@ -116,11 +116,16 @@ class JogadorCtrl:
         return novo_jogador
 
     def excluir_jogador(self):
+        self.__jogador_tela.mostra_mensagem('** Ao excluir sua conta, os '
+                                            'registros dos seus jogos serão '
+                                            'perdidos! **')
         confirmacao = self.__jogador_tela.confirma_acao(
             'Tem certeza que deseja excluir sua conta?'
         )
         if confirmacao:
             jogador_logado = self.__controlador_principal.jogador_logado
+            for jogo in jogador_logado.jogos:
+                self.__controlador_principal.jogo_ctrl.remover_jogo(jogo)
             self.__jogadores.remove(jogador_logado)
             self.__jogador_tela.mostra_mensagem(
                 'Jogador excluído com sucesso!'

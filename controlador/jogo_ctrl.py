@@ -27,6 +27,10 @@ class JogoCtrl:
             if jogo.id == id_jogo:
                 return jogo
 
+    def remover_jogo(self, jogo: Jogo):
+        if jogo in self.__jogos:
+            self.__jogos.remove(jogo)
+
     def iniciar_jogo(self):
         jogador_logado = self.__controlador_principal.jogador_logado
         oceano_jogador, oceano_pc = self.__controlador_principal\
