@@ -6,8 +6,6 @@ if __name__ == '__main__':
     while True:
         try:
             controlador_principal.iniciar_app()
-        except Exception as e:
+        except Exception:
             print('Ocorreu um erro inesperado! '
                   'Redirecionamos você para a tela inicial')
-        except KeyboardInterrupt:
-            print('')

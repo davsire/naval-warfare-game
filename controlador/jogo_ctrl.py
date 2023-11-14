@@ -3,14 +3,16 @@ from time import sleep
 from entidade.jogo import Jogo, Vencedor
 from entidade.embarcacao import Embarcacao
 from tela.jogo_tela import JogoTela
+from dao.jogo_dao import JogoDAO
+from exception.nao_encontrado_error import NaoEncontradoErro
 
 
 class JogoCtrl:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__jogo_tela = JogoTela()
-        self.__jogos = []
-        self.__proximo_id = 1
+        self.__jogo_dao = JogoDAO()
+        self.__proximo_id = self.obter_proximo_id()
         self.__mensagens_acerto = ['Tiro certeiro!',
                                    'Acertou em cheio!',
                                    'Embarcação atingida!']
@@ -20,16 +22,23 @@ class JogoCtrl:
 
     @property
     def jogos(self):
-        return self.__jogos
+        return self.__jogo_dao.get_all()
+
+    def obter_proximo_id(self):
+        ids = [jogo.id for jogo in self.jogos]
+        return max(ids) + 1
 
     def obter_jogo_por_id(self, id_jogo: int):
-        for jogo in self.__jogos:
-            if jogo.id == id_jogo:
-                return jogo
+        try:
+            return self.__jogo_dao.get(id_jogo)
+        except NaoEncontradoErro as e:
+            self.__jogo_tela.mostra_mensagem(e)
 
     def remover_jogo(self, jogo: Jogo):
-        if jogo in self.__jogos:
-            self.__jogos.remove(jogo)
+        try:
+            self.__jogo_dao.remove(jogo)
+        except NaoEncontradoErro as e:
+            self.__jogo_tela.mostra_mensagem(e)
 
     def iniciar_jogo(self):
         jogador_logado = self.__controlador_principal.jogador_logado
@@ -39,7 +48,7 @@ class JogoCtrl:
         novo_jogo = Jogo(self.__proximo_id, jogador_logado,
                          oceano_jogador, oceano_pc)
         self.__proximo_id += 1
-        self.__jogos.append(novo_jogo)
+        self.__jogo_dao.add(novo_jogo)
         jogador_logado.jogos.append(novo_jogo)
 
         self.__jogo_tela.mostra_titulo('PREPARAR CANHÕES! ATIRAR!')
@@ -191,5 +200,3 @@ class JogoCtrl:
                     self.__jogo_tela.mostra_jogadas(jogo.jogadas)
                 else:
                     self.__controlador_principal.iniciar_app()
-        else:
-            self.__jogo_tela.mostra_mensagem('Não existe um jogo com esse ID!')

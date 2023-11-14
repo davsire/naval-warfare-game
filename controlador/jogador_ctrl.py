@@ -1,24 +1,30 @@
 from tela.jogador_tela import JogadorTela
+from dao.jogador_dao import JogadorDAO
 from entidade.jogador import Jogador
+from exception.nao_encontrado_error import NaoEncontradoErro
 
 
 class JogadorCtrl:
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__jogador_tela = JogadorTela()
-        self.__jogadores = []
-        self.__proximo_id = 1
+        self.__jogador_dao = JogadorDAO()
+        self.__proximo_id = self.obter_proximo_id()
 
     @property
     def jogadores(self) -> list:
-        return self.__jogadores
+        return self.__jogador_dao.get_all()
+
+    def obter_proximo_id(self):
+        ids = [jogador.id for jogador in self.jogadores]
+        return max(ids) + 1
 
     def obter_jogador_por_id(self, id_jogador: int) -> Jogador:
-        for jogador in self.jogadores:
-            if jogador.id == id_jogador:
-                return jogador
-        self.__jogador_tela.mostra_mensagem(
-            'Não existe um jogador com esse ID.')
+        try:
+            return self.__jogador_dao.get(id_jogador)
+        except NaoEncontradoErro as e:
+            self.__jogador_tela.mostra_mensagem(e)
+
 
     def logar_jogador(self) -> Jogador:
         usuario, senha = self.__jogador_tela.mostra_login_jogador()
@@ -111,7 +117,7 @@ class JogadorCtrl:
         nome, data_nasc, usuario, senha = self.obter_informacoes_jogador()
         novo_jogador = Jogador(self.__proximo_id, nome, data_nasc,
                                usuario, senha)
-        self.__jogadores.append(novo_jogador)
+        self.__jogador_dao.add(novo_jogador)
         self.__proximo_id += 1
         return novo_jogador
 
@@ -126,7 +132,7 @@ class JogadorCtrl:
             jogador_logado = self.__controlador_principal.jogador_logado
             for jogo in jogador_logado.jogos:
                 self.__controlador_principal.jogo_ctrl.remover_jogo(jogo)
-            self.__jogadores.remove(jogador_logado)
+            self.__jogador_dao.remove(jogador_logado)
             self.__jogador_tela.mostra_mensagem(
                 'Jogador excluído com sucesso!'
             )
