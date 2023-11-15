@@ -59,6 +59,7 @@ class JogoCtrl:
                          oceano_jogador, oceano_pc)
 
         self.__jogo_tela.mostra_titulo('PREPARAR CANHÕES! ATIRAR!')
+        self.mostrar_situacao_jogo(novo_jogo)
         self.executar_jogadas(novo_jogo)
 
     def mostrar_situacao_jogo(self, jogo: Jogo):
@@ -68,7 +69,6 @@ class JogoCtrl:
                                         jogo.oceano_pc.mapa)
 
     def executar_jogadas(self, jogo: Jogo):
-        self.mostrar_situacao_jogo(jogo)
         self.executar_jogada_jogador(jogo)
         if not jogo.vencedor:
             self.executar_jogada_pc(jogo)
