@@ -12,7 +12,6 @@ class JogoCtrl:
         self.__controlador_principal = controlador_principal
         self.__jogo_tela = JogoTela()
         self.__jogo_dao = JogoDAO()
-        self.__proximo_id = self.obter_proximo_id()
         self.__mensagens_acerto = ['Tiro certeiro!',
                                    'Acertou em cheio!',
                                    'Embarcação atingida!']
@@ -21,12 +20,13 @@ class JogoCtrl:
                                  'Nenhuma ebarcação atingida...']
 
     @property
+    def __proximo_id(self):
+        ultimo_id = max([jogo.id for jogo in self.jogos], default=0)
+        return ultimo_id + 1
+
+    @property
     def jogos(self):
         return self.__jogo_dao.get_all()
-
-    def obter_proximo_id(self):
-        ids = [jogo.id for jogo in self.jogos]
-        return max(ids) + 1
 
     def obter_jogo_por_id(self, id_jogo: int):
         try:
@@ -34,9 +34,19 @@ class JogoCtrl:
         except NaoEncontradoErro as e:
             self.__jogo_tela.mostra_mensagem(e)
 
+    def salvar_jogo(self, jogo: Jogo):
+        jogador = self.__controlador_principal.jogador_logado
+        jogador.jogos.append(jogo)
+        self.__jogo_dao.add(jogo)
+        self.__controlador_principal.jogador_ctrl.salvar_jogador(jogador)
+
     def remover_jogo(self, jogo: Jogo):
         try:
             self.__jogo_dao.remove(jogo)
+            self.__controlador_principal.oceano_ctrl\
+                .remover_oceano(jogo.oceano_jogador)
+            self.__controlador_principal.oceano_ctrl\
+                .remover_oceano(jogo.oceano_pc)
         except NaoEncontradoErro as e:
             self.__jogo_tela.mostra_mensagem(e)
 
@@ -47,9 +57,6 @@ class JogoCtrl:
 
         novo_jogo = Jogo(self.__proximo_id, jogador_logado,
                          oceano_jogador, oceano_pc)
-        self.__proximo_id += 1
-        self.__jogo_dao.add(novo_jogo)
-        jogador_logado.jogos.append(novo_jogo)
 
         self.__jogo_tela.mostra_titulo('PREPARAR CANHÕES! ATIRAR!')
         self.executar_jogadas(novo_jogo)
@@ -66,8 +73,8 @@ class JogoCtrl:
         if not jogo.vencedor:
             self.executar_jogada_pc(jogo)
         if jogo.vencedor:
-            self.mostrar_situacao_jogo(jogo)
             self.__jogo_tela.mostra_fim_jogo(jogo.vencedor)
+            self.salvar_jogo(jogo)
             return
         self.executar_jogadas(jogo)
 
@@ -93,9 +100,9 @@ class JogoCtrl:
                 linha, coluna = self.obter_posicao_tiro(jogo)
                 acertou = self.computar_tiro(linha, coluna, jogo)
                 existe_vencedor = self.verificar_vitoria(jogo)
+                self.mostrar_situacao_jogo(jogo)
                 if not acertou or existe_vencedor:
                     return
-                self.mostrar_situacao_jogo(jogo)
             except ValueError:
                 self.__jogo_tela.mostra_mensagem('Você já atirou aqui! '
                                                  'Tente novamente')
@@ -107,9 +114,9 @@ class JogoCtrl:
                 linha, coluna = self.obter_posicao_aleatoria(jogo)
                 acertou = self.computar_tiro(linha, coluna, jogo, True)
                 existe_vencedor = self.verificar_vitoria(jogo)
+                self.mostrar_situacao_jogo(jogo)
                 if not acertou or existe_vencedor:
                     return
-                self.mostrar_situacao_jogo(jogo)
             except ValueError:
                 pass
 

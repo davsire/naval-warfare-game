@@ -9,15 +9,15 @@ class JogadorCtrl:
         self.__controlador_principal = controlador_principal
         self.__jogador_tela = JogadorTela()
         self.__jogador_dao = JogadorDAO()
-        self.__proximo_id = self.obter_proximo_id()
+
+    @property
+    def __proximo_id(self):
+        ultimo_id = max([jogador.id for jogador in self.jogadores], default=0)
+        return ultimo_id + 1
 
     @property
     def jogadores(self) -> list:
         return self.__jogador_dao.get_all()
-
-    def obter_proximo_id(self):
-        ids = [jogador.id for jogador in self.jogadores]
-        return max(ids) + 1
 
     def obter_jogador_por_id(self, id_jogador: int) -> Jogador:
         try:
@@ -25,6 +25,16 @@ class JogadorCtrl:
         except NaoEncontradoErro as e:
             self.__jogador_tela.mostra_mensagem(e)
 
+    def salvar_jogador(self, jogador: Jogador):
+        self.__jogador_dao.add(jogador)
+
+    def remover_jogador(self, jogador: Jogador):
+        try:
+            self.__jogador_dao.remove(jogador)
+            for jogo in jogador.jogos:
+                self.__controlador_principal.jogo_ctrl.remover_jogo(jogo)
+        except NaoEncontradoErro as e:
+            self.__jogador_tela.mostra_mensagem(e)
 
     def logar_jogador(self) -> Jogador:
         usuario, senha = self.__jogador_tela.mostra_login_jogador()
@@ -117,8 +127,7 @@ class JogadorCtrl:
         nome, data_nasc, usuario, senha = self.obter_informacoes_jogador()
         novo_jogador = Jogador(self.__proximo_id, nome, data_nasc,
                                usuario, senha)
-        self.__jogador_dao.add(novo_jogador)
-        self.__proximo_id += 1
+        self.salvar_jogador(novo_jogador)
         return novo_jogador
 
     def excluir_jogador(self):
@@ -130,9 +139,7 @@ class JogadorCtrl:
         )
         if confirmacao:
             jogador_logado = self.__controlador_principal.jogador_logado
-            for jogo in jogador_logado.jogos:
-                self.__controlador_principal.jogo_ctrl.remover_jogo(jogo)
-            self.__jogador_dao.remove(jogador_logado)
+            self.remover_jogador(jogador_logado)
             self.__jogador_tela.mostra_mensagem(
                 'Jogador excluído com sucesso!'
             )
@@ -146,6 +153,7 @@ class JogadorCtrl:
         jogador_logado.data_nascimento = data_nasc
         jogador_logado.usuario = usuario
         jogador_logado.senha = senha
+        self.salvar_jogador(jogador_logado)
 
     def mostrar_historico_jogos_logado(self):
         jogador = self.__controlador_principal.jogador_logado

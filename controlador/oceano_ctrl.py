@@ -14,6 +14,7 @@ class OceanoCtrl:
         self.__tamanho_minimo_oceano = 5
         self.__tamanho_maximo_oceano = 25
         self.__oceanos = []
+        self.__proximo_id = 1
         self.__embarcacoes_iniciais = ['B', 'B', 'B', 'S', 'S', 'F', 'F', 'P']
         self.__indice_letras = {letra: index
                                 for index, letra
@@ -23,16 +24,23 @@ class OceanoCtrl:
                                       SiglaEmbarcacao.F.name: 3,
                                       SiglaEmbarcacao.P.name: 4}
 
+    def salvar_oceano(self, tamanho_oceano: int):
+        oceano = Oceano(self.__proximo_id, tamanho_oceano)
+        self.__oceanos.append(oceano)
+        self.__proximo_id += 1
+        return oceano
+
+    def remover_oceano(self, oceano: Oceano):
+        self.__oceanos.remove(oceano)
+
     def cadastrar_oceano(self) -> tuple:
         self.__oceano_tela.mostra_titulo('CADASTRANDO OCEANO')
         tamanho_oceano = self.__oceano_tela.obtem_tamanho_oceano(
             self.__tamanho_minimo_oceano,
             self.__tamanho_maximo_oceano,
         )
-        oceano_jogador = Oceano(tamanho_oceano)
-        oceano_pc = Oceano(tamanho_oceano)
-        self.__oceanos.append(oceano_jogador)
-        self.__oceanos.append(oceano_pc)
+        oceano_jogador = self.salvar_oceano(tamanho_oceano)
+        oceano_pc = self.salvar_oceano(tamanho_oceano)
 
         self.__oceano_tela.mostra_mensagem('Seu oceano:')
         self.__oceano_tela.mostra_oceano(oceano_jogador.mapa)
