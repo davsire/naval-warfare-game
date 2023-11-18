@@ -1,23 +1,25 @@
 from tela.abstract_tela import AbstractTela
+import PySimpleGUI as sg
 
 
 class RankingTela(AbstractTela):
     def __init__(self):
         pass
 
-    def mostra_jogadores(self, ranking: list):
-        print('-' * 35)
-        for index, jogador in enumerate(ranking, start=1):
-            print(f'{index} - ID: {jogador.id} - Nome: {jogador.nome}'
-                  f' - Pontuacao total: {jogador.pontuacao_total}')
-        print('-' * 35)
+    def abrir_ranking(self, ranking: list):
+        layout = [
+            *self.obtem_layout_lista(ranking, 'RANKING DOS JOGADORES'),
+            *self.obtem_layout_opcoes([
+                'Acessar perfil por ID',
+                'Voltar ao menu'
+            ]),
+        ]
 
-    def mostra_menu_ranking(self) -> int:
-        self.mostra_opcoes([
-            'Acessar perfil por ID',
-            'Voltar ao menu'
-        ])
-        return self.obtem_opcao(
-            'O que deseja acessar?\nSelecione uma opção: ',
-            [1, 2]
-        )
+        self._window = sg.Window('Batalha Naval',
+                                 layout,
+                                 element_justification='center')
+        opcao_escolhida, _ = self.open()
+        if not opcao_escolhida:
+            opcao_escolhida = 2
+        self.close()
+        return opcao_escolhida

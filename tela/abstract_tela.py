@@ -1,10 +1,50 @@
 from abc import ABC, abstractmethod
+import PySimpleGUI as sg
 
 
 class AbstractTela(ABC):
     @abstractmethod
     def __init__(self):
-        pass
+        self._window = None
+
+    def obtem_layout_opcoes(self, opcoes: list, titulo: str = ''):
+        layout = []
+
+        if titulo:
+            layout.extend([
+                [sg.Text('#' * 35, justification='center')],
+                [sg.Text(titulo, justification='center')],
+                [sg.Text('#' * 35, justification='center', size=(35, 2))],
+            ])
+
+        layout.extend([
+            [sg.Button(opcao, key=index, size=15)]
+            for index, opcao in enumerate(opcoes, start=1)
+        ])
+
+        return layout
+
+    def obtem_layout_lista(self, elementos: list, titulo: str = ''):
+        layout = []
+
+        if titulo:
+            layout.extend([
+                [sg.Text('#' * 35, justification='center')],
+                [sg.Text(titulo, justification='center')],
+                [sg.Text('#' * 35, justification='center', size=(35, 2))],
+            ])
+
+        layout = [
+            [sg.Text('-' * 35, justification='center')],
+            *[[sg.Text(
+                elemento,
+                size=(35),
+                justification='center'
+            )] for elemento in elementos],
+            [sg.Text('-' * 35, justification='center')],
+        ]
+
+        return layout
 
     def obtem_opcao(self, mensagem: str, opcoes_validas: list = None) -> int:
         while True:
@@ -37,3 +77,10 @@ class AbstractTela(ABC):
 
     def mostra_mensagem(self, mensagem: str):
         print(mensagem)
+
+    def open(self):
+        botao, valores = self._window.Read()
+        return botao, valores
+
+    def close(self):
+        self._window.Close()
