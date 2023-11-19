@@ -7,6 +7,8 @@ from controlador.oceano_ctrl import OceanoCtrl
 
 
 class PrincipalCtrl:
+    __instancia = None
+
     def __init__(self):
         self.__jogador_logado = None
         self.__principal_tela = PrincipalTela()
@@ -14,6 +16,11 @@ class PrincipalCtrl:
         self.__jogador_ctrl = JogadorCtrl(self)
         self.__ranking_ctrl = RankingCtrl(self)
         self.__oceano_ctrl = OceanoCtrl(self)
+
+    def __new__(cls):
+        if PrincipalCtrl.__instancia is None:
+            PrincipalCtrl.__instancia = object.__new__(cls)
+        return PrincipalCtrl.__instancia
 
     @property
     def jogador_logado(self) -> Jogador:

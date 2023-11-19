@@ -5,10 +5,17 @@ from exception.nao_encontrado_error import NaoEncontradoErro
 
 
 class JogadorCtrl:
+    __instancia = None
+
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__jogador_tela = JogadorTela()
         self.__jogador_dao = JogadorDAO()
+
+    def __new__(cls):
+        if JogadorCtrl.__instancia is None:
+            JogadorCtrl.__instancia = object.__new__(cls)
+        return JogadorCtrl.__instancia
 
     @property
     def __proximo_id(self):

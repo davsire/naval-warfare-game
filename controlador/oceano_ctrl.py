@@ -3,17 +3,20 @@ import string
 from entidade.oceano import Oceano
 from entidade.embarcacao import SiglaEmbarcacao
 from tela.oceano_tela import OceanoTela
+from dao.oceano_dao import OceanoDAO
 from exception.posicao_embarcacao_error import PosicaoEmbarcacaoErro
 from exception.conflito_embarcacao_error import ConflitoEmbarcacaoErro
 
 
 class OceanoCtrl:
+    __instancia = None
+
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__oceano_tela = OceanoTela()
+        self.__oceano_dao = OceanoDAO()
         self.__tamanho_minimo_oceano = 5
         self.__tamanho_maximo_oceano = 25
-        self.__oceanos = []
         self.__proximo_id = 1
         self.__embarcacoes_iniciais = ['B', 'B', 'B', 'S', 'S', 'F', 'F', 'P']
         self.__indice_letras = {letra: index
@@ -24,14 +27,27 @@ class OceanoCtrl:
                                       SiglaEmbarcacao.F.name: 3,
                                       SiglaEmbarcacao.P.name: 4}
 
+    def __new__(cls):
+        if OceanoCtrl.__instancia is None:
+            OceanoCtrl.__instancia = object.__new__(cls)
+        return OceanoCtrl.__instancia
+
+    @property
+    def __proximo_id(self):
+        ultimo_id = max([oceano.id for oceano in self.oceanos], default=0)
+        return ultimo_id + 1
+
+    @property
+    def oceanos(self) -> list:
+        return self.__oceano_dao.get_all()
+
     def salvar_oceano(self, tamanho_oceano: int):
         oceano = Oceano(self.__proximo_id, tamanho_oceano)
-        self.__oceanos.append(oceano)
-        self.__proximo_id += 1
+        self.__oceano_dao.add(oceano)
         return oceano
 
     def remover_oceano(self, oceano: Oceano):
-        self.__oceanos.remove(oceano)
+        self.__oceano_dao.remove(oceano)
 
     def cadastrar_oceano(self) -> tuple:
         self.__oceano_tela.mostra_titulo('CADASTRANDO OCEANO')

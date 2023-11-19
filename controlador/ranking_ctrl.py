@@ -2,9 +2,16 @@ from tela.ranking_tela import RankingTela
 
 
 class RankingCtrl:
+    __instancia = None
+
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__ranking_tela = RankingTela()
+
+    def __new__(cls):
+        if RankingCtrl.__instancia is None:
+            RankingCtrl.__instancia = object.__new__(cls)
+        return RankingCtrl.__instancia
 
     def listar_jogadores(self):
         self.__ranking_tela.mostra_titulo('RANKING DOS JOGADORES')
