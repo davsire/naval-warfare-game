@@ -1,4 +1,5 @@
-from tela.abstract_tela import AbstractTela
+from tela.abstract_tela import AbstractTela, OpcaoBotao
+import PySimpleGUI as sg
 
 
 class JogadorTela(AbstractTela):
@@ -6,10 +7,30 @@ class JogadorTela(AbstractTela):
         pass
 
     def mostra_login_jogador(self) -> tuple:
-        self.mostra_titulo('LOGIN JOGADOR')
-        usuario = self.obtem_informacao('Digite seu usuario: ').strip()
-        senha = self.obtem_informacao('Digite sua senha: ').strip()
-        return usuario, senha
+        layout = [
+            *self.obtem_layout_titulo('LOGIN JOGADOR'),
+            [
+                sg.Text('Digite seu usuário: ', size=20),
+                sg.InputText(size=20, key='usuario')
+            ],
+            [
+                sg.Text('Digite sua senha: ', size=(20, 2)),
+                sg.InputText(size=(20, 2), key='senha')
+            ],
+            [
+                sg.Submit('Login'),
+                sg.Cancel('Voltar', key=OpcaoBotao.VOLTAR)
+            ]
+        ]
+
+        self._window = sg.Window('Batalha Naval',
+                                 layout,
+                                 element_justification='center')
+        botao, valores = self.open()
+        if not botao:
+            botao = OpcaoBotao.VOLTAR
+        self.close()
+        return botao, valores
 
     def obtem_id_jogador(self) -> int:
         while True:
@@ -17,22 +38,43 @@ class JogadorTela(AbstractTela):
                 id_jogador = int(input('Digite o ID do jogador: '))
                 return id_jogador
             except ValueError:
-                print('Digite um ID válido!')
+                self.mostra_mensagem('Digite um ID válido!')
 
     def mostra_perfil_jogador(self,
                               id_jogador: int,
                               nome: str,
                               data_nascimento: str,
                               usuario: str,
-                              pontuacao_total: int):
-        self.mostra_titulo('PERFIL DE JOGADOR')
-        self.mostra_mensagem('-'*35)
-        self.mostra_mensagem(f'ID: {id_jogador}\n'
-                             f'Nome: {nome}\n'
-                             f'Data de Nascimento: {data_nascimento}\n'
-                             f'Nome de usuário: {usuario}\n'
-                             f'Pontuação total: {pontuacao_total}')
-        self.mostra_mensagem('-'*35)
+                              pontuacao_total: int,
+                              is_logado: bool = False):
+        dados = {
+            'ID': id_jogador,
+            'Nome': nome,
+            'Data de Nascimento': data_nascimento,
+            'Nome de usuário': usuario,
+            'Pontuação total': pontuacao_total,
+        }
+        opcoes = [
+            'Histórico de jogos',
+            'Voltar ao menu'
+        ]
+        if is_logado:
+            opcoes.insert(1, 'Editar perfil')
+            opcoes.insert(1, 'Excluir perfil')
+        layout = [
+            *self.obtem_layout_titulo('PERFIL DE JOGADOR'),
+            *self.obtem_layout_dados(dados),
+            *self.obtem_layout_opcoes(opcoes),
+        ]
+
+        self._window = sg.Window('Batalha Naval',
+                                 layout,
+                                 element_justification='center')
+        opcao_escolhida, _ = self.open()
+        if not opcao_escolhida:
+            opcao_escolhida = 4 if is_logado else 2
+        self.close()
+        return opcao_escolhida
 
     def mostra_historico_jogos(self, jogos: list):
         self.mostra_titulo('HISTÓRICO DE JOGOS')
@@ -46,28 +88,6 @@ class JogadorTela(AbstractTela):
         else:
             self.mostra_mensagem('O jogador ainda não tem jogos registrados!')
         self.mostra_mensagem('-' * 35)
-
-    def mostra_menu_perfil(self) -> int:
-        self.mostra_opcoes([
-            'Histórico de Jogos',
-            'Voltar ao menu'
-        ])
-        return self.obtem_opcao(
-            'O que deseja acessar?\nSelecione uma opção: ',
-            [1, 2]
-        )
-
-    def mostra_menu_perfil_logado(self) -> int:
-        self.mostra_opcoes([
-            'Histórico de Jogos',
-            'Editar Perfil',
-            'Excluir Perfil',
-            'Voltar ao menu'
-        ])
-        return self.obtem_opcao(
-            'O que deseja acessar?\nSelecione uma opção: ',
-            [1, 2, 3, 4]
-        )
 
     def mostra_menu_historico_jogo(self) -> int:
         self.mostra_opcoes([

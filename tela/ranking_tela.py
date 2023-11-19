@@ -8,7 +8,8 @@ class RankingTela(AbstractTela):
 
     def abrir_ranking(self, ranking: list):
         layout = [
-            *self.obtem_layout_lista(ranking, 'RANKING DOS JOGADORES'),
+            *self.obtem_layout_titulo('RANKING DOS JOGADORES'),
+            *self.obtem_layout_lista(ranking),
             *self.obtem_layout_opcoes([
                 'Acessar perfil por ID',
                 'Voltar ao menu'

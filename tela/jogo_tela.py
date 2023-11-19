@@ -14,7 +14,7 @@ class JogoTela(AbstractTela):
                 id_jogo = int(input('Digite o ID do jogo: '))
                 return id_jogo
             except ValueError:
-                print('Digite um id válido!')
+                self.mostra_mensagem('Digite um ID válido!')
 
     def mostra_pontuacoes(self, pontuacao_jogador: int, pontuacao_pc: int):
         print('-' * 35)

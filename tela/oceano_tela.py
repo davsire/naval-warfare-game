@@ -25,7 +25,7 @@ class OceanoTela(AbstractTela):
                     raise ValueError
                 return tamanho
             except ValueError:
-                print('Digite um número válido!')
+                self.mostra_mensagem('Digite um número válido!')
 
     def obtem_opcao_cadastro_oceano(self) -> int:
         self.mostra_mensagem('O que você deseja fazer?')

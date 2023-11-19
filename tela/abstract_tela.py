@@ -1,5 +1,10 @@
 from abc import ABC, abstractmethod
 import PySimpleGUI as sg
+from enum import Enum
+
+
+class OpcaoBotao(Enum):
+    VOLTAR = 'VOLTAR',
 
 
 class AbstractTela(ABC):
@@ -7,44 +12,47 @@ class AbstractTela(ABC):
     def __init__(self):
         self._window = None
 
-    def obtem_layout_opcoes(self, opcoes: list, titulo: str = ''):
-        layout = []
-
-        if titulo:
-            layout.extend([
-                [sg.Text('#' * 35, justification='center')],
-                [sg.Text(titulo, justification='center')],
-                [sg.Text('#' * 35, justification='center', size=(35, 2))],
-            ])
-
-        layout.extend([
-            [sg.Button(opcao, key=index, size=15)]
-            for index, opcao in enumerate(opcoes, start=1)
-        ])
-
-        return layout
-
-    def obtem_layout_lista(self, elementos: list, titulo: str = ''):
-        layout = []
-
-        if titulo:
-            layout.extend([
-                [sg.Text('#' * 35, justification='center')],
-                [sg.Text(titulo, justification='center')],
-                [sg.Text('#' * 35, justification='center', size=(35, 2))],
-            ])
-
-        layout = [
-            [sg.Text('-' * 35, justification='center')],
-            *[[sg.Text(
-                elemento,
-                size=(35),
-                justification='center'
-            )] for elemento in elementos],
-            [sg.Text('-' * 35, justification='center')],
+    def obtem_layout_titulo(self, titulo: str):
+        return [
+            [sg.Text('#' * 40, justification='center')],
+            [sg.Text(titulo, justification='center')],
+            [sg.Text('#' * 40, justification='center')],
         ]
 
-        return layout
+    def obtem_layout_opcoes(self, opcoes: list):
+        return [
+            [sg.Button(opcao, key=index, size=15)]
+            for index, opcao in enumerate(opcoes, start=1)
+        ]
+
+    def obtem_layout_lista(self, elementos: list):
+        return [
+            [sg.Text('-' * 70, justification='center')],
+            *[[sg.Text(
+                elemento,
+                size=40,
+                justification='center'
+            )] for elemento in elementos],
+            [sg.Text('-' * 70, justification='center')],
+        ]
+
+    def obtem_layout_dados(self, dados: dict):
+        return [
+            [sg.Text('-' * 70, justification='center')],
+            *[[
+                sg.Text(
+                    f'{label}: ',
+                    size=15,
+                    justification='left',
+                ),
+                sg.Text(
+                    dados[label],
+                    size=15,
+                    justification='right',
+                ),
+            ] for label in dados],
+            [sg.Text('-' * 70, justification='center')],
+        ]
 
     def obtem_opcao(self, mensagem: str, opcoes_validas: list = None) -> int:
         while True:
@@ -76,7 +84,7 @@ class AbstractTela(ABC):
         print('#' * 35)
 
     def mostra_mensagem(self, mensagem: str):
-        print(mensagem)
+        sg.Popup(mensagem, title='Batalha Naval')
 
     def open(self):
         botao, valores = self._window.Read()
