@@ -48,14 +48,18 @@ class JogadorCtrl:
                     return jogador
             self.__jogador_tela.mostra_mensagem('Usuário ou senha incorretos.')
 
-    def mostrar_jogador(self):
-        id_jogador = self.__jogador_tela.obtem_id_jogador()
-        jogador = self.obter_jogador_por_id(id_jogador)
+    def mostrar_jogador(self, jogador: Jogador = None):
+        if not jogador:
+            id_jogador = self.__jogador_tela.obtem_id_jogador()
+            jogador = self.obter_jogador_por_id(id_jogador)
         if jogador:
+            is_logado = jogador == self.__controlador_principal.jogador_logado
+            iniciar_app = self.__controlador_principal.iniciar_app
             opcoes_acoes = {
                 1: self.mostrar_historico_jogos,
-                2: self.__controlador_principal.iniciar_app,
-                4: self.__controlador_principal.iniciar_app,
+                2: self.editar_jogador if is_logado else iniciar_app,
+                3: self.excluir_jogador,
+                4: iniciar_app,
             }
             while True:
                 opcao_escolhida = self.__jogador_tela.mostra_perfil_jogador(
@@ -64,32 +68,12 @@ class JogadorCtrl:
                     jogador.data_nascimento,
                     jogador.usuario,
                     jogador.pontuacao_total,
-                    jogador == self.__controlador_principal.jogador_logado
+                    is_logado
                 )
                 if opcao_escolhida == 1:
                     opcoes_acoes[opcao_escolhida](jogador)
                 else:
                     opcoes_acoes[opcao_escolhida]()
-
-    def mostrar_jogador_logado(self):
-        jogador = self.__controlador_principal.jogador_logado
-        if jogador:
-            opcoes_acoes = {
-                1: self.mostrar_historico_jogos_logado,
-                2: self.editar_jogador,
-                3: self.excluir_jogador,
-                4: self.__controlador_principal.iniciar_app,
-            }
-            while True:
-                opcao_escolhida = self.__jogador_tela.mostra_perfil_jogador(
-                    jogador.id,
-                    jogador.nome,
-                    jogador.data_nascimento,
-                    jogador.usuario,
-                    jogador.pontuacao_total,
-                    True
-                )
-                opcoes_acoes[opcao_escolhida]()
 
     def tratar_usario(self) -> str:
         jogador_logado = self.__controlador_principal.jogador_logado
@@ -162,10 +146,6 @@ class JogadorCtrl:
         jogador_logado.usuario = usuario
         jogador_logado.senha = senha
         self.salvar_jogador(jogador_logado)
-
-    def mostrar_historico_jogos_logado(self):
-        jogador = self.__controlador_principal.jogador_logado
-        self.mostrar_historico_jogos(jogador)
 
     def mostrar_historico_jogos(self, jogador: Jogador):
         self.__jogador_tela.mostra_historico_jogos(jogador.jogos)

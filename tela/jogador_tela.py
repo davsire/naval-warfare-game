@@ -60,7 +60,7 @@ class JogadorTela(AbstractTela):
         ]
         if is_logado:
             opcoes.insert(1, 'Editar perfil')
-            opcoes.insert(1, 'Excluir perfil')
+            opcoes.insert(2, 'Excluir perfil')
         layout = [
             *self.obtem_layout_titulo('PERFIL DE JOGADOR'),
             *self.obtem_layout_dados(dados),
@@ -72,7 +72,7 @@ class JogadorTela(AbstractTela):
                                  element_justification='center')
         opcao_escolhida, _ = self.open()
         if not opcao_escolhida:
-            opcao_escolhida = 4 if is_logado else 2
+            opcao_escolhida = 4
         self.close()
         return opcao_escolhida
 
