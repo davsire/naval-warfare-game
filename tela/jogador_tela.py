@@ -4,7 +4,7 @@ import PySimpleGUI as sg
 
 class JogadorTela(AbstractTela):
     def __init__(self):
-        pass
+        super().__init__()
 
     def mostra_login_jogador(self) -> tuple:
         dados = {
@@ -16,10 +16,7 @@ class JogadorTela(AbstractTela):
             *self.obtem_layout_obtem_dados(dados, 'Login')
         ]
 
-        self._window = sg.Window('Batalha Naval',
-                                 layout,
-                                 element_justification='center')
-        botao, valores = self.open()
+        botao, valores = self.open(layout)
         if not botao:
             botao = OpcaoBotao.VOLTAR
         self.close()
@@ -60,34 +57,24 @@ class JogadorTela(AbstractTela):
             *self.obtem_layout_opcoes(opcoes),
         ]
 
-        self._window = sg.Window('Batalha Naval',
-                                 layout,
-                                 element_justification='center')
-        opcao_escolhida, _ = self.open()
+        opcao_escolhida, _ = self.open(layout)
         if not opcao_escolhida:
             opcao_escolhida = 4
         self.close()
         return opcao_escolhida
 
     def mostra_historico_jogos(self, jogos: list):
-        self.mostra_titulo('HISTÓRICO DE JOGOS')
-        self.mostra_mensagem('-' * 35)
-        if len(jogos):
-            for index, jogo in enumerate(jogos, start=1):
-                vencedor = jogo.vencedor.name if jogo.vencedor else '~'
-                print(f'{index} - ID: {jogo.id} - '
-                      f'Vencedor: {vencedor} - '
-                      f'Data: {jogo.data_hora}')
-        else:
-            self.mostra_mensagem('O jogador ainda não tem jogos registrados!')
-        self.mostra_mensagem('-' * 35)
+        layout = [
+            *self.obtem_layout_titulo('HISTÓRICO DE JOGOS'),
+            *self.obtem_layout_lista(jogos),
+            *self.obtem_layout_opcoes([
+                'Acessar relatório de jogo',
+                'Voltar ao menu'
+            ])
+        ]
 
-    def mostra_menu_historico_jogo(self) -> int:
-        self.mostra_opcoes([
-            'Acessar relatório de jogo',
-            'Voltar ao menu'
-        ])
-        return self.obtem_opcao(
-            'O que deseja acessar?\nSelecione uma opção: ',
-            [1, 2]
-        )
+        opcao_escolhida, _ = self.open(layout)
+        if not opcao_escolhida:
+            opcao_escolhida = 2
+        self.close()
+        return opcao_escolhida

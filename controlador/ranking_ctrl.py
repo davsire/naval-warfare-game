@@ -15,7 +15,7 @@ class RankingCtrl:
             ranking = [
                 f'ID: {jogador.id} - Nome: {jogador.nome}'
                 f' - Pontuacao total: {jogador.pontuacao_total}'
-                for index, jogador in enumerate(jogadores_ord, start=1)
+                for jogador in jogadores_ord
             ]
 
             opcao_escolhida = self.__ranking_tela.abrir_ranking(ranking)

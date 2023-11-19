@@ -191,15 +191,16 @@ class JogoCtrl:
         jogo = self.obter_jogo_por_id(id_jogo)
         if jogo:
             vencedor = jogo.vencedor.name if jogo.vencedor else '~'
-            self.__jogo_tela.mostra_relatorio_jogo(jogo.id,
-                                                   jogo.jogador.nome,
-                                                   jogo.jogador.usuario,
-                                                   vencedor,
-                                                   jogo.data_hora,
-                                                   jogo.pontuacao_jogador,
-                                                   jogo.pontuacao_pc)
             while True:
-                opcao_escolhida = self.__jogo_tela.mostra_menu_relatorio_jogo()
+                opcao_escolhida = self.__jogo_tela.mostra_relatorio_jogo(
+                    jogo.id,
+                    jogo.jogador.nome,
+                    jogo.jogador.usuario,
+                    vencedor,
+                    jogo.data_hora,
+                    jogo.pontuacao_jogador,
+                    jogo.pontuacao_pc
+                )
                 if opcao_escolhida == 1:
                     self.__jogo_tela.mostra_oceanos(jogo.oceano_jogador.mapa,
                                                     jogo.oceano_pc.mapa)

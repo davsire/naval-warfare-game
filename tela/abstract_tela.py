@@ -10,7 +10,7 @@ class OpcaoBotao(Enum):
 class AbstractTela(ABC):
     @abstractmethod
     def __init__(self):
-        self._window = None
+        self.__window = None
 
     def obtem_layout_titulo(self, titulo: str):
         return [
@@ -21,37 +21,36 @@ class AbstractTela(ABC):
 
     def obtem_layout_opcoes(self, opcoes: list):
         return [
-            [sg.Button(opcao, key=index, size=15)]
+            [sg.Button(opcao, key=index, size=max(20, len(opcao)))]
             for index, opcao in enumerate(opcoes, start=1)
         ]
 
     def obtem_layout_lista(self, elementos: list):
         return [
-            [sg.Text('-' * 70, justification='center')],
+            [sg.Text('-' * 80, justification='center')],
             *[[sg.Text(
                 elemento,
-                size=40,
                 justification='center'
             )] for elemento in elementos],
-            [sg.Text('-' * 70, justification='center')],
+            [sg.Text('-' * 80, justification='center')],
         ]
 
     def obtem_layout_mostra_dados(self, dados: dict):
         return [
-            [sg.Text('-' * 70, justification='center')],
+            [sg.Text('-' * 80, justification='center')],
             *[[
                 sg.Text(
                     f'{label}: ',
-                    size=15,
+                    size=20,
                     justification='left',
                 ),
                 sg.Text(
                     dados[label],
-                    size=15,
+                    size=20,
                     justification='right',
                 ),
             ] for label in dados],
-            [sg.Text('-' * 70, justification='center')],
+            [sg.Text('-' * 80, justification='center')],
         ]
 
     def obtem_layout_obtem_dados(self, dados: dict, label_confirmar: str):
@@ -61,8 +60,8 @@ class AbstractTela(ABC):
                 sg.InputText(size=20, key=chave)
             ] for chave in dados],
             [
-                sg.Submit(label_confirmar),
-                sg.Cancel('Voltar', key=OpcaoBotao.VOLTAR)
+                sg.Submit(label_confirmar, size=(10, 1)),
+                sg.Cancel('Voltar', key=OpcaoBotao.VOLTAR, size=(10, 1))
             ]
         ]
 
@@ -98,9 +97,12 @@ class AbstractTela(ABC):
     def mostra_mensagem(self, mensagem: str):
         sg.Popup(mensagem, title='Batalha Naval')
 
-    def open(self):
-        botao, valores = self._window.Read()
+    def open(self, layout: list):
+        self.__window = sg.Window('Batalha Naval',
+                                  layout,
+                                  element_justification='center')
+        botao, valores = self.__window.Read()
         return botao, valores
 
     def close(self):
-        self._window.Close()
+        self.__window.Close()

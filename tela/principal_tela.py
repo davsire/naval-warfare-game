@@ -4,7 +4,9 @@ import PySimpleGUI as sg
 
 class PrincipalTela(AbstractTela):
     def __init__(self):
+        super().__init__()
         sg.ChangeLookAndFeel('DarkGrey14')
+        sg.set_options(font=('System', 12))
 
     def mostra_menu_login(self) -> int:
         layout = [
@@ -15,10 +17,8 @@ class PrincipalTela(AbstractTela):
                  'Sair do jogo'],
             )
         ]
-        self._window = sg.Window('Batalha Naval',
-                                 layout,
-                                 element_justification='center')
-        opcao_escolhida, _ = self.open()
+
+        opcao_escolhida, _ = self.open(layout)
         if not opcao_escolhida:
             opcao_escolhida = 3
         self.close()
@@ -34,10 +34,8 @@ class PrincipalTela(AbstractTela):
                  'Logout'],
             )
         ]
-        self._window = sg.Window('Batalha Naval',
-                                 layout,
-                                 element_justification='center')
-        opcao_escolhida, _ = self.open()
+
+        opcao_escolhida, _ = self.open(layout)
         if not opcao_escolhida:
             opcao_escolhida = 4
         self.close()

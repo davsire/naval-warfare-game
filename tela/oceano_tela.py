@@ -5,6 +5,7 @@ from entidade.embarcacao import Embarcacao
 
 class OceanoTela(AbstractTela):
     def __init__(self):
+        super().__init__()
         self.__letras_colunas = list(string.ascii_uppercase)
         self.__nomes_embarcacoes = {
             'B': 'Bote',

@@ -148,11 +148,18 @@ class JogadorCtrl:
         self.salvar_jogador(jogador_logado)
 
     def mostrar_historico_jogos(self, jogador: Jogador):
-        self.__jogador_tela.mostra_historico_jogos(jogador.jogos)
         opcoes_acoes = {
             1: self.__controlador_principal.jogo_ctrl.mostrar_relatorio_jogo,
             2: self.__controlador_principal.iniciar_app
         }
+        jogos = [
+            f'ID: {jogo.id} - '
+            f'Vencedor: {jogo.vencedor.name if jogo.vencedor else '~'} - '
+            f'Data: {jogo.data_hora}'
+            for jogo in jogador.jogos
+        ]
+        if not len(jogos):
+            jogos.append('O jogador ainda não tem jogos registrados!')
         while True:
-            opcao_escolhida = self.__jogador_tela.mostra_menu_historico_jogo()
+            opcao_escolhida = self.__jogador_tela.mostra_historico_jogos(jogos)
             opcoes_acoes[opcao_escolhida]()

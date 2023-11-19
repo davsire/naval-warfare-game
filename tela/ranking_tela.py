@@ -4,7 +4,7 @@ import PySimpleGUI as sg
 
 class RankingTela(AbstractTela):
     def __init__(self):
-        pass
+        super().__init__()
 
     def abrir_ranking(self, ranking: list):
         layout = [
@@ -16,10 +16,7 @@ class RankingTela(AbstractTela):
             ]),
         ]
 
-        self._window = sg.Window('Batalha Naval',
-                                 layout,
-                                 element_justification='center')
-        opcao_escolhida, _ = self.open()
+        opcao_escolhida, _ = self.open(layout)
         if not opcao_escolhida:
             opcao_escolhida = 2
         self.close()
