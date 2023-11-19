@@ -9,6 +9,8 @@ from exception.conflito_embarcacao_error import ConflitoEmbarcacaoErro
 
 class OceanoCtrl:
     def __init__(self, controlador_principal):
+        __instancia = None
+
         self.__controlador_principal = controlador_principal
         self.__oceano_tela = OceanoTela()
         self.__tamanho_minimo_oceano = 5
@@ -23,6 +25,11 @@ class OceanoCtrl:
                                       SiglaEmbarcacao.S.name: 2,
                                       SiglaEmbarcacao.F.name: 3,
                                       SiglaEmbarcacao.P.name: 4}
+
+    def __new__(cls):
+        if OceanoCtrl.__instancia is None:
+            OceanoCtrl.__instancia = object.__new__(cls)
+        return OceanoCtrl.__instancia
 
     def salvar_oceano(self, tamanho_oceano: int):
         oceano = Oceano(self.__proximo_id, tamanho_oceano)

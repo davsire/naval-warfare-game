@@ -8,6 +8,8 @@ from exception.nao_encontrado_error import NaoEncontradoErro
 
 
 class JogoCtrl:
+    __instancia = None
+
     def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__jogo_tela = JogoTela()
@@ -18,6 +20,11 @@ class JogoCtrl:
         self.__mensagens_erro = ['Direto no mar...',
                                  'Acertou algum peixe...',
                                  'Nenhuma ebarcação atingida...']
+
+    def __new__(cls):
+        if JogoCtrl.__instancia is None:
+            JogoCtrl.__instancia = object.__new__(cls)
+        return JogoCtrl.__instancia
 
     @property
     def __proximo_id(self):
