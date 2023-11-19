@@ -50,7 +50,7 @@ class PrincipalCtrl:
         self.__jogador_ctrl.mostrar_jogador(self.__jogador_logado)
 
     def abrir_ranking(self):
-        self.__ranking_ctrl.abrir_ranking()
+        self.__ranking_ctrl.mostra_ranking()
 
     def sair(self):
         exit(0)

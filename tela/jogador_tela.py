@@ -7,20 +7,13 @@ class JogadorTela(AbstractTela):
         pass
 
     def mostra_login_jogador(self) -> tuple:
+        dados = {
+            'usuario': 'Digite seu usuário: ',
+            'senha': 'Digite sua senha: ',
+        }
         layout = [
             *self.obtem_layout_titulo('LOGIN JOGADOR'),
-            [
-                sg.Text('Digite seu usuário: ', size=20),
-                sg.InputText(size=20, key='usuario')
-            ],
-            [
-                sg.Text('Digite sua senha: ', size=(20, 2)),
-                sg.InputText(size=(20, 2), key='senha')
-            ],
-            [
-                sg.Submit('Login'),
-                sg.Cancel('Voltar', key=OpcaoBotao.VOLTAR)
-            ]
+            *self.obtem_layout_obtem_dados(dados, 'Login')
         ]
 
         self._window = sg.Window('Batalha Naval',
@@ -63,7 +56,7 @@ class JogadorTela(AbstractTela):
             opcoes.insert(2, 'Excluir perfil')
         layout = [
             *self.obtem_layout_titulo('PERFIL DE JOGADOR'),
-            *self.obtem_layout_dados(dados),
+            *self.obtem_layout_mostra_dados(dados),
             *self.obtem_layout_opcoes(opcoes),
         ]
 

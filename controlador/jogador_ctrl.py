@@ -54,12 +54,12 @@ class JogadorCtrl:
             jogador = self.obter_jogador_por_id(id_jogador)
         if jogador:
             is_logado = jogador == self.__controlador_principal.jogador_logado
-            iniciar_app = self.__controlador_principal.iniciar_app
+            voltar_menu = self.__controlador_principal.iniciar_app
             opcoes_acoes = {
                 1: self.mostrar_historico_jogos,
-                2: self.editar_jogador if is_logado else iniciar_app,
+                2: self.editar_jogador if is_logado else voltar_menu,
                 3: self.excluir_jogador,
-                4: iniciar_app,
+                4: voltar_menu,
             }
             while True:
                 opcao_escolhida = self.__jogador_tela.mostra_perfil_jogador(

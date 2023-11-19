@@ -6,7 +6,7 @@ class RankingCtrl:
         self.__controlador_principal = controlador_principal
         self.__ranking_tela = RankingTela()
 
-    def abrir_ranking(self):
+    def mostra_ranking(self):
         while True:
             jogadores = self.__controlador_principal.jogador_ctrl.jogadores
             jogadores_ord = sorted(jogadores,
@@ -22,9 +22,8 @@ class RankingCtrl:
             self.redirecionar(opcao_escolhida)
 
     def redirecionar(self, opcao_escolhida: int):
-        controlador_jogador = self.__controlador_principal.jogador_ctrl
         opcoes_acoes = {
-                1: controlador_jogador.mostrar_jogador,
+                1: self.__controlador_principal.jogador_ctrl.mostrar_jogador,
                 2: self.__controlador_principal.abrir_menu_principal,
             }
         opcoes_acoes[opcao_escolhida]()

@@ -36,7 +36,7 @@ class AbstractTela(ABC):
             [sg.Text('-' * 70, justification='center')],
         ]
 
-    def obtem_layout_dados(self, dados: dict):
+    def obtem_layout_mostra_dados(self, dados: dict):
         return [
             [sg.Text('-' * 70, justification='center')],
             *[[
@@ -52,6 +52,18 @@ class AbstractTela(ABC):
                 ),
             ] for label in dados],
             [sg.Text('-' * 70, justification='center')],
+        ]
+
+    def obtem_layout_obtem_dados(self, dados: dict, label_confirmar: str):
+        return [
+            *[[
+                sg.Text(dados[chave], size=20),
+                sg.InputText(size=20, key=chave)
+            ] for chave in dados],
+            [
+                sg.Submit(label_confirmar),
+                sg.Cancel('Voltar', key=OpcaoBotao.VOLTAR)
+            ]
         ]
 
     def obtem_opcao(self, mensagem: str, opcoes_validas: list = None) -> int:
