@@ -8,7 +8,7 @@ class RankingCtrl:
         self.__controlador_principal = controlador_principal
         self.__ranking_tela = RankingTela()
 
-    def __new__(cls):
+    def __new__(cls, controlador_principal):
         if RankingCtrl.__instancia is None:
             RankingCtrl.__instancia = object.__new__(cls)
         return RankingCtrl.__instancia

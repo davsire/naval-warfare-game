@@ -27,7 +27,7 @@ class OceanoCtrl:
                                       SiglaEmbarcacao.F.name: 3,
                                       SiglaEmbarcacao.P.name: 4}
 
-    def __new__(cls):
+    def __new__(cls, controlador_principal):
         if OceanoCtrl.__instancia is None:
             OceanoCtrl.__instancia = object.__new__(cls)
         return OceanoCtrl.__instancia

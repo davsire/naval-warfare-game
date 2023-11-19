@@ -22,7 +22,7 @@ class JogoCtrl:
                                  'Acertou algum peixe...',
                                  'Nenhuma ebarcação atingida...']
 
-    def __new__(cls):
+    def __new__(cls, controlador_principal):
         if JogoCtrl.__instancia is None:
             JogoCtrl.__instancia = object.__new__(cls)
         return JogoCtrl.__instancia

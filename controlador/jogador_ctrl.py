@@ -13,7 +13,7 @@ class JogadorCtrl:
         self.__jogador_tela = JogadorTela()
         self.__jogador_dao = JogadorDAO()
 
-    def __new__(cls):
+    def __new__(cls, controlador_principal):
         if JogadorCtrl.__instancia is None:
             JogadorCtrl.__instancia = object.__new__(cls)
         return JogadorCtrl.__instancia
