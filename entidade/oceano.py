@@ -8,9 +8,14 @@ from exception.conflito_embarcacao_error import ConflitoEmbarcacaoErro
 
 
 class Oceano:
-    def __init__(self, tamanho: int):
+    def __init__(self, id: int, tamanho: int):
+        self.__id = id
         self.__tamanho = tamanho
         self.__mapa = [[None for _ in range(tamanho)] for _ in range(tamanho)]
+
+    @property
+    def id(self) -> int:
+        return self.__id
 
     @property
     def tamanho(self) -> int:
