@@ -1,6 +1,6 @@
 import string
 from entidade.jogo import Vencedor
-from tela.abstract_tela import AbstractTela
+from tela.abstract_tela import AbstractTela, OpcaoBotao
 from entidade.embarcacao import Embarcacao
 import PySimpleGUI as sg
 
@@ -10,17 +10,20 @@ class JogoTela(AbstractTela):
         super().__init__()
         self.__letras_colunas = list(string.ascii_uppercase)
 
-    def obtem_id_jogo(self) -> int:
-        dados = {'id_jogo': 'Digite o ID do jogo: '}
+    def obtem_id_jogo(self) -> tuple:
+        dados = {'id_jogo': 'Digite o ID do jogo:'}
         while True:
+            layout = [
+                *self.obtem_layout_titulo('BUSCAR JOGO'),
+                *self.obtem_layout_obtem_dados(dados, 'Buscar')
+            ]
+            botao, valores = self.open(layout)
+            self.close()
+            if botao == OpcaoBotao.VOLTAR or not botao:
+                return OpcaoBotao.VOLTAR, None
             try:
-                layout = [
-                    *self.obtem_layout_obtem_dados(dados, 'Buscar')
-                ]
-                botao, valores = self.open(layout)
-                self.close()
                 id_jogo = int(valores['id_jogo'])
-                return id_jogo
+                return botao, id_jogo
             except ValueError:
                 self.mostra_mensagem('Digite um ID válido!')
 
@@ -109,6 +112,7 @@ class JogoTela(AbstractTela):
 
     def mostra_jogadas(self, jogadas: list):
         layout = [
+            *self.obtem_layout_titulo('JOGADAS DA PARTIDA'),
             [sg.Column(self.obtem_layout_lista(jogadas), scrollable=True)],
             [sg.Button('Voltar', size=10)]
         ]

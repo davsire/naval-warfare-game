@@ -5,6 +5,7 @@ from entidade.embarcacao import SiglaEmbarcacao
 from tela.oceano_tela import OceanoTela
 from exception.posicao_embarcacao_error import PosicaoEmbarcacaoErro
 from exception.conflito_embarcacao_error import ConflitoEmbarcacaoErro
+from tela.abstract_tela import OpcaoBotao
 
 
 class OceanoCtrl:
@@ -34,11 +35,12 @@ class OceanoCtrl:
         self.__oceanos.remove(oceano)
 
     def cadastrar_oceano(self) -> tuple:
-        self.__oceano_tela.mostra_titulo('CADASTRANDO OCEANO')
-        tamanho_oceano = self.__oceano_tela.obtem_tamanho_oceano(
+        opcao, tamanho_oceano = self.__oceano_tela.obtem_tamanho_oceano(
             self.__tamanho_minimo_oceano,
             self.__tamanho_maximo_oceano,
         )
+        if opcao == OpcaoBotao.VOLTAR:
+            self.__controlador_principal.iniciar_app()
         oceano_jogador = self.salvar_oceano(tamanho_oceano)
         oceano_pc = self.salvar_oceano(tamanho_oceano)
 

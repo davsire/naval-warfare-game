@@ -5,6 +5,7 @@ from entidade.embarcacao import Embarcacao
 from tela.jogo_tela import JogoTela
 from dao.jogo_dao import JogoDAO
 from exception.nao_encontrado_error import NaoEncontradoErro
+from tela.abstract_tela import OpcaoBotao
 
 
 class JogoCtrl:
@@ -187,7 +188,9 @@ class JogoCtrl:
             jogo.adicionar_jogada_jogador(False)
 
     def mostrar_relatorio_jogo(self):
-        id_jogo = self.__jogo_tela.obtem_id_jogo()
+        opcao, id_jogo = self.__jogo_tela.obtem_id_jogo()
+        if opcao == OpcaoBotao.VOLTAR:
+            return
         jogo = self.obter_jogo_por_id(id_jogo)
         if jogo:
             vencedor = jogo.vencedor.name if jogo.vencedor else '~'

@@ -56,7 +56,7 @@ class AbstractTela(ABC):
     def obtem_layout_obtem_dados(self, dados: dict, label_confirmar: str):
         return [
             *[[
-                sg.Text(dados[chave], size=20),
+                sg.Text(dados[chave], size=max(20, len(dados[chave]))),
                 sg.InputText(size=20, key=chave)
             ] for chave in dados],
             [
@@ -97,7 +97,7 @@ class AbstractTela(ABC):
     def mostra_mensagem(self, mensagem: str):
         sg.Popup(mensagem, title='Batalha Naval')
 
-    def open(self, layout: list):
+    def open(self, layout: list) -> tuple:
         self.__window = sg.Window('Batalha Naval',
                                   layout,
                                   element_justification='center')
