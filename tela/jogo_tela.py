@@ -113,7 +113,9 @@ class JogoTela(AbstractTela):
     def mostra_jogadas(self, jogadas: list):
         layout = [
             *self.obtem_layout_titulo('JOGADAS DA PARTIDA'),
-            [sg.Column(self.obtem_layout_lista(jogadas), scrollable=True)],
+            [sg.Column(self.obtem_layout_lista(jogadas),
+                       scrollable=True,
+                       vertical_scroll_only=True)],
             [sg.Button('Voltar', size=10)]
         ]
         self.open(layout)
