@@ -3,14 +3,15 @@ import string
 from entidade.oceano import Oceano
 from entidade.embarcacao import SiglaEmbarcacao
 from tela.oceano_tela import OceanoTela
+from dao.oceano_dao import OceanoDAO
 from exception.posicao_embarcacao_error import PosicaoEmbarcacaoErro
 from exception.conflito_embarcacao_error import ConflitoEmbarcacaoErro
 
 
 class OceanoCtrl:
-    def __init__(self, controlador_principal):
-        __instancia = None
+    __instancia = None
 
+    def __init__(self, controlador_principal):
         self.__controlador_principal = controlador_principal
         self.__oceano_tela = OceanoTela()
         self.__tamanho_minimo_oceano = 5
