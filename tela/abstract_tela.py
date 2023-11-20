@@ -53,11 +53,20 @@ class AbstractTela(ABC):
             [sg.Text('-' * 80, justification='center')],
         ]
 
-    def obtem_layout_obtem_dados(self, dados: dict, label_confirmar: str):
+    def obtem_layout_obtem_dados(self,
+                                 dados: dict,
+                                 label_confirmar: str,
+                                 dados_atuais: dict = None):
+        if dados_atuais is None:
+            dados_atuais = {}
         return [
             *[[
                 sg.Text(dados[chave], size=max(20, len(dados[chave]))),
-                sg.InputText(size=20, key=chave)
+                sg.InputText(
+                    dados_atuais[chave] if chave in dados_atuais else '',
+                    size=20,
+                    key=chave
+                )
             ] for chave in dados],
             [
                 sg.Submit(label_confirmar, size=(10, 1)),

@@ -161,7 +161,7 @@ class JogadorCtrl:
         }
         jogos = [
             f'ID: {jogo.id} - '
-            f'Vencedor: {jogo.vencedor.name if jogo.vencedor else '~'} - '
+            f'Vencedor: {jogo.vencedor.name if jogo.vencedor else "~"} - '
             f'Data: {jogo.data_hora}'
             for jogo in jogador.jogos
         ]
