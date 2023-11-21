@@ -22,11 +22,20 @@ class JogadorTela(AbstractTela):
         self.close()
         return botao, valores
 
-    def obtem_id_jogador(self) -> int:
+    def obtem_id_jogador(self) -> tuple:
+        dados = {'id_jogador': 'Digite o ID do jogador:'}
         while True:
+            layout = [
+                *self.obtem_layout_titulo('BUSCAR JOGADOR'),
+                *self.obtem_layout_obtem_dados(dados, 'Buscar')
+            ]
+            botao, valores = self.open(layout)
+            self.close()
+            if botao == OpcaoBotao.VOLTAR or not botao:
+                return OpcaoBotao.VOLTAR, None
             try:
-                id_jogador = int(input('Digite o ID do jogador: '))
-                return id_jogador
+                id_jogador = int(valores['id_jogador'])
+                return botao, id_jogador
             except ValueError:
                 self.mostra_mensagem('Digite um ID válido!')
 
@@ -62,6 +71,17 @@ class JogadorTela(AbstractTela):
             opcao_escolhida = 4
         self.close()
         return opcao_escolhida
+
+    def mostra_excluir_jogador(self, mensagem):
+        layout = [
+            self.confirma_acao(mensagem, 'Excluir')
+        ]
+        botao, valores = self.open(layout)
+        self.close()
+        if botao == 'Excluir':
+            return True
+        else:
+            return False
 
     def mostra_historico_jogos(self, jogos: list):
         layout = [

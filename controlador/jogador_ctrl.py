@@ -57,7 +57,9 @@ class JogadorCtrl:
 
     def mostrar_jogador(self, jogador: Jogador = None):
         if not jogador:
-            id_jogador = self.__jogador_tela.obtem_id_jogador()
+            opcao, id_jogador = self.__jogador_tela.obtem_id_jogador()
+            if opcao == OpcaoBotao.VOLTAR:
+                return
             jogador = self.obter_jogador_por_id(id_jogador)
         if jogador:
             is_logado = jogador == self.__controlador_principal.jogador_logado
@@ -133,7 +135,7 @@ class JogadorCtrl:
         self.__jogador_tela.mostra_mensagem('** Ao excluir sua conta, os '
                                             'registros dos seus jogos serão '
                                             'perdidos! **')
-        confirmacao = self.__jogador_tela.confirma_acao(
+        confirmacao = self.__jogador_tela.mostra_excluir_jogador(
             'Tem certeza que deseja excluir sua conta?'
         )
         if confirmacao:
