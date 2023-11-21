@@ -114,18 +114,19 @@ class JogadorCtrl:
                 self.__jogador_tela.mostra_mensagem(
                     'Data de nascimento inválida!')
 
-    def obter_informacoes_jogador(self) -> tuple:
-        nome = self.__jogador_tela.obtem_informacao(
-            'Digite seu nome: ')
-        data_nascimento = self.tratar_data_nascimento()
-        usuario = self.tratar_usario()
-        senha = self.__jogador_tela.obtem_informacao(
-            'Digite sua senha: ').strip()
-        return nome, data_nascimento, usuario, senha
+    # IMPLEMENTAR
+    def valida_dados(self, dados):
+        pass
+
+    def obter_informacoes_jogador(self, label_confirmar: str) -> tuple:
+        opcao, dados = self.__jogador_tela.mostra_obter_informacoes_jogador(label_confirmar)
+        if opcao == OpcaoBotao.VOLTAR:
+            self.__controlador_principal.iniciar_app()
+        self.valida_dados(dados)
+        return dados['nome'], dados['data_nasc'], dados['usuario'], dados['senha']
 
     def cadastrar_jogador(self) -> Jogador:
-        self.__jogador_tela.mostra_titulo('CADASTRANDO JOGADOR')
-        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador()
+        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador('Cadastrar')
         novo_jogador = Jogador(self.__proximo_id, nome, data_nasc,
                                usuario, senha)
         self.salvar_jogador(novo_jogador)
@@ -147,8 +148,7 @@ class JogadorCtrl:
             self.__controlador_principal.logout()
 
     def editar_jogador(self):
-        self.__jogador_tela.mostra_titulo('EDITANDO JOGADOR')
-        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador()
+        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador('Editar')
         jogador_logado = self.__controlador_principal.jogador_logado
         jogador_logado.nome = nome
         jogador_logado.data_nascimento = data_nasc
