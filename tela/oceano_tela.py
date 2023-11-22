@@ -1,10 +1,12 @@
 import string
-from tela.abstract_tela import AbstractTela
+from tela.abstract_tela import AbstractTela, OpcaoBotao
 from entidade.embarcacao import Embarcacao
+import PySimpleGUI as sg
 
 
 class OceanoTela(AbstractTela):
     def __init__(self):
+        super().__init__()
         self.__letras_colunas = list(string.ascii_uppercase)
         self.__nomes_embarcacoes = {
             'B': 'Bote',
@@ -13,19 +15,35 @@ class OceanoTela(AbstractTela):
             'P': 'Porta Aviões',
         }
 
-    def obtem_tamanho_oceano(self, minimo: int, maximo: int) -> int:
+    def obtem_tamanho_oceano(self, minimo: int, maximo: int) -> tuple:
+        dados = {
+            'tamanho_oceano': 'Digite o tamanho dos oceanos do jogo:'
+        }
         while True:
-            self.mostra_mensagem('O tamanho do oceano deve ser maior ou igual '
-                                 f'a {minimo} espaços e menor '
-                                 f'ou igual a {maximo} espaços!')
+            layout = [
+                *self.obtem_layout_titulo('CADASTRANDO OCEANO'),
+                [sg.Text(
+                    'O tamanho do oceano deve ser maior ou igual '
+                    f'a {minimo} espaços e menor '
+                    f'ou igual a {maximo} espaços!',
+                    size=(50, 2),
+                    justification='center',
+                    pad=(0, 10)
+                )],
+                *self.obtem_layout_obtem_dados(dados, 'Confirmar'),
+            ]
+            botao, valores = self.open(layout)
+            self.close()
+            if botao == OpcaoBotao.VOLTAR or not botao:
+                return OpcaoBotao.VOLTAR, None
             try:
-                tamanho = int(input('Digite o tamanho dos oceanos do jogo: '))
+                tamanho = int(valores['tamanho_oceano'])
                 if tamanho < minimo or \
                         tamanho > maximo:
                     raise ValueError
-                return tamanho
+                return botao, tamanho
             except ValueError:
-                print('Digite um número válido!')
+                self.mostra_mensagem('Digite um número válido!')
 
     def obtem_opcao_cadastro_oceano(self) -> int:
         self.mostra_mensagem('O que você deseja fazer?')

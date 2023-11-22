@@ -8,26 +8,29 @@ class RankingCtrl:
         self.__controlador_principal = controlador_principal
         self.__ranking_tela = RankingTela()
 
-    def __new__(cls):
+    def __new__(cls, controlador_principal):
         if RankingCtrl.__instancia is None:
             RankingCtrl.__instancia = object.__new__(cls)
         return RankingCtrl.__instancia
 
-    def listar_jogadores(self):
-        self.__ranking_tela.mostra_titulo('RANKING DOS JOGADORES')
-        jogadores = self.__controlador_principal.jogador_ctrl.jogadores
-        ranking = sorted(jogadores,
-                         key=lambda jogador: jogador.pontuacao_total,
-                         reverse=True)
-        self.__ranking_tela.mostra_jogadores(ranking)
-        self.abrir_menu_ranking()
+    def mostra_ranking(self):
+        while True:
+            jogadores = self.__controlador_principal.jogador_ctrl.jogadores
+            jogadores_ord = sorted(jogadores,
+                                   key=lambda jogador: jogador.pontuacao_total,
+                                   reverse=True)
+            ranking = [
+                f'ID: {jogador.id} - Nome: {jogador.nome}'
+                f' - Pontuacao total: {jogador.pontuacao_total}'
+                for jogador in jogadores_ord
+            ]
 
-    def abrir_menu_ranking(self):
-        controlador_jogador = self.__controlador_principal.jogador_ctrl
+            opcao_escolhida = self.__ranking_tela.abrir_ranking(ranking)
+            self.redirecionar(opcao_escolhida)
+
+    def redirecionar(self, opcao_escolhida: int):
         opcoes_acoes = {
-                1: controlador_jogador.mostrar_jogador,
+                1: self.__controlador_principal.jogador_ctrl.mostrar_jogador,
                 2: self.__controlador_principal.abrir_menu_principal,
             }
-        while True:
-            opcao_escolhida = self.__ranking_tela.mostra_menu_ranking()
-            opcoes_acoes[opcao_escolhida]()
+        opcoes_acoes[opcao_escolhida]()

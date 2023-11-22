@@ -5,6 +5,7 @@ from entidade.embarcacao import Embarcacao
 from tela.jogo_tela import JogoTela
 from dao.jogo_dao import JogoDAO
 from exception.nao_encontrado_error import NaoEncontradoErro
+from tela.abstract_tela import OpcaoBotao
 
 
 class JogoCtrl:
@@ -21,7 +22,7 @@ class JogoCtrl:
                                  'Acertou algum peixe...',
                                  'Nenhuma ebarcação atingida...']
 
-    def __new__(cls):
+    def __new__(cls, controlador_principal):
         if JogoCtrl.__instancia is None:
             JogoCtrl.__instancia = object.__new__(cls)
         return JogoCtrl.__instancia
@@ -194,19 +195,22 @@ class JogoCtrl:
             jogo.adicionar_jogada_jogador(False)
 
     def mostrar_relatorio_jogo(self):
-        id_jogo = self.__jogo_tela.obtem_id_jogo()
+        opcao, id_jogo = self.__jogo_tela.obtem_id_jogo()
+        if opcao == OpcaoBotao.VOLTAR:
+            return
         jogo = self.obter_jogo_por_id(id_jogo)
         if jogo:
             vencedor = jogo.vencedor.name if jogo.vencedor else '~'
-            self.__jogo_tela.mostra_relatorio_jogo(jogo.id,
-                                                   jogo.jogador.nome,
-                                                   jogo.jogador.usuario,
-                                                   vencedor,
-                                                   jogo.data_hora,
-                                                   jogo.pontuacao_jogador,
-                                                   jogo.pontuacao_pc)
             while True:
-                opcao_escolhida = self.__jogo_tela.mostra_menu_relatorio_jogo()
+                opcao_escolhida = self.__jogo_tela.mostra_relatorio_jogo(
+                    jogo.id,
+                    jogo.jogador.nome,
+                    jogo.jogador.usuario,
+                    vencedor,
+                    jogo.data_hora,
+                    jogo.pontuacao_jogador,
+                    jogo.pontuacao_pc
+                )
                 if opcao_escolhida == 1:
                     self.__jogo_tela.mostra_oceanos(jogo.oceano_jogador.mapa,
                                                     jogo.oceano_pc.mapa)

@@ -1,4 +1,5 @@
 from tela.jogador_tela import JogadorTela
+from tela.abstract_tela import OpcaoBotao
 from dao.jogador_dao import JogadorDAO
 from entidade.jogador import Jogador
 from exception.nao_encontrado_error import NaoEncontradoErro
@@ -12,7 +13,7 @@ class JogadorCtrl:
         self.__jogador_tela = JogadorTela()
         self.__jogador_dao = JogadorDAO()
 
-    def __new__(cls):
+    def __new__(cls, controlador_principal):
         if JogadorCtrl.__instancia is None:
             JogadorCtrl.__instancia = object.__new__(cls)
         return JogadorCtrl.__instancia
@@ -44,51 +45,42 @@ class JogadorCtrl:
             self.__jogador_tela.mostra_mensagem(e)
 
     def logar_jogador(self) -> Jogador:
-        usuario, senha = self.__jogador_tela.mostra_login_jogador()
-        for jogador in self.jogadores:
-            if usuario == jogador.usuario and \
-                    senha == jogador.senha:
-                return jogador
-        self.__jogador_tela.mostra_mensagem('Usuário ou senha incorretos.')
+        while True:
+            opcao, dados = self.__jogador_tela.mostra_login_jogador()
+            if opcao == OpcaoBotao.VOLTAR:
+                self.__controlador_principal.iniciar_app()
+            for jogador in self.jogadores:
+                if dados['usuario'] == jogador.usuario and \
+                        dados['senha'] == jogador.senha:
+                    return jogador
+            self.__jogador_tela.mostra_mensagem('Usuário ou senha incorretos.')
 
-    def mostrar_jogador(self):
-        id_jogador = self.__jogador_tela.obtem_id_jogador()
-        jogador = self.obter_jogador_por_id(id_jogador)
+    def mostrar_jogador(self, jogador: Jogador = None):
+        if not jogador:
+            id_jogador = self.__jogador_tela.obtem_id_jogador()
+            jogador = self.obter_jogador_por_id(id_jogador)
         if jogador:
-            self.__jogador_tela.mostra_perfil_jogador(jogador.id,
-                                                      jogador.nome,
-                                                      jogador.data_nascimento,
-                                                      jogador.usuario,
-                                                      jogador.pontuacao_total)
+            is_logado = jogador == self.__controlador_principal.jogador_logado
+            voltar_menu = self.__controlador_principal.iniciar_app
             opcoes_acoes = {
                 1: self.mostrar_historico_jogos,
-                2: self.__controlador_principal.iniciar_app,
+                2: self.editar_jogador if is_logado else voltar_menu,
+                3: self.excluir_jogador,
+                4: voltar_menu,
             }
             while True:
-                opcao_escolhida = self.__jogador_tela.mostra_menu_perfil()
+                opcao_escolhida = self.__jogador_tela.mostra_perfil_jogador(
+                    jogador.id,
+                    jogador.nome,
+                    jogador.data_nascimento,
+                    jogador.usuario,
+                    jogador.pontuacao_total,
+                    is_logado
+                )
                 if opcao_escolhida == 1:
                     opcoes_acoes[opcao_escolhida](jogador)
                 else:
                     opcoes_acoes[opcao_escolhida]()
-
-    def mostrar_jogador_logado(self):
-        jogador = self.__controlador_principal.jogador_logado
-        jogador_tela = self.__jogador_tela
-        if jogador:
-            opcoes_acoes = {
-                1: self.mostrar_historico_jogos_logado,
-                2: self.editar_jogador,
-                3: self.excluir_jogador,
-                4: self.__controlador_principal.iniciar_app,
-            }
-            while True:
-                jogador_tela.mostra_perfil_jogador(jogador.id,
-                                                   jogador.nome,
-                                                   jogador.data_nascimento,
-                                                   jogador.usuario,
-                                                   jogador.pontuacao_total)
-                opcao_escolhida = jogador_tela.mostra_menu_perfil_logado()
-                opcoes_acoes[opcao_escolhida]()
 
     def tratar_usario(self) -> str:
         jogador_logado = self.__controlador_principal.jogador_logado
@@ -162,16 +154,19 @@ class JogadorCtrl:
         jogador_logado.senha = senha
         self.salvar_jogador(jogador_logado)
 
-    def mostrar_historico_jogos_logado(self):
-        jogador = self.__controlador_principal.jogador_logado
-        self.mostrar_historico_jogos(jogador)
-
     def mostrar_historico_jogos(self, jogador: Jogador):
-        self.__jogador_tela.mostra_historico_jogos(jogador.jogos)
         opcoes_acoes = {
             1: self.__controlador_principal.jogo_ctrl.mostrar_relatorio_jogo,
             2: self.__controlador_principal.iniciar_app
         }
+        jogos = [
+            f'ID: {jogo.id} - '
+            f'Vencedor: {jogo.vencedor.name if jogo.vencedor else "~"} - '
+            f'Data: {jogo.data_hora}'
+            for jogo in jogador.jogos
+        ]
+        if not len(jogos):
+            jogos.append('O jogador ainda não tem jogos registrados!')
         while True:
-            opcao_escolhida = self.__jogador_tela.mostra_menu_historico_jogo()
+            opcao_escolhida = self.__jogador_tela.mostra_historico_jogos(jogos)
             opcoes_acoes[opcao_escolhida]()

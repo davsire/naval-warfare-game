@@ -6,6 +6,7 @@ from tela.oceano_tela import OceanoTela
 from dao.oceano_dao import OceanoDAO
 from exception.posicao_embarcacao_error import PosicaoEmbarcacaoErro
 from exception.conflito_embarcacao_error import ConflitoEmbarcacaoErro
+from tela.abstract_tela import OpcaoBotao
 
 
 class OceanoCtrl:
@@ -17,7 +18,6 @@ class OceanoCtrl:
         self.__oceano_dao = OceanoDAO()
         self.__tamanho_minimo_oceano = 5
         self.__tamanho_maximo_oceano = 25
-        self.__proximo_id = 1
         self.__embarcacoes_iniciais = ['B', 'B', 'B', 'S', 'S', 'F', 'F', 'P']
         self.__indice_letras = {letra: index
                                 for index, letra
@@ -27,7 +27,7 @@ class OceanoCtrl:
                                       SiglaEmbarcacao.F.name: 3,
                                       SiglaEmbarcacao.P.name: 4}
 
-    def __new__(cls):
+    def __new__(cls, controlador_principal):
         if OceanoCtrl.__instancia is None:
             OceanoCtrl.__instancia = object.__new__(cls)
         return OceanoCtrl.__instancia
@@ -50,11 +50,12 @@ class OceanoCtrl:
         self.__oceano_dao.remove(oceano)
 
     def cadastrar_oceano(self) -> tuple:
-        self.__oceano_tela.mostra_titulo('CADASTRANDO OCEANO')
-        tamanho_oceano = self.__oceano_tela.obtem_tamanho_oceano(
+        opcao, tamanho_oceano = self.__oceano_tela.obtem_tamanho_oceano(
             self.__tamanho_minimo_oceano,
             self.__tamanho_maximo_oceano,
         )
+        if opcao == OpcaoBotao.VOLTAR:
+            self.__controlador_principal.iniciar_app()
         oceano_jogador = self.salvar_oceano(tamanho_oceano)
         oceano_pc = self.salvar_oceano(tamanho_oceano)
 

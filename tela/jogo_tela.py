@@ -1,20 +1,31 @@
 import string
 from entidade.jogo import Vencedor
-from tela.abstract_tela import AbstractTela
+from tela.abstract_tela import AbstractTela, OpcaoBotao
 from entidade.embarcacao import Embarcacao
+import PySimpleGUI as sg
 
 
 class JogoTela(AbstractTela):
     def __init__(self):
+        super().__init__()
         self.__letras_colunas = list(string.ascii_uppercase)
 
-    def obtem_id_jogo(self) -> int:
+    def obtem_id_jogo(self) -> tuple:
+        dados = {'id_jogo': 'Digite o ID do jogo:'}
         while True:
+            layout = [
+                *self.obtem_layout_titulo('BUSCAR JOGO'),
+                *self.obtem_layout_obtem_dados(dados, 'Buscar')
+            ]
+            botao, valores = self.open(layout)
+            self.close()
+            if botao == OpcaoBotao.VOLTAR or not botao:
+                return OpcaoBotao.VOLTAR, None
             try:
-                id_jogo = int(input('Digite o ID do jogo: '))
-                return id_jogo
+                id_jogo = int(valores['id_jogo'])
+                return botao, id_jogo
             except ValueError:
-                print('Digite um id válido!')
+                self.mostra_mensagem('Digite um ID válido!')
 
     def mostra_pontuacoes(self, pontuacao_jogador: int, pontuacao_pc: int):
         print('-' * 35)
@@ -74,26 +85,38 @@ class JogoTela(AbstractTela):
                               data_hora: str,
                               pontuacao_jogador: int,
                               pontuacao_pc: int):
-        self.mostra_titulo('RELATÓRIO DE JOGO')
-        print('-' * 35)
-        print(f'ID: {id_jogo}\n'
-              f'Jogador: {jogador_nome} ({jogador_usuario})\n'
-              f'Vencedor: {vencedor}\n'
-              f'Data: {data_hora}\n'
-              f'Pontuação do jogador: {pontuacao_jogador} pts\n'
-              f'Pontuação do PC: {pontuacao_pc} pts')
-        print('-' * 35)
+        dados = {
+            'ID': id_jogo,
+            'Jogador': f'{jogador_nome} ({jogador_usuario})',
+            'Vencedor': vencedor,
+            'Data': data_hora,
+            'Pontuação do jogador': pontuacao_jogador,
+            'Pontuação do PC': pontuacao_pc
+        }
+        layout = [
+            *self.obtem_layout_titulo('RELATÓRIO DE JOGO'),
+            *self.obtem_layout_mostra_dados(dados),
+            *self.obtem_layout_opcoes([
+                'Visualizar mapas finais da partida',
+                'Visualizar jogadas da partida',
+                'Voltar ao menu'
+            ])
+        ]
+
+        opcao_escolhida, _ = self.open(layout)
+        if not opcao_escolhida:
+            opcao_escolhida = 3
+        self.close()
+        return opcao_escolhida
+
 
     def mostra_jogadas(self, jogadas: list):
-        print('-' * 35)
-        print('\n'.join(jogadas))
-        print('-' * 35)
-
-    def mostra_menu_relatorio_jogo(self) -> int:
-        self.mostra_opcoes([
-            'Visualizar mapas finais da partida',
-            'Visualizar jogadas da partida',
-            'Voltar ao menu'
-        ])
-        return self.obtem_opcao('O que deseja acessar?\nSelecione uma opção: ',
-                                [1, 2, 3])
+        layout = [
+            *self.obtem_layout_titulo('JOGADAS DA PARTIDA'),
+            [sg.Column(self.obtem_layout_lista(jogadas),
+                       scrollable=True,
+                       vertical_scroll_only=True)],
+            [sg.Button('Voltar', size=10)]
+        ]
+        self.open(layout)
+        self.close()
