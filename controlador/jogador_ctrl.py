@@ -106,9 +106,9 @@ class JogadorCtrl:
     def valida_dados(self, dados):
         erros = []
         if not self.tratar_data_nascimento(dados['data_nasc']):
-            erros.append('Data de nascimento inválida!')
+            erros.append('A data de nascimento está inválida!')
         if not self.tratar_usario(dados['usuario']):
-            erros.append('Nome de usuário ja está em uso...')
+            erros.append('O nome de usuário ja está em uso!')
 
         if len(erros):
             self.__jogador_tela.mostra_mensagem('\n'.join(erros))
@@ -122,14 +122,18 @@ class JogadorCtrl:
                 self.__controlador_principal.iniciar_app()
             if not self.valida_dados(dados):
                 break
-        return dados['nome'], dados['data_nasc'], dados['usuario'], dados['senha']
+        return dados['nome'], dados['data_nasc'],\
+            dados['usuario'], dados['senha']
 
     def cadastrar_jogador(self) -> Jogador:
         dados_atuais = {}
-        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador('Cadastrar', dados_atuais)
+        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador(
+            'Cadastrar', dados_atuais
+        )
         novo_jogador = Jogador(self.__proximo_id, nome, data_nasc,
                                usuario, senha)
         self.salvar_jogador(novo_jogador)
+        self.__jogador_tela.mostra_mensagem('Jogador cadastrado com sucesso!')
         return novo_jogador
 
     def excluir_jogador(self):
@@ -155,12 +159,15 @@ class JogadorCtrl:
             'usuario': jogador_logado.usuario,
             'senha': jogador_logado.senha,
         }
-        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador('Editar', dados_atuais)
+        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador(
+            'Editar', dados_atuais
+        )
         jogador_logado.nome = nome
         jogador_logado.data_nascimento = data_nasc
         jogador_logado.usuario = usuario
         jogador_logado.senha = senha
         self.salvar_jogador(jogador_logado)
+        self.__jogador_tela.mostra_mensagem('Dados alterados com sucesso!')
 
     def mostrar_historico_jogos(self, jogador: Jogador):
         opcoes_acoes = {

@@ -22,7 +22,9 @@ class JogadorTela(AbstractTela):
         self.close()
         return botao, valores
 
-    def mostra_obter_informacoes_jogador(self, acao: str, dados_atuais: dict):
+    def mostra_obter_informacoes_jogador(self,
+                                         acao: str,
+                                         dados_atuais: dict) -> tuple:
         dados = {
             'nome': 'Digite seu nome: ',
             'data_nasc': 'Digite sua data de nascimento',
@@ -62,7 +64,7 @@ class JogadorTela(AbstractTela):
                               data_nascimento: str,
                               usuario: str,
                               pontuacao_total: int,
-                              is_logado: bool = False):
+                              is_logado: bool = False) -> int:
         dados = {
             'ID': id_jogador,
             'Nome': nome,
@@ -89,13 +91,13 @@ class JogadorTela(AbstractTela):
         self.close()
         return opcao_escolhida
 
-    def mostra_excluir_jogador(self, mensagem):
+    def mostra_excluir_jogador(self, mensagem) -> bool:
         layout = [
-            self.confirma_acao(mensagem, 'Excluir')
+            self.confirma_acao(mensagem)
         ]
-        botao, valores = self.open(layout)
+        botao, _ = self.open(layout)
         self.close()
-        return botao == 'Sim'
+        return botao
 
     def mostra_historico_jogos(self, jogos: list):
         layout = [
