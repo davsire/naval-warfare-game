@@ -22,7 +22,7 @@ class JogadorTela(AbstractTela):
         self.close()
         return botao, valores
 
-    def mostra_obter_informacoes_jogador(self, label_confirmar: str, dados_atuais: dict):
+    def mostra_obter_informacoes_jogador(self, acao: str, dados_atuais: dict):
         dados = {
             'nome': 'Digite seu nome: ',
             'data_nasc': 'Digite sua data de nascimento',
@@ -30,8 +30,8 @@ class JogadorTela(AbstractTela):
             'senha': 'Digite sua senha: ',
         }
         layout = [
-            *self.obtem_layout_titulo('CADASTRO JOGADOR'),
-            *self.obtem_layout_obtem_dados(dados, label_confirmar, dados_atuais)
+            *self.obtem_layout_titulo(f'{acao.upper()} JOGADOR'),
+            *self.obtem_layout_obtem_dados(dados, acao, dados_atuais)
         ]
         botao, valores = self.open(layout)
         if not botao:

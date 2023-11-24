@@ -87,13 +87,8 @@ class JogadorCtrl:
     def tratar_usario(self, usuario) -> bool:
         jogador_logado = self.__controlador_principal.jogador_logado
         usuarios = [jogador.usuario for jogador in self.jogadores]
-        if usuario not in usuarios or \
-                (jogador_logado and jogador_logado.usuario == usuario):
-            return True
-        else:
-            self.__jogador_tela.mostra_mensagem(
-                'Nome de usuário já está em uso...')
-            return False
+        return usuario not in usuarios or \
+            (jogador_logado and jogador_logado.usuario == usuario)
 
     def tratar_data_nascimento(self, data_nasc: str) -> bool:
         try:
@@ -101,28 +96,31 @@ class JogadorCtrl:
             dia = int(dia)
             mes = int(mes)
             ano = int(ano)
-            if not (0 < dia < 32) or not (0 < mes < 13) or\
+            if not (0 < dia < 32) or not (0 < mes < 13) or \
                     not (ano > 0):
                 raise ValueError
             return True
         except ValueError:
-            self.__jogador_tela.mostra_mensagem(
-                'Data de nascimento inválida!')
             return False
 
     def valida_dados(self, dados):
-        if self.tratar_data_nascimento(dados['data_nasc']) and self.tratar_usario(dados['usuario']):
-            return True
-        else:
-            return False
+        erros = []
+        if not self.tratar_data_nascimento(dados['data_nasc']):
+            erros.append('Data de nascimento inválida!')
+        if not self.tratar_usario(dados['usuario']):
+            erros.append('Nome de usuário ja está em uso...')
 
-    def obter_informacoes_jogador(self, label_confirmar: str, dados_atuais) -> tuple:
+        if len(erros):
+            self.__jogador_tela.mostra_mensagem('\n'.join(erros))
+        return bool(len(erros))
+
+    def obter_informacoes_jogador(self, acao: str, dados_atuais) -> tuple:
         while True:
-            opcao, dados = self.__jogador_tela.mostra_obter_informacoes_jogador(label_confirmar, dados_atuais)
+            opcao, dados = self.__jogador_tela.mostra_obter_informacoes_jogador(acao, dados_atuais)
             dados_atuais = dados
             if opcao == OpcaoBotao.VOLTAR:
                 self.__controlador_principal.iniciar_app()
-            if self.valida_dados(dados):
+            if not self.valida_dados(dados):
                 break
         return dados['nome'], dados['data_nasc'], dados['usuario'], dados['senha']
 
