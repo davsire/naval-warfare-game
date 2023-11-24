@@ -98,8 +98,8 @@ class AbstractTela(ABC):
         return [
             [sg.Text(mensagem)],
             [
-                [sg.Button('Excluir', size=(10,1)),
-                 sg.Button('Voltar', size=(10,1))]
+                [sg.Button('Sim', size=(10,1)),
+                 sg.Button('Não', size=(10,1))]
             ],
         ]
 

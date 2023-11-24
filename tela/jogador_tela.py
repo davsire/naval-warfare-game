@@ -95,10 +95,7 @@ class JogadorTela(AbstractTela):
         ]
         botao, valores = self.open(layout)
         self.close()
-        if botao == 'Excluir':
-            return True
-        else:
-            return False
+        return botao == 'Sim'
 
     def mostra_historico_jogos(self, jogos: list):
         layout = [
