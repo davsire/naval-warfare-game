@@ -7,13 +7,20 @@ class JogadorTela(AbstractTela):
         super().__init__()
 
     def mostra_login_jogador(self) -> tuple:
-        dados = {
-            'usuario': 'Digite seu usuário: ',
-            'senha': 'Digite sua senha: ',
-        }
         layout = [
             *self.obtem_layout_titulo('LOGIN JOGADOR'),
-            *self.obtem_layout_obtem_dados(dados, 'Login')
+            [
+                sg.Text('Digite seu usuário: ', size=20),
+                sg.InputText(size=20, key='usuario')
+            ],
+            [
+                sg.Text('Digite sua senha: ', size=20),
+                sg.InputText(size=20, key='senha', password_char='*')
+            ],
+            [
+                sg.Submit('Login', size=(10, 1)),
+                sg.Cancel('Voltar', key=OpcaoBotao.VOLTAR, size=(10, 1))
+            ],
         ]
 
         botao, valores = self.open(layout)

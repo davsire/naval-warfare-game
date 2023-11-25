@@ -28,10 +28,8 @@ class AbstractTela(ABC):
     def obtem_layout_lista(self, elementos: list):
         return [
             [sg.Text('-' * 80, justification='center')],
-            *[[sg.Text(
-                elemento,
-                justification='center'
-            )] for elemento in elementos],
+            *[[sg.Text(elemento, justification='center')]
+              for elemento in elementos],
             [sg.Text('-' * 80, justification='center')],
         ]
 
@@ -39,16 +37,8 @@ class AbstractTela(ABC):
         return [
             [sg.Text('-' * 80, justification='center')],
             *[[
-                sg.Text(
-                    f'{label}: ',
-                    size=20,
-                    justification='left',
-                ),
-                sg.Text(
-                    dados[label],
-                    size=20,
-                    justification='right',
-                ),
+                sg.Text(f'{label}: ', size=20, justification='left'),
+                sg.Text(dados[label], size=20, justification='right'),
             ] for label in dados],
             [sg.Text('-' * 80, justification='center')],
         ]
@@ -93,7 +83,7 @@ class AbstractTela(ABC):
 
     def confirma_acao(self, mensagem: str):
         return [
-            [sg.Text(mensagem)],
+            [sg.Text(mensagem, justification='center')],
             [
                 sg.Button('Sim', size=(10, 1), key=True),
                 sg.Button('Não', size=(10, 1), key=False)

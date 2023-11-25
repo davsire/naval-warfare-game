@@ -103,24 +103,27 @@ class JogadorCtrl:
         except ValueError:
             return False
 
-    def valida_dados(self, dados):
+    def valida_dados(self, dados: dict):
         erros = []
         if not self.tratar_data_nascimento(dados['data_nasc']):
             erros.append('A data de nascimento está inválida!')
         if not self.tratar_usario(dados['usuario']):
             erros.append('O nome de usuário ja está em uso!')
+        if '' in dados.values():
+            erros.append('Todos os campos devem ser preenchidos!')
 
         if len(erros):
-            self.__jogador_tela.mostra_mensagem('\n'.join(erros))
-        return bool(len(erros))
+            self.__jogador_tela.mostra_mensagem('\n---\n'.join(erros))
+        return not len(erros)
 
     def obter_informacoes_jogador(self, acao: str, dados_atuais) -> tuple:
         while True:
-            opcao, dados = self.__jogador_tela.mostra_obter_informacoes_jogador(acao, dados_atuais)
+            opcao, dados = self.__jogador_tela\
+                .mostra_obter_informacoes_jogador(acao, dados_atuais)
             dados_atuais = dados
             if opcao == OpcaoBotao.VOLTAR:
                 self.__controlador_principal.iniciar_app()
-            if not self.valida_dados(dados):
+            if self.valida_dados(dados):
                 break
         return dados['nome'], dados['data_nasc'],\
             dados['usuario'], dados['senha']
@@ -137,10 +140,9 @@ class JogadorCtrl:
         return novo_jogador
 
     def excluir_jogador(self):
-        self.__jogador_tela.mostra_mensagem('** Ao excluir sua conta, os '
-                                            'registros dos seus jogos serão '
-                                            'perdidos! **')
         confirmacao = self.__jogador_tela.mostra_excluir_jogador(
+            '** Ao excluir sua conta, os registros dos seus jogos serão '
+            'perdidos! ** \n\n'
             'Tem certeza que deseja excluir sua conta?'
         )
         if confirmacao:
