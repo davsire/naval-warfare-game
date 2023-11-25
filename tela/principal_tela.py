@@ -6,7 +6,7 @@ class PrincipalTela(AbstractTela):
     def __init__(self):
         super().__init__()
         sg.ChangeLookAndFeel('DarkGrey14')
-        sg.set_options(font=('System', 12))
+        sg.set_options(font=('Fixedsys', 14))
 
     def mostra_menu_login(self) -> int:
         layout = [
