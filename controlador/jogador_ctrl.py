@@ -57,7 +57,9 @@ class JogadorCtrl:
 
     def mostrar_jogador(self, jogador: Jogador = None):
         if not jogador:
-            id_jogador = self.__jogador_tela.obtem_id_jogador()
+            opcao, id_jogador = self.__jogador_tela.obtem_id_jogador()
+            if opcao == OpcaoBotao.VOLTAR:
+                return
             jogador = self.obter_jogador_por_id(id_jogador)
         if jogador:
             is_logado = jogador == self.__controlador_principal.jogador_logado
@@ -82,58 +84,65 @@ class JogadorCtrl:
                 else:
                     opcoes_acoes[opcao_escolhida]()
 
-    def tratar_usario(self) -> str:
+    def tratar_usario(self, usuario) -> bool:
         jogador_logado = self.__controlador_principal.jogador_logado
         usuarios = [jogador.usuario for jogador in self.jogadores]
-        while True:
-            usuario = self.__jogador_tela.obtem_informacao(
-                'Digite seu usuário: ').strip()
-            if usuario not in usuarios or \
-                    (jogador_logado and jogador_logado.usuario == usuario):
-                return usuario
-            else:
-                self.__jogador_tela.mostra_mensagem(
-                    'Nome de usuário já está em uso...')
+        return usuario not in usuarios or \
+            (jogador_logado and jogador_logado.usuario == usuario)
 
-    def tratar_data_nascimento(self) -> str:
-        while True:
-            try:
-                dia, mes, ano = self.__jogador_tela.obtem_informacao(
-                    f'Digite sua data de nascimento '
-                    f'separada por espaços (ex: 01 01 2000): ').split()
-                dia = int(dia)
-                mes = int(mes)
-                ano = int(ano)
-                if not (0 < dia < 32) or not (0 < mes < 13) or\
-                        not (ano > 0):
-                    raise ValueError
-                return f'{dia}/{mes}/{ano}'
-            except ValueError:
-                self.__jogador_tela.mostra_mensagem(
-                    'Data de nascimento inválida!')
+    def tratar_data_nascimento(self, data_nasc: str) -> bool:
+        try:
+            dia, mes, ano = data_nasc.split()
+            dia = int(dia)
+            mes = int(mes)
+            ano = int(ano)
+            if not (0 < dia < 32) or not (0 < mes < 13) or \
+                    not (ano > 0):
+                raise ValueError
+            return True
+        except ValueError:
+            return False
 
-    def obter_informacoes_jogador(self) -> tuple:
-        nome = self.__jogador_tela.obtem_informacao(
-            'Digite seu nome: ')
-        data_nascimento = self.tratar_data_nascimento()
-        usuario = self.tratar_usario()
-        senha = self.__jogador_tela.obtem_informacao(
-            'Digite sua senha: ').strip()
-        return nome, data_nascimento, usuario, senha
+    def valida_dados(self, dados: dict):
+        erros = []
+        if not self.tratar_data_nascimento(dados['data_nasc']):
+            erros.append('A data de nascimento está inválida!')
+        if not self.tratar_usario(dados['usuario']):
+            erros.append('O nome de usuário ja está em uso!')
+        if '' in dados.values():
+            erros.append('Todos os campos devem ser preenchidos!')
+
+        if len(erros):
+            self.__jogador_tela.mostra_mensagem('\n---\n'.join(erros))
+        return not len(erros)
+
+    def obter_informacoes_jogador(self, acao: str, dados_atuais) -> tuple:
+        while True:
+            opcao, dados = self.__jogador_tela\
+                .mostra_obter_informacoes_jogador(acao, dados_atuais)
+            dados_atuais = dados
+            if opcao == OpcaoBotao.VOLTAR:
+                self.__controlador_principal.iniciar_app()
+            if self.valida_dados(dados):
+                break
+        return dados['nome'], dados['data_nasc'],\
+            dados['usuario'], dados['senha']
 
     def cadastrar_jogador(self) -> Jogador:
-        self.__jogador_tela.mostra_titulo('CADASTRANDO JOGADOR')
-        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador()
+        dados_atuais = {}
+        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador(
+            'Cadastrar', dados_atuais
+        )
         novo_jogador = Jogador(self.__proximo_id, nome, data_nasc,
                                usuario, senha)
         self.salvar_jogador(novo_jogador)
+        self.__jogador_tela.mostra_mensagem('Jogador cadastrado com sucesso!')
         return novo_jogador
 
     def excluir_jogador(self):
-        self.__jogador_tela.mostra_mensagem('** Ao excluir sua conta, os '
-                                            'registros dos seus jogos serão '
-                                            'perdidos! **')
-        confirmacao = self.__jogador_tela.confirma_acao(
+        confirmacao = self.__jogador_tela.mostra_excluir_jogador(
+            '** Ao excluir sua conta, os registros dos seus jogos serão '
+            'perdidos! ** \n\n'
             'Tem certeza que deseja excluir sua conta?'
         )
         if confirmacao:
@@ -145,14 +154,22 @@ class JogadorCtrl:
             self.__controlador_principal.logout()
 
     def editar_jogador(self):
-        self.__jogador_tela.mostra_titulo('EDITANDO JOGADOR')
-        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador()
         jogador_logado = self.__controlador_principal.jogador_logado
+        dados_atuais = {
+            'nome': jogador_logado.nome,
+            'data_nasc': jogador_logado.data_nascimento,
+            'usuario': jogador_logado.usuario,
+            'senha': jogador_logado.senha,
+        }
+        nome, data_nasc, usuario, senha = self.obter_informacoes_jogador(
+            'Editar', dados_atuais
+        )
         jogador_logado.nome = nome
         jogador_logado.data_nascimento = data_nasc
         jogador_logado.usuario = usuario
         jogador_logado.senha = senha
         self.salvar_jogador(jogador_logado)
+        self.__jogador_tela.mostra_mensagem('Dados alterados com sucesso!')
 
     def mostrar_historico_jogos(self, jogador: Jogador):
         opcoes_acoes = {

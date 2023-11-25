@@ -28,10 +28,8 @@ class AbstractTela(ABC):
     def obtem_layout_lista(self, elementos: list):
         return [
             [sg.Text('-' * 80, justification='center')],
-            *[[sg.Text(
-                elemento,
-                justification='center'
-            )] for elemento in elementos],
+            *[[sg.Text(elemento, justification='center')]
+              for elemento in elementos],
             [sg.Text('-' * 80, justification='center')],
         ]
 
@@ -39,16 +37,8 @@ class AbstractTela(ABC):
         return [
             [sg.Text('-' * 80, justification='center')],
             *[[
-                sg.Text(
-                    f'{label}: ',
-                    size=20,
-                    justification='left',
-                ),
-                sg.Text(
-                    dados[label],
-                    size=20,
-                    justification='right',
-                ),
+                sg.Text(f'{label}: ', size=20, justification='left'),
+                sg.Text(dados[label], size=20, justification='right'),
             ] for label in dados],
             [sg.Text('-' * 80, justification='center')],
         ]
@@ -59,9 +49,10 @@ class AbstractTela(ABC):
                                  dados_atuais: dict = None):
         if dados_atuais is None:
             dados_atuais = {}
+        tamanho_labels = max(20, max([len(label) for label in dados.values()]))
         return [
             *[[
-                sg.Text(dados[chave], size=max(20, len(dados[chave]))),
+                sg.Text(dados[chave], size=tamanho_labels),
                 sg.InputText(
                     dados_atuais[chave] if chave in dados_atuais else '',
                     size=20,
@@ -90,13 +81,14 @@ class AbstractTela(ABC):
         for index, opcao in enumerate(opcoes, start=1):
             print(f'{index} - {opcao}')
 
-    def obtem_informacao(self, mensagem: str) -> str:
-        informacao = input(mensagem)
-        return informacao
-
-    def confirma_acao(self, mensagem: str) -> bool:
-        confirmacao = input(f'{mensagem} [S/n] ')
-        return confirmacao.lower() != 'n'
+    def confirma_acao(self, mensagem: str):
+        return [
+            [sg.Text(mensagem, justification='center')],
+            [
+                sg.Button('Sim', size=(10, 1), key=True),
+                sg.Button('Não', size=(10, 1), key=False)
+            ],
+        ]
 
     def mostra_titulo(self, titulo: str):
         print('#' * 35)
