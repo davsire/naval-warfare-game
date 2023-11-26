@@ -14,6 +14,15 @@ class OceanoTela(AbstractTela):
             SiglaEmbarcacao.F.name: 'Fragata',
             SiglaEmbarcacao.P.name: 'Porta Aviões',
         }
+        self.__cores_mapa = {
+            SiglaEmbarcacao.B.name: '#ebbb78',
+            SiglaEmbarcacao.S.name: '#7bf263',
+            SiglaEmbarcacao.F.name: '#9a74e8',
+            SiglaEmbarcacao.P.name: '#86b4e3',
+            'X': 'red',
+            '*': 'white',
+            '~': '#4a9ee0',
+        }
 
     def obtem_sigla_mapa(self, posicao_mapa) -> str:
         if isinstance(posicao_mapa, Embarcacao):
@@ -47,8 +56,18 @@ class OceanoTela(AbstractTela):
                               size=(3, 2),
                               p=(2, 2),
                               disabled=True,
-                              button_color=('white', 'darkblue'),
-                              disabled_button_color=('white', 'darkblue'))
+                              button_color=(
+                                  self.__cores_mapa[
+                                      self.obtem_sigla_mapa(posicao)
+                                  ],
+                                  'darkblue'
+                              ),
+                              disabled_button_color=(
+                                  self.__cores_mapa[
+                                      self.obtem_sigla_mapa(posicao)
+                                  ],
+                                  'darkblue'
+                              ))
                     for posicao in linha
                 ]
             ]

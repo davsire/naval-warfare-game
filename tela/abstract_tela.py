@@ -74,19 +74,14 @@ class AbstractTela(ABC):
             ],
         ]
 
-    def mostra_titulo(self, titulo: str):
-        print('#' * 35)
-        print(titulo)
-        print('#' * 35)
-
     def mostra_mensagem(self, mensagem: str):
         sg.Popup(mensagem, title='Batalha Naval')
 
-    def open(self, layout: list) -> tuple:
+    def open(self, layout: list, timeout: int = None) -> tuple:
         self.__window = sg.Window('Batalha Naval',
                                   layout,
                                   element_justification='center')
-        botao, valores = self.__window.Read()
+        botao, valores = self.__window.Read(timeout=timeout)
         return botao, valores
 
     def close(self):

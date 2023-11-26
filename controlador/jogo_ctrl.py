@@ -66,15 +66,22 @@ class JogoCtrl:
         novo_jogo = Jogo(self.__proximo_id, jogador_logado,
                          oceano_jogador, oceano_pc)
 
-        self.__jogo_tela.mostra_titulo('PREPARAR CANHÕES! ATIRAR!')
-        self.mostrar_situacao_jogo(novo_jogo)
         self.executar_jogadas(novo_jogo)
 
-    def mostrar_situacao_jogo(self, jogo: Jogo):
-        self.__jogo_tela.mostra_pontuacoes(jogo.pontuacao_jogador,
-                                           jogo.pontuacao_pc)
-        self.__jogo_tela.mostra_oceanos(jogo.oceano_jogador.mapa,
-                                        jogo.oceano_pc.mapa)
+    def mostrar_oceanos(self,
+                        jogo: Jogo,
+                        permite_acao=False,
+                        timeout_tela: int = None):
+        botao = self.__jogo_tela.mostra_situacao_jogo(jogo.oceano_jogador.mapa,
+                                                      jogo.oceano_pc.mapa,
+                                                      jogo.pontuacao_jogador,
+                                                      jogo.pontuacao_pc,
+                                                      permite_acao,
+                                                      timeout_tela)
+        if botao == OpcaoBotao.VOLTAR:
+            self.__controlador_principal.iniciar_app()
+        return botao
+
 
     def executar_jogadas(self, jogo: Jogo):
         self.executar_jogada_jogador(jogo)
@@ -105,11 +112,11 @@ class JogoCtrl:
     def executar_jogada_jogador(self, jogo: Jogo):
         while True:
             try:
-                linha, coluna = self.obter_posicao_tiro(jogo)
+                linha, coluna = self.mostrar_oceanos(jogo, True)
                 acertou = self.computar_tiro(linha, coluna, jogo)
                 existe_vencedor = self.verificar_vitoria(jogo)
-                self.mostrar_situacao_jogo(jogo)
                 if not acertou or existe_vencedor:
+                    self.mostrar_oceanos(jogo, False, 1000)
                     return
             except ValueError:
                 self.__jogo_tela.mostra_mensagem('Você já atirou aqui! '
@@ -118,22 +125,14 @@ class JogoCtrl:
     def executar_jogada_pc(self, jogo: Jogo):
         while True:
             try:
-                sleep(1)
                 linha, coluna = self.obter_posicao_aleatoria(jogo)
                 acertou = self.computar_tiro(linha, coluna, jogo, True)
                 existe_vencedor = self.verificar_vitoria(jogo)
-                self.mostrar_situacao_jogo(jogo)
                 if not acertou or existe_vencedor:
                     return
+                self.mostrar_oceanos(jogo, False, 1000)
             except ValueError:
                 pass
-
-    def obter_posicao_tiro(self, jogo: Jogo) -> tuple:
-        tamanho_oceano = jogo.oceano_jogador.tamanho
-        self.__jogo_tela.mostra_mensagem('Onde desejar atirar?')
-        linha, coluna = self.__controlador_principal\
-            .oceano_ctrl.obter_posicao(tamanho_oceano)
-        return linha, coluna
 
     def obter_posicao_aleatoria(self, jogo: Jogo) -> tuple:
         tamanho_oceano = jogo.oceano_jogador.tamanho
