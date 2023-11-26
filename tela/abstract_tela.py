@@ -80,7 +80,7 @@ class AbstractTela(ABC):
     def mostra_mensagem_rapida(self, mensagem: str, posicao: tuple):
         sg.PopupQuick(mensagem,
                       title='Batalha Naval',
-                      auto_close_duration=1,
+                      auto_close_duration=1.5,
                       keep_on_top=True,
                       relative_location=posicao)
 
