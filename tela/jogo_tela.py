@@ -201,7 +201,6 @@ class JogoTela(AbstractTela):
         self.close()
         return opcao_escolhida
 
-
     def mostra_jogadas(self, jogadas: list):
         layout = [
             *self.obtem_layout_titulo('JOGADAS DA PARTIDA'),

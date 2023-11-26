@@ -1,5 +1,4 @@
 from tela.abstract_tela import AbstractTela
-import PySimpleGUI as sg
 
 
 class RankingTela(AbstractTela):

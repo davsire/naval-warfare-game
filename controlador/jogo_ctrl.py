@@ -1,5 +1,4 @@
 import random
-from time import sleep
 from entidade.jogo import Jogo, Vencedor
 from entidade.embarcacao import Embarcacao
 from tela.jogo_tela import JogoTela
@@ -81,7 +80,6 @@ class JogoCtrl:
         if botao == OpcaoBotao.VOLTAR:
             self.__controlador_principal.iniciar_app()
         return botao
-
 
     def executar_jogadas(self, jogo: Jogo):
         self.executar_jogada_jogador(jogo)
