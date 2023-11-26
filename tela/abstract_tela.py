@@ -77,6 +77,13 @@ class AbstractTela(ABC):
     def mostra_mensagem(self, mensagem: str):
         sg.Popup(mensagem, title='Batalha Naval')
 
+    def mostra_mensagem_rapida(self, mensagem: str, posicao: tuple):
+        sg.PopupQuick(mensagem,
+                      title='Batalha Naval',
+                      auto_close_duration=1,
+                      keep_on_top=True,
+                      relative_location=posicao)
+
     def open(self, layout: list, timeout: int = None) -> tuple:
         self.__window = sg.Window('Batalha Naval',
                                   layout,

@@ -116,7 +116,7 @@ class JogoCtrl:
                 acertou = self.computar_tiro(linha, coluna, jogo)
                 existe_vencedor = self.verificar_vitoria(jogo)
                 if not acertou or existe_vencedor:
-                    self.mostrar_oceanos(jogo, False, 1000)
+                    self.mostrar_oceanos(jogo, False, 1500)
                     return
             except ValueError:
                 self.__jogo_tela.mostra_mensagem('Você já atirou aqui! '
@@ -130,7 +130,7 @@ class JogoCtrl:
                 existe_vencedor = self.verificar_vitoria(jogo)
                 if not acertou or existe_vencedor:
                     return
-                self.mostrar_oceanos(jogo, False, 1000)
+                self.mostrar_oceanos(jogo, False, 1500)
             except ValueError:
                 pass
 
@@ -162,16 +162,19 @@ class JogoCtrl:
         jogador_logado = self.__controlador_principal.jogador_logado
         indice_mensagem = random.randrange(len(self.__mensagens_acerto))
         mensagem = self.__mensagens_acerto[indice_mensagem]
-        self.__jogo_tela.mostra_mensagem(
-            f'{"PC: " if is_pc else "VOCÊ: "}{mensagem}'
+        self.__jogo_tela.mostra_mensagem_rapida(
+            f'{"PC: " if is_pc else "VOCÊ: "}{mensagem}',
+            (0, -200)
         )
 
         embarcacao.tomar_dano()
         pontuacao = 1
         if embarcacao.afundou:
             pontuacao += 3
-            self.__jogo_tela.mostra_mensagem(f'{"PC: " if is_pc else "VOCÊ: "}'
-                                             'Embarcação afundada!')
+            self.__jogo_tela.mostra_mensagem_rapida(
+                f'{"PC:" if is_pc else "VOCÊ:"} Embarcação afundada!',
+                (0, -200)
+            )
 
         if is_pc:
             jogo.aumentar_pontuacao_pc(pontuacao)
@@ -184,8 +187,9 @@ class JogoCtrl:
     def computar_erro(self, jogo: Jogo, is_pc: bool):
         indice_mensagem = random.randrange(len(self.__mensagens_erro))
         mensagem = self.__mensagens_erro[indice_mensagem]
-        self.__jogo_tela.mostra_mensagem(
-            f'{"PC: " if is_pc else "VOCÊ: "}{mensagem}'
+        self.__jogo_tela.mostra_mensagem_rapida(
+            f'{"PC: " if is_pc else "VOCÊ: "}{mensagem}',
+            (0, -200)
         )
 
         if is_pc:

@@ -102,14 +102,19 @@ class JogoTela(AbstractTela):
         return layout_header + layout_mapa
 
     def mostra_fim_jogo(self, vencedor: Vencedor):
-        if vencedor == Vencedor.JOGADOR:
-            print('~' * 35)
-            print('Parabéns!!! Você venceu a partida!')
-            print('~' * 35)
-        else:
-            print('~' * 35)
-            print('Que pena, a vitória não veio dessa vez...')
-            print('~' * 35)
+        resultado = 'Parabéns!!! Você venceu a partida!' \
+                    if vencedor == Vencedor.JOGADOR else \
+                    'Que pena, a vitória não veio dessa vez...'
+
+        layout = [
+            [sg.Text('~' * 55)],
+            [sg.Text(resultado)],
+            [sg.Text('~' * 55)],
+            [sg.Button('Continuar')]
+        ]
+
+        self.open(layout)
+        self.close()
 
     def mostra_situacao_jogo(self,
                              mapa_jogador: list,
