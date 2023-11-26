@@ -1,4 +1,5 @@
 from controlador.principal_ctrl import PrincipalCtrl
+import PySimpleGUI as sg
 
 
 if __name__ == '__main__':
@@ -7,5 +8,5 @@ if __name__ == '__main__':
         try:
             controlador_principal.iniciar_app()
         except Exception:
-            print('Ocorreu um erro inesperado! '
-                  'Redirecionamos você para a tela inicial')
+            sg.Popup('Ocorreu um erro inesperado! '
+                     'Redirecionamos você para a tela inicial')

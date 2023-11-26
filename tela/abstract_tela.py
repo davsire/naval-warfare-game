@@ -27,20 +27,20 @@ class AbstractTela(ABC):
 
     def obtem_layout_lista(self, elementos: list):
         return [
-            [sg.Text('-' * 80, justification='center')],
+            [sg.Text('-' * 55, justification='center')],
             *[[sg.Text(elemento, justification='center')]
               for elemento in elementos],
-            [sg.Text('-' * 80, justification='center')],
+            [sg.Text('-' * 55, justification='center')],
         ]
 
     def obtem_layout_mostra_dados(self, dados: dict):
         return [
-            [sg.Text('-' * 80, justification='center')],
+            [sg.Text('-' * 55, justification='center')],
             *[[
                 sg.Text(f'{label}: ', size=20, justification='left'),
                 sg.Text(dados[label], size=20, justification='right'),
             ] for label in dados],
-            [sg.Text('-' * 80, justification='center')],
+            [sg.Text('-' * 55, justification='center')],
         ]
 
     def obtem_layout_obtem_dados(self,
@@ -65,22 +65,6 @@ class AbstractTela(ABC):
             ]
         ]
 
-    def obtem_opcao(self, mensagem: str, opcoes_validas: list = None) -> int:
-        while True:
-            try:
-                opcao_escolhida = int(input(mensagem))
-                if opcoes_validas and opcao_escolhida not in opcoes_validas:
-                    raise ValueError
-                return opcao_escolhida
-            except ValueError:
-                print('Selecione uma opção válida!')
-                if opcoes_validas:
-                    print('Opções válidas:', opcoes_validas)
-
-    def mostra_opcoes(self, opcoes: list):
-        for index, opcao in enumerate(opcoes, start=1):
-            print(f'{index} - {opcao}')
-
     def confirma_acao(self, mensagem: str):
         return [
             [sg.Text(mensagem, justification='center')],
@@ -90,19 +74,21 @@ class AbstractTela(ABC):
             ],
         ]
 
-    def mostra_titulo(self, titulo: str):
-        print('#' * 35)
-        print(titulo)
-        print('#' * 35)
-
     def mostra_mensagem(self, mensagem: str):
         sg.Popup(mensagem, title='Batalha Naval')
 
-    def open(self, layout: list) -> tuple:
+    def mostra_mensagem_rapida(self, mensagem: str, posicao: tuple):
+        sg.PopupQuick(mensagem,
+                      title='Batalha Naval',
+                      auto_close_duration=1.5,
+                      keep_on_top=True,
+                      relative_location=posicao)
+
+    def open(self, layout: list, timeout: int = None) -> tuple:
         self.__window = sg.Window('Batalha Naval',
                                   layout,
                                   element_justification='center')
-        botao, valores = self.__window.Read()
+        botao, valores = self.__window.Read(timeout=timeout)
         return botao, valores
 
     def close(self):

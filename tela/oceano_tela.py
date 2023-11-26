@@ -1,6 +1,6 @@
 import string
 from tela.abstract_tela import AbstractTela, OpcaoBotao
-from entidade.embarcacao import Embarcacao
+from entidade.embarcacao import Embarcacao, SiglaEmbarcacao
 import PySimpleGUI as sg
 
 
@@ -9,11 +9,72 @@ class OceanoTela(AbstractTela):
         super().__init__()
         self.__letras_colunas = list(string.ascii_uppercase)
         self.__nomes_embarcacoes = {
-            'B': 'Bote',
-            'S': 'Submarino',
-            'F': 'Fragata',
-            'P': 'Porta Aviões',
+            SiglaEmbarcacao.B.name: 'Bote',
+            SiglaEmbarcacao.S.name: 'Submarino',
+            SiglaEmbarcacao.F.name: 'Fragata',
+            SiglaEmbarcacao.P.name: 'Porta Aviões',
         }
+        self.__cores_mapa = {
+            SiglaEmbarcacao.B.name: '#ebbb78',
+            SiglaEmbarcacao.S.name: '#7bf263',
+            SiglaEmbarcacao.F.name: '#9a74e8',
+            SiglaEmbarcacao.P.name: '#86b4e3',
+            'X': 'red',
+            '*': 'white',
+            '~': '#4a9ee0',
+        }
+
+    def obtem_sigla_mapa(self, posicao_mapa) -> str:
+        if isinstance(posicao_mapa, Embarcacao):
+            return posicao_mapa.sigla.name
+        return '~'
+
+    def obtem_layout_oceano(self, mapa: list):
+        letras_colunas = self.__letras_colunas[:len(mapa)]
+        layout_header = [
+            [
+                sg.Text('', size=2),
+                *[sg.Button(coluna,
+                            size=(3, 1),
+                            p=(2, 2),
+                            disabled=True,
+                            button_color=('black', 'lightgray'),
+                            disabled_button_color=('black', 'lightgray'))
+                    for coluna in letras_colunas]
+            ]
+        ]
+        layout_mapa = [
+            [
+                sg.Button(index_linha + 1,
+                          size=(2, 2),
+                          p=(2, 2),
+                          disabled=True,
+                          button_color=('black', 'lightgray'),
+                          disabled_button_color=('black', 'lightgray')),
+                *[
+                    sg.Button(self.obtem_sigla_mapa(posicao),
+                              size=(3, 2),
+                              p=(2, 2),
+                              disabled=True,
+                              button_color=(
+                                  self.__cores_mapa[
+                                      self.obtem_sigla_mapa(posicao)
+                                  ],
+                                  'darkblue'
+                              ),
+                              disabled_button_color=(
+                                  self.__cores_mapa[
+                                      self.obtem_sigla_mapa(posicao)
+                                  ],
+                                  'darkblue'
+                              ))
+                    for posicao in linha
+                ]
+            ]
+            for index_linha, linha in enumerate(mapa)
+        ]
+
+        return layout_header + layout_mapa
 
     def obtem_tamanho_oceano(self, minimo: int, maximo: int) -> tuple:
         dados = {
@@ -45,48 +106,80 @@ class OceanoTela(AbstractTela):
             except ValueError:
                 self.mostra_mensagem('Digite um número válido!')
 
-    def obtem_opcao_cadastro_oceano(self) -> int:
-        self.mostra_mensagem('O que você deseja fazer?')
-        self.mostra_opcoes([
-            'Posicionar embarcações',
-            'Gerar oceano aleatório',
-        ])
-        return self.obtem_opcao('Escolha uma opção: ', [1, 2])
-
-    def mostra_embarcacoes_disponiveis(self, disponiveis: list):
-        for sigla, nome in self.__nomes_embarcacoes.items():
-            print(f'{nome} ({sigla}) - {disponiveis.count(sigla)} disponíveis')
-
     def obtem_sigla_embarcacao(self, disponiveis: list) -> str:
-        while True:
-            self.mostra_embarcacoes_disponiveis(disponiveis)
-            sigla_embarcacao = input('Digite a sigla da embarcação: ')
-            if sigla_embarcacao.upper() in disponiveis:
-                return sigla_embarcacao.upper()
-            print('Digite a sigla de uma embarcação disponível!')
+        layout = [
+            *self.obtem_layout_titulo('ESCOLHA SUA EMBARCAÇÃO'),
+            [
+                [sg.Button(nome,
+                           key=sigla,
+                           size=15,
+                           disabled=(not disponiveis.count(sigla))),
+                 sg.Text(f'({disponiveis.count(sigla)} disponíveis)')]
+                for sigla, nome in self.__nomes_embarcacoes.items()
+            ]
+        ]
+        botao, _ = self.open(layout)
+        self.close()
+        if not botao:
+            botao = OpcaoBotao.VOLTAR
+        return botao
 
-    def obtem_posicao(self, aviso: str = '') -> tuple:
-        while True:
-            try:
-                if aviso:
-                    print(aviso)
-                linha, coluna = input(
-                    'Digite a linha e coluna separadas por hífen (ex: 1-A): '
-                ).split('-')
-                if not linha or not coluna:
-                    raise ValueError
-                return linha, coluna
-            except ValueError:
-                print('É necessário digitar uma linha e uma coluna!')
+    def obtem_posicoes(self, mapa: list,
+                       tamanho: int,
+                       is_bote: bool) -> tuple:
+        layout = [
+            self.obtem_layout_titulo('POSICIONANDO EMBARCAÇÃO'),
+            self.obtem_layout_oceano(mapa),
+            [sg.Text(f'** Tamanho da embarcação: {tamanho} espaço(s) **')],
+            [
+                sg.Text('Digite a linha e coluna iniciais:', size=35),
+                sg.InputText('1', size=5, key='pos_i_linha'),
+                sg.InputText('A', size=5, key='pos_i_coluna')
+            ],
+            [
+                sg.Text('Digite a linha e coluna finais:', size=35),
+                sg.InputText('1', size=5, key='pos_f_linha'),
+                sg.InputText('A', size=5, key='pos_f_coluna')
+            ] if not is_bote else [],
+            [
+                sg.Submit('Confirmar'),
+                sg.Cancel('Voltar', key=OpcaoBotao.VOLTAR)
+            ]
+        ]
+
+        botao, valores = self.open(layout)
+        self.close()
+        if not botao:
+            botao = OpcaoBotao.VOLTAR
+
+        pos_inicial = (valores['pos_i_linha'], valores['pos_i_coluna'])
+        pos_final = pos_inicial if is_bote \
+            else (valores['pos_f_linha'], valores['pos_f_coluna'])
+
+        return pos_inicial, pos_final, botao
+
+    def mostra_oceano_inicial(self, mapa: list):
+        layout = [
+            self.obtem_layout_titulo('SEU OCEANO'),
+            self.obtem_layout_oceano(mapa),
+            self.obtem_layout_opcoes([
+                'Posicionar embarcações',
+                'Gerar oceano aleatório',
+            ])
+        ]
+        botao, _ = self.open(layout)
+        self.close()
+        if not botao:
+            botao = OpcaoBotao.VOLTAR
+        return botao
 
     def mostra_oceano(self, mapa: list):
-        letras_colunas = self.__letras_colunas[:len(mapa)]
-        print(f'{" " * 3}{" ".join(letras_colunas)}')
-        for index, linha in enumerate(mapa, start=1):
-            print(f'{index:<2}', end=' ')
-            for embarcacao in linha:
-                if isinstance(embarcacao, Embarcacao):
-                    print(embarcacao.sigla.name, end=' ')
-                else:
-                    print('~', end=' ')
-            print('')
+        layout = [
+            self.obtem_layout_titulo('SEU OCEANO'),
+            self.obtem_layout_oceano(mapa),
+            self.obtem_layout_opcoes([
+                'Continuar'
+            ])
+        ]
+        self.open(layout)
+        self.close()
