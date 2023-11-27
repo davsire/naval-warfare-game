@@ -1,10 +1,10 @@
 import random
-from time import sleep
 from entidade.jogo import Jogo, Vencedor
 from entidade.embarcacao import Embarcacao
 from tela.jogo_tela import JogoTela
 from dao.jogo_dao import JogoDAO
 from exception.nao_encontrado_error import NaoEncontradoErro
+from tela.abstract_tela import OpcaoBotao
 
 
 class JogoCtrl:
@@ -21,7 +21,7 @@ class JogoCtrl:
                                  'Acertou algum peixe...',
                                  'Nenhuma ebarcação atingida...']
 
-    def __new__(cls):
+    def __new__(cls, controlador_principal):
         if JogoCtrl.__instancia is None:
             JogoCtrl.__instancia = object.__new__(cls)
         return JogoCtrl.__instancia
@@ -65,15 +65,21 @@ class JogoCtrl:
         novo_jogo = Jogo(self.__proximo_id, jogador_logado,
                          oceano_jogador, oceano_pc)
 
-        self.__jogo_tela.mostra_titulo('PREPARAR CANHÕES! ATIRAR!')
-        self.mostrar_situacao_jogo(novo_jogo)
         self.executar_jogadas(novo_jogo)
 
-    def mostrar_situacao_jogo(self, jogo: Jogo):
-        self.__jogo_tela.mostra_pontuacoes(jogo.pontuacao_jogador,
-                                           jogo.pontuacao_pc)
-        self.__jogo_tela.mostra_oceanos(jogo.oceano_jogador.mapa,
-                                        jogo.oceano_pc.mapa)
+    def mostrar_oceanos(self,
+                        jogo: Jogo,
+                        permite_acao: bool = False,
+                        timeout_tela: int = None):
+        botao = self.__jogo_tela.mostra_situacao_jogo(jogo.oceano_jogador.mapa,
+                                                      jogo.oceano_pc.mapa,
+                                                      jogo.pontuacao_jogador,
+                                                      jogo.pontuacao_pc,
+                                                      permite_acao,
+                                                      timeout_tela)
+        if botao == OpcaoBotao.VOLTAR:
+            self.__controlador_principal.iniciar_app()
+        return botao
 
     def executar_jogadas(self, jogo: Jogo):
         self.executar_jogada_jogador(jogo)
@@ -104,11 +110,11 @@ class JogoCtrl:
     def executar_jogada_jogador(self, jogo: Jogo):
         while True:
             try:
-                linha, coluna = self.obter_posicao_tiro(jogo)
+                linha, coluna = self.mostrar_oceanos(jogo, True)
                 acertou = self.computar_tiro(linha, coluna, jogo)
                 existe_vencedor = self.verificar_vitoria(jogo)
-                self.mostrar_situacao_jogo(jogo)
                 if not acertou or existe_vencedor:
+                    self.mostrar_oceanos(jogo, False, 1500)
                     return
             except ValueError:
                 self.__jogo_tela.mostra_mensagem('Você já atirou aqui! '
@@ -117,22 +123,14 @@ class JogoCtrl:
     def executar_jogada_pc(self, jogo: Jogo):
         while True:
             try:
-                sleep(1)
                 linha, coluna = self.obter_posicao_aleatoria(jogo)
                 acertou = self.computar_tiro(linha, coluna, jogo, True)
                 existe_vencedor = self.verificar_vitoria(jogo)
-                self.mostrar_situacao_jogo(jogo)
                 if not acertou or existe_vencedor:
                     return
+                self.mostrar_oceanos(jogo, False, 1500)
             except ValueError:
                 pass
-
-    def obter_posicao_tiro(self, jogo: Jogo) -> tuple:
-        tamanho_oceano = jogo.oceano_jogador.tamanho
-        self.__jogo_tela.mostra_mensagem('Onde desejar atirar?')
-        linha, coluna = self.__controlador_principal\
-            .oceano_ctrl.obter_posicao(tamanho_oceano)
-        return linha, coluna
 
     def obter_posicao_aleatoria(self, jogo: Jogo) -> tuple:
         tamanho_oceano = jogo.oceano_jogador.tamanho
@@ -162,16 +160,19 @@ class JogoCtrl:
         jogador_logado = self.__controlador_principal.jogador_logado
         indice_mensagem = random.randrange(len(self.__mensagens_acerto))
         mensagem = self.__mensagens_acerto[indice_mensagem]
-        self.__jogo_tela.mostra_mensagem(
-            f'{"PC: " if is_pc else "VOCÊ: "}{mensagem}'
+        self.__jogo_tela.mostra_mensagem_rapida(
+            f'{"PC: " if is_pc else "VOCÊ: "}{mensagem}',
+            (0, -200)
         )
 
         embarcacao.tomar_dano()
         pontuacao = 1
         if embarcacao.afundou:
             pontuacao += 3
-            self.__jogo_tela.mostra_mensagem(f'{"PC: " if is_pc else "VOCÊ: "}'
-                                             'Embarcação afundada!')
+            self.__jogo_tela.mostra_mensagem_rapida(
+                f'{"PC:" if is_pc else "VOCÊ:"} Embarcação afundada!',
+                (0, -200)
+            )
 
         if is_pc:
             jogo.aumentar_pontuacao_pc(pontuacao)
@@ -184,8 +185,9 @@ class JogoCtrl:
     def computar_erro(self, jogo: Jogo, is_pc: bool):
         indice_mensagem = random.randrange(len(self.__mensagens_erro))
         mensagem = self.__mensagens_erro[indice_mensagem]
-        self.__jogo_tela.mostra_mensagem(
-            f'{"PC: " if is_pc else "VOCÊ: "}{mensagem}'
+        self.__jogo_tela.mostra_mensagem_rapida(
+            f'{"PC: " if is_pc else "VOCÊ: "}{mensagem}',
+            (0, -200)
         )
 
         if is_pc:
@@ -194,19 +196,22 @@ class JogoCtrl:
             jogo.adicionar_jogada_jogador(False)
 
     def mostrar_relatorio_jogo(self):
-        id_jogo = self.__jogo_tela.obtem_id_jogo()
+        opcao, id_jogo = self.__jogo_tela.obtem_id_jogo()
+        if opcao == OpcaoBotao.VOLTAR:
+            return
         jogo = self.obter_jogo_por_id(id_jogo)
         if jogo:
             vencedor = jogo.vencedor.name if jogo.vencedor else '~'
-            self.__jogo_tela.mostra_relatorio_jogo(jogo.id,
-                                                   jogo.jogador.nome,
-                                                   jogo.jogador.usuario,
-                                                   vencedor,
-                                                   jogo.data_hora,
-                                                   jogo.pontuacao_jogador,
-                                                   jogo.pontuacao_pc)
             while True:
-                opcao_escolhida = self.__jogo_tela.mostra_menu_relatorio_jogo()
+                opcao_escolhida = self.__jogo_tela.mostra_relatorio_jogo(
+                    jogo.id,
+                    jogo.jogador.nome,
+                    jogo.jogador.usuario,
+                    vencedor,
+                    jogo.data_hora,
+                    jogo.pontuacao_jogador,
+                    jogo.pontuacao_pc
+                )
                 if opcao_escolhida == 1:
                     self.__jogo_tela.mostra_oceanos(jogo.oceano_jogador.mapa,
                                                     jogo.oceano_pc.mapa)

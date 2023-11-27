@@ -54,10 +54,10 @@ class PrincipalCtrl:
         self.__jogo_ctrl.iniciar_jogo()
 
     def abrir_perfil_jogador(self):
-        self.__jogador_ctrl.mostrar_jogador_logado()
+        self.__jogador_ctrl.mostrar_jogador(self.__jogador_logado)
 
     def abrir_ranking(self):
-        self.__ranking_ctrl.listar_jogadores()
+        self.__ranking_ctrl.mostra_ranking()
 
     def sair(self):
         exit(0)

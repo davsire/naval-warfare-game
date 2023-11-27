@@ -6,6 +6,7 @@ from tela.oceano_tela import OceanoTela
 from dao.oceano_dao import OceanoDAO
 from exception.posicao_embarcacao_error import PosicaoEmbarcacaoErro
 from exception.conflito_embarcacao_error import ConflitoEmbarcacaoErro
+from tela.abstract_tela import OpcaoBotao
 
 
 class OceanoCtrl:
@@ -16,8 +17,7 @@ class OceanoCtrl:
         self.__oceano_tela = OceanoTela()
         self.__oceano_dao = OceanoDAO()
         self.__tamanho_minimo_oceano = 5
-        self.__tamanho_maximo_oceano = 25
-        self.__proximo_id = 1
+        self.__tamanho_maximo_oceano = 15
         self.__embarcacoes_iniciais = ['B', 'B', 'B', 'S', 'S', 'F', 'F', 'P']
         self.__indice_letras = {letra: index
                                 for index, letra
@@ -27,7 +27,7 @@ class OceanoCtrl:
                                       SiglaEmbarcacao.F.name: 3,
                                       SiglaEmbarcacao.P.name: 4}
 
-    def __new__(cls):
+    def __new__(cls, controlador_principal):
         if OceanoCtrl.__instancia is None:
             OceanoCtrl.__instancia = object.__new__(cls)
         return OceanoCtrl.__instancia
@@ -50,43 +50,42 @@ class OceanoCtrl:
         self.__oceano_dao.remove(oceano)
 
     def cadastrar_oceano(self) -> tuple:
-        self.__oceano_tela.mostra_titulo('CADASTRANDO OCEANO')
-        tamanho_oceano = self.__oceano_tela.obtem_tamanho_oceano(
+        opcao, tamanho_oceano = self.__oceano_tela.obtem_tamanho_oceano(
             self.__tamanho_minimo_oceano,
             self.__tamanho_maximo_oceano,
         )
+        if opcao == OpcaoBotao.VOLTAR:
+            self.__controlador_principal.iniciar_app()
         oceano_jogador = self.salvar_oceano(tamanho_oceano)
         oceano_pc = self.salvar_oceano(tamanho_oceano)
 
-        self.__oceano_tela.mostra_mensagem('Seu oceano:')
-        self.__oceano_tela.mostra_oceano(oceano_jogador.mapa)
+        opcao_cadastro = self.__oceano_tela.mostra_oceano_inicial(
+            oceano_jogador.mapa
+        )
+
+        if opcao_cadastro == OpcaoBotao.VOLTAR:
+            self.__controlador_principal.iniciar_app()
 
         self.preencher_oceano_aleatorio(oceano_pc)
-        if self.__oceano_tela.obtem_opcao_cadastro_oceano() == 1:
+        if opcao_cadastro == 1:
             self.preencher_oceano_jogador(oceano_jogador)
         else:
             self.preencher_oceano_aleatorio(oceano_jogador)
-            self.__oceano_tela.mostra_mensagem('Seu oceano:')
-            self.__oceano_tela.mostra_oceano(oceano_jogador.mapa)
 
         return oceano_jogador, oceano_pc
 
     def preencher_oceano_jogador(self, oceano: Oceano):
         disponiveis = self.__embarcacoes_iniciais.copy()
-        self.__oceano_tela.mostra_titulo('ADICIONANDO EMBARCAÇÕES')
         while len(disponiveis):
             try:
                 sigla = self.__oceano_tela.obtem_sigla_embarcacao(disponiveis)
-                tamanho = self.__tamanho_embarcacoes[sigla]
-                self.__oceano_tela.mostra_oceano(oceano.mapa)
-                self.__oceano_tela.mostra_mensagem('** Tamanho da embarcação: '
-                                                   f'{tamanho} espaço(s) **')
+                if sigla == OpcaoBotao.VOLTAR:
+                    self.__controlador_principal.iniciar_app()
 
-                pos_inicial = self.obter_posicao(oceano.tamanho,
-                                                 'Início da embarcação:')
-                pos_final = pos_inicial if \
-                    sigla == SiglaEmbarcacao.B.name else \
-                    self.obter_posicao(oceano.tamanho, 'Final da embarcação:')
+                pos_inicial, pos_final, opcao = self.obter_posicoes(oceano,
+                                                                    sigla)
+                if opcao == OpcaoBotao.VOLTAR:
+                    continue
                 pos_inicial, pos_final = self.ordernar_posicoes(pos_inicial,
                                                                 pos_final)
 
@@ -110,20 +109,41 @@ class OceanoCtrl:
             except ConflitoEmbarcacaoErro:
                 pass
 
-    def obter_posicao(self, tamanho_oceano: int, aviso: str = '') -> tuple:
-        linhas_mapa = range(tamanho_oceano)
-        colunas_mapa = list(self.__indice_letras.keys())[:tamanho_oceano]
+    def obter_posicoes(self, oceano: Oceano, sigla: str) -> tuple:
+        is_bote = sigla == SiglaEmbarcacao.B.name
+        linhas_mapa = range(oceano.tamanho)
+        colunas_mapa = list(self.__indice_letras.keys())[:oceano.tamanho]
         while True:
             try:
-                linha, coluna = self.__oceano_tela.obtem_posicao(aviso)
-                linha = int(linha) - 1
-                coluna = coluna.upper()
-                if linha not in linhas_mapa or coluna not in colunas_mapa:
+                pos_inicial, pos_final, opcao = (
+                    self.__oceano_tela.obtem_posicoes(
+                        oceano.mapa, self.__tamanho_embarcacoes[sigla], is_bote
+                    )
+                )
+
+                if opcao == OpcaoBotao.VOLTAR:
+                    return None, None, opcao
+
+                linha_inicial = int(pos_inicial[0]) - 1
+                linha_final = int(pos_final[0]) - 1
+                coluna_inicial = pos_inicial[1].upper()
+                coluna_final = pos_final[1].upper()
+
+                if any([linha_inicial not in linhas_mapa,
+                        linha_final not in linhas_mapa,
+                        coluna_inicial not in colunas_mapa,
+                        coluna_final not in colunas_mapa]):
                     raise ValueError
-                return linha, self.__indice_letras[coluna]
+
+                pos_inicial = (linha_inicial,
+                               self.__indice_letras[coluna_inicial])
+                pos_final = (linha_final,
+                             self.__indice_letras[coluna_final])
+
+                return pos_inicial, pos_final, None
             except ValueError:
                 self.__oceano_tela.mostra_mensagem(
-                    'Digite uma linha e coluna existentes no mapa!'
+                    'As linhas e colunas devem existir no mapa!'
                 )
 
     def obter_posicoes_aleatorias(self,
