@@ -37,7 +37,7 @@ class AbstractTela(ABC):
         return [
             [sg.Text('-' * 55, justification='center')],
             *[[
-                sg.Text(f'{label}: ', size=20, justification='left'),
+                sg.Text(f'{label}:', size=20, justification='left'),
                 sg.Text(dados[label], size=20, justification='right'),
             ] for label in dados],
             [sg.Text('-' * 55, justification='center')],

@@ -10,11 +10,11 @@ class JogadorTela(AbstractTela):
         layout = [
             *self.obtem_layout_titulo('LOGIN JOGADOR'),
             [
-                sg.Text('Digite seu usuário: ', size=20),
+                sg.Text('Digite seu usuário:', size=20),
                 sg.InputText(size=20, key='usuario')
             ],
             [
-                sg.Text('Digite sua senha: ', size=20),
+                sg.Text('Digite sua senha:', size=20),
                 sg.InputText(size=20, key='senha', password_char='*')
             ],
             [
@@ -33,10 +33,10 @@ class JogadorTela(AbstractTela):
                                          acao: str,
                                          dados_atuais: dict) -> tuple:
         dados = {
-            'nome': 'Digite seu nome: ',
-            'data_nasc': 'Digite sua data de nascimento',
-            'usuario': 'Digite seu usuário: ',
-            'senha': 'Digite sua senha: ',
+            'nome': 'Digite seu nome:',
+            'data_nasc': 'Digite sua data de nascimento:',
+            'usuario': 'Digite seu usuário:',
+            'senha': 'Digite sua senha:',
         }
         layout = [
             *self.obtem_layout_titulo(f'{acao.upper()} JOGADOR'),
