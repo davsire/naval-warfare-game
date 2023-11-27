@@ -84,7 +84,7 @@ class JogadorCtrl:
                 else:
                     opcoes_acoes[opcao_escolhida]()
 
-    def tratar_usario(self, usuario) -> bool:
+    def tratar_usario(self, usuario: str) -> bool:
         jogador_logado = self.__controlador_principal.jogador_logado
         usuarios = [jogador.usuario for jogador in self.jogadores]
         return usuario not in usuarios or \
@@ -125,11 +125,13 @@ class JogadorCtrl:
                 self.__controlador_principal.iniciar_app()
             if self.valida_dados(dados):
                 break
-        return dados['nome'], dados['data_nasc'],\
+        return dados['nome'], '/'.join(dados['data_nasc'].split()),\
             dados['usuario'], dados['senha']
 
     def cadastrar_jogador(self) -> Jogador:
-        dados_atuais = {}
+        dados_atuais = {
+            'data_nasc': '01 01 2000'
+        }
         nome, data_nasc, usuario, senha = self.obter_informacoes_jogador(
             'Cadastrar', dados_atuais
         )
@@ -157,7 +159,7 @@ class JogadorCtrl:
         jogador_logado = self.__controlador_principal.jogador_logado
         dados_atuais = {
             'nome': jogador_logado.nome,
-            'data_nasc': jogador_logado.data_nascimento,
+            'data_nasc': jogador_logado.data_nascimento.split('/'),
             'usuario': jogador_logado.usuario,
             'senha': jogador_logado.senha,
         }

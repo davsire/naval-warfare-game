@@ -98,7 +98,7 @@ class JogadorTela(AbstractTela):
         self.close()
         return opcao_escolhida
 
-    def mostra_excluir_jogador(self, mensagem) -> bool:
+    def mostra_excluir_jogador(self, mensagem: str) -> bool:
         layout = [
             self.confirma_acao(mensagem)
         ]

@@ -69,7 +69,7 @@ class JogoCtrl:
 
     def mostrar_oceanos(self,
                         jogo: Jogo,
-                        permite_acao=False,
+                        permite_acao: bool = False,
                         timeout_tela: int = None):
         botao = self.__jogo_tela.mostra_situacao_jogo(jogo.oceano_jogador.mapa,
                                                       jogo.oceano_pc.mapa,
